@@ -55,30 +55,31 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="container mx-auto px-4 pb-24">
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {/* Starter Plan */}
+          {/* Free Plan */}
           <Card className="border-2 hover:border-primary/50 transition-colors">
             <CardHeader className="text-center pb-8">
-              <CardTitle className="text-2xl">Starter</CardTitle>
-              <CardDescription className="text-base">Perfect for individual traders</CardDescription>
+              <CardTitle className="text-2xl">Free</CardTitle>
+              <CardDescription className="text-base">Perfect for getting started</CardDescription>
               <div className="text-4xl font-bold mt-4">
                 $0
                 <span className="text-lg font-normal text-muted-foreground">/month</span>
               </div>
+              <div className="text-sm text-muted-foreground mt-1">Always discounted</div>
             </CardHeader>
 
             <CardContent className="space-y-6">
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>Basic charts & indicators</span>
+                  <span>Basic charts & indicators (10)</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>Real-time market data</span>
+                  <span>Limited chart timeframes</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>5-minute historical data</span>
+                  <span>Historical data</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
@@ -96,43 +97,35 @@ export default function PricingPage() {
             </CardContent>
           </Card>
 
-          {/* Pro Plan - Featured */}
+          {/* Normal Plan */}
           <Card className="border-2 border-primary shadow-2xl scale-105 relative">
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <Badge className="bg-primary text-primary-foreground px-4 py-1">Most Popular</Badge>
             </div>
 
             <CardHeader className="text-center pb-8 pt-8">
-              <CardTitle className="text-2xl">Pro Trader</CardTitle>
-              <CardDescription className="text-base">Advanced tools for serious traders</CardDescription>
+              <CardTitle className="text-2xl">Normal</CardTitle>
+              <CardDescription className="text-base">Essential tools for traders</CardDescription>
               <div className="text-4xl font-bold mt-4">
-                $49
-                <span className="text-lg font-normal text-muted-foreground">/month</span>
+                $1,000
+                <span className="text-lg font-normal text-muted-foreground">/year</span>
               </div>
-              <div className="text-sm text-muted-foreground mt-1">Billed monthly</div>
+              <div className="text-sm text-muted-foreground mt-1">Billed annually</div>
             </CardHeader>
 
             <CardContent className="space-y-6">
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>All Starter features</span>
+                  <span>All Free features</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>50+ technical indicators</span>
+                  <span>Enhanced charting tools</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>Advanced charting tools</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Real-time alerts</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>AI-powered insights</span>
+                  <span>Extended historical data</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
@@ -149,52 +142,53 @@ export default function PricingPage() {
               </div>
 
               <Button className="w-full" size="lg" variant="default">
-                Start Pro Trial
+                Start Normal Plan
               </Button>
             </CardContent>
           </Card>
 
-          {/* Enterprise Plan */}
-          <Card className="border-2 hover:border-primary/50 transition-colors">
+          {/* Premium Plan */}
+          <Card className="border-2 hover:border-primary/50 transition-colors bg-gradient-to-br from-primary/5 to-primary/10">
             <CardHeader className="text-center pb-8">
-              <CardTitle className="text-2xl">Enterprise</CardTitle>
-              <CardDescription className="text-base">For trading firms & institutions</CardDescription>
+              <CardTitle className="text-2xl">Premium</CardTitle>
+              <CardDescription className="text-base">Ultimate trading experience</CardDescription>
               <div className="text-4xl font-bold mt-4">
-                $199
-                <span className="text-lg font-normal text-muted-foreground">/month</span>
+                $3,000
+                <span className="text-lg font-normal text-muted-foreground">/year</span>
               </div>
+              <div className="text-sm text-muted-foreground mt-1">Billed annually</div>
             </CardHeader>
 
             <CardContent className="space-y-6">
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>All Pro features</span>
+                  <span>All Normal features</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>Algorithmic trading</span>
+                  <span>Trading signals</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>Custom integrations</span>
+                  <span>One-on-one coaching</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
-                  <span>White-label solution</span>
+                  <span>Personal strategy sessions</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Check className="w-5 h-5 text-primary" />
+                  <span>Priority support</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Check className="w-5 h-5 text-primary" />
                   <span>Dedicated account manager</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Phone & priority support</span>
-                </div>
               </div>
 
               <Button variant="outline" className="w-full" size="lg">
-                Contact Sales
+                Contact for Premium
               </Button>
             </CardContent>
           </Card>
@@ -214,31 +208,31 @@ export default function PricingPage() {
           <div className="max-w-4xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
               <div className="font-semibold p-4">Features</div>
-              <div className="text-center font-semibold p-4">Starter</div>
-              <div className="text-center font-semibold p-4 text-primary">Pro</div>
-              <div className="text-center font-semibold p-4">Enterprise</div>
+              <div className="text-center font-semibold p-4">Free</div>
+              <div className="text-center font-semibold p-4 text-primary">Normal</div>
+              <div className="text-center font-semibold p-4">Premium</div>
             </div>
 
             <div className="bg-background rounded-lg shadow-sm">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b">
-                <div>Real-time market data</div>
-                <Check className="w-5 h-5 text-primary mx-auto" />
-                <Check className="w-5 h-5 text-primary mx-auto" />
-                <Check className="w-5 h-5 text-primary mx-auto" />
+                <div>Market data</div>
+                <div className="text-center text-sm text-muted-foreground">Historical only</div>
+                <div className="text-center text-sm text-muted-foreground">Historical only</div>
+                <div className="text-center text-sm text-muted-foreground">Historical only</div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b">
                 <div>Technical indicators</div>
                 <div className="text-center text-sm text-muted-foreground">Basic (10)</div>
-                <div className="text-center text-sm font-medium">50+</div>
-                <Check className="w-5 h-5 text-primary mx-auto" />
+                <div className="text-center text-sm font-medium">Basic (10)</div>
+                <div className="text-center text-sm font-medium">Basic (10)</div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b">
                 <div>Chart timeframes</div>
                 <div className="text-center text-sm text-muted-foreground">Limited</div>
-                <div className="text-center text-sm font-medium">All</div>
-                <Check className="w-5 h-5 text-primary mx-auto" />
+                <div className="text-center text-sm font-medium">Limited</div>
+                <div className="text-center text-sm font-medium">Limited</div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b">
@@ -252,18 +246,18 @@ export default function PricingPage() {
                 <div>Risk management tools</div>
                 <div className="text-center text-sm text-muted-foreground">Basic</div>
                 <div className="text-center text-sm font-medium">Advanced</div>
-                <Check className="w-5 h-5 text-primary mx-auto" />
+                <div className="text-center text-sm font-medium">Advanced</div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b">
-                <div>AI insights</div>
+                <div>Trading signals</div>
+                <div className="text-center">❌</div>
                 <div className="text-center">❌</div>
                 <Check className="w-5 h-5 text-primary mx-auto" />
-                <Check className="w-5 h-5 text-primary mx-auto" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-b">
-                <div>Algorithmic trading</div>
+                <div>One-on-one coaching</div>
                 <div className="text-center">❌</div>
                 <div className="text-center">❌</div>
                 <Check className="w-5 h-5 text-primary mx-auto" />
@@ -302,7 +296,7 @@ export default function PricingPage() {
 
           <div className="border-b pb-8">
             <h3 className="text-lg font-semibold mb-4">What's included in the free plan?</h3>
-            <p className="text-muted-foreground">The free plan includes basic charting tools, real-time market data, portfolio tracking, and essential risk management features.</p>
+            <p className="text-muted-foreground">The free plan includes basic charts with 10 technical indicators, limited chart timeframes, historical market data, portfolio tracking, and basic risk management features.</p>
           </div>
 
           <div className="border-b pb-8">
