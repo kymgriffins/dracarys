@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { LoginForm } from "@/components/login-form";
+import { SignUpForm } from "@/components/sign-up-form";
 
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-4">
       <div className="w-full max-w-md">
@@ -14,7 +14,7 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        <LoginForm />
+        <SignUpForm />
       </div>
     </div>
   );
