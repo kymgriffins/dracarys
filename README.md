@@ -1,10 +1,7 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+<h1 align="center">Dracarys - Trader Development Platform</h1>
 
 <p align="center">
- The fastest way to build apps with Next.js and Supabase
+ Master trading through journaling, psychology coaching, and mentorship
 </p>
 
 <p align="center">
@@ -19,19 +16,27 @@
 
 ## Features
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+### Core Trading Development Tools
+- **Trading Journaling**: Log trades with detailed performance analytics
+- **Psychology Engine**: Emotional profiling, bias detection, and confidence tracking
+- **Rule-Based Playbooks**: Custom trading frameworks and setup validation
+- **Daily Rituals**: Pre-session checklists, bias worksheets, and reflection routines
+- **Performance Analytics**: Win-rate analysis, consistency metrics, and improvement tracking
+
+### Premium Mentorship (Subscription Tiers)
+- **Live Trade Walkthroughs**: Educational live sessions with mentor breakdown
+- **Educational Signals Feed**: Frameworked alerts not signals, demonstrating decision-making
+- **Private Mentor Chat**: One-on-one coaching and accountability systems
+- **Weekly Review Calls**: Structured feedback and improvement roadmaps
+- **Research Vault**: Curated trading materials and strategy resources
+- **Personal Trading Plan**: Custom-built frameworks with mentor collaboration
+
+### Platform Technology
+- Works across the entire [Next.js](https://nextjs.org) stack with App Router
+- Supabase backend with real-time features and secure authentication
+- Styled with [Tailwind CSS](https://tailwindcss.com) and [shadcn/ui](https://ui.shadcn.com/)
+- Stripe-powered subscription billing
+- Mobile-responsive design for trading analysis on-the-go
 
 ## Demo
 

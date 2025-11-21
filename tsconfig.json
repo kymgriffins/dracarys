@@ -27,7 +27,8 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "types": ["next", "react", "react-dom", "@types/jest"]
   },
   "include": [
     "next-env.d.ts",

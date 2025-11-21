@@ -1,10 +1,24 @@
+"use client";
+
 import { Sidebar } from "@/components/sidebar";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Dummy authentication check
+    const isAuthenticated = localStorage.getItem("dummyAuth") === "true";
+    if (!isAuthenticated) {
+      router.push("/auth/login");
+    }
+  }, [router]);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="flex">

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, ArrowRight, BarChart3, TrendingUp, Users, Target, Shield, Zap } from "lucide-react";
+import { Check, Star, ArrowRight, TrendingUp } from "lucide-react";
 
 export default function PricingPage() {
   return (
@@ -44,10 +44,10 @@ export default function PricingPage() {
             Simple, Transparent Pricing
           </Badge>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Choose Your Trading Edge
+            Master Your Trading Journey
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Professional tools that scale with your trading needs. Start free, upgrade as you grow.
+            From trade journaling to personalized coaching. Level up your trading psychology and strategy.
           </p>
         </div>
       </section>
@@ -141,9 +141,25 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              <Button className="w-full" size="lg" variant="default">
-                Start Normal Plan
-              </Button>
+              <div className="space-y-3">
+                <Button className="w-full" size="lg" variant="default" asChild>
+                  <Link href="/payment/stripe?plan=normal">
+                    Pay with Card
+                  </Link>
+                </Button>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/payment/mpesa?plan=normal">
+                      M-Pesa
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/payment/crypto?plan=normal">
+                      Crypto
+                    </Link>
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
@@ -187,9 +203,25 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              <Button variant="outline" className="w-full" size="lg">
-                Contact for Premium
-              </Button>
+              <div className="space-y-3">
+                <Button variant="outline" className="w-full" size="lg" asChild>
+                  <Link href="/payment/stripe?plan=premium">
+                    Pay with Card
+                  </Link>
+                </Button>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/payment/mpesa?plan=premium">
+                      M-Pesa
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href="/payment/crypto?plan=premium">
+                      Crypto
+                    </Link>
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

@@ -4,112 +4,115 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  BarChart3,
-  Activity,
-  Users,
+  Brain,
+  Target,
+  BookOpen,
   CheckCircle,
-  Clock,
-  AlertCircle,
   Plus,
-  ArrowUpRight,
-  ArrowDownRight,
   Calendar,
   MessageSquare,
-  Target
+  Award,
+  ArrowUpRight,
+  ArrowDownRight
 } from "lucide-react";
 
-// Sample data - in a real app this would come from your database/API
+// Sample psychology-focused trader development data
 const stats = [
   {
-    title: "Portfolio Value",
-    value: "$127,543.21",
-    change: "+12.5%",
+    title: "Discipline Score",
+    value: "8.2/10",
+    change: "+0.3",
     changeType: "positive" as const,
-    icon: DollarSign,
-  },
-  {
-    title: "Today's P&L",
-    value: "+$1,234.56",
-    change: "+2.3%",
-    changeType: "positive" as const,
-    icon: TrendingUp,
-  },
-  {
-    title: "Active Positions",
-    value: "12",
-    change: "-2",
-    changeType: "negative" as const,
     icon: Target,
+    description: "Daily routine adherence"
   },
   {
-    title: "Win Rate",
-    value: "68.5%",
-    change: "+5.2%",
+    title: "Psychological Win Rate",
+    value: "72.4%",
+    change: "+5.1%",
     changeType: "positive" as const,
-    icon: BarChart3,
+    icon: Brain,
+    description: "Trades where emotions were controlled"
+  },
+  {
+    title: "Journal Streak",
+    value: "12 days",
+    change: "Current",
+    changeType: "neutral" as const,
+    icon: BookOpen,
+    description: "Consecutive daily entries"
+  },
+  {
+    title: "Routine Completion",
+    value: "85%",
+    change: "+12%",
+    changeType: "positive" as const,
+    icon: CheckCircle,
+    description: "Weekly ritual adherence"
   },
 ];
 
-const recentTrades = [
+// Psychology-focused recent journal entries
+const recentJournalEntries = [
   {
     id: "1",
-    symbol: "SPY",
-    type: "Buy",
-    quantity: 100,
-    price: "$478.23",
-    status: "Filled",
+    title: "Morning Preparation Missed - Need to Fix",
+    emotionalState: "Rushed",
+    disciplineScore: 6,
     time: "2 hours ago",
-    pnl: null,
+    status: "needs-review",
   },
   {
     id: "2",
-    symbol: "NVDA",
-    type: "Sell",
-    quantity: 50,
-    price: "$1,234.56",
-    status: "Filled",
-    time: "4 hours ago",
-    pnl: "+$125.00",
+    title: "Perfect Entry on Setup #3",
+    emotionalState: "Calm",
+    disciplineScore: 9,
+    time: "1 day ago",
+    status: "reviewed",
   },
   {
     id: "3",
-    symbol: "AAPL",
-    type: "Buy",
-    quantity: 75,
-    price: "$192.85",
-    status: "Pending",
-    time: "6 hours ago",
-    pnl: null,
+    title: "Dealt with FOMO, exited early",
+    emotionalState: "Anxious",
+    disciplineScore: 8,
+    time: "2 days ago",
+    status: "reviewed",
   },
 ];
 
+// Psychology-focused activity feed
 const activityFeed = [
   {
     id: "1",
-    type: "trade",
-    title: "Position opened",
-    description: "Bought 100 shares of SPY at $478.23",
+    type: "journal",
+    title: "New journal entry",
+    description: "Completed today's pre-session routine",
     time: "2h ago",
-    icon: TrendingUp,
+    icon: BookOpen,
   },
   {
     id: "2",
-    type: "alert",
-    title: "Price alert triggered",
-    description: "NVDA hit your target price of $1,250",
+    type: "routine",
+    title: "Routine completed",
+    description: "Morning preparation checklist finished",
     time: "3h ago",
-    icon: AlertCircle,
+    icon: CheckCircle,
   },
   {
     id: "3",
-    type: "task",
-    title: "Task completed",
-    description: "Review quarterly trading performance",
+    type: "mentor",
+    title: "Mentor feedback received",
+    description: "Coach reviewed your latest bias pattern analysis",
     time: "1d ago",
-    icon: CheckCircle,
+    icon: MessageSquare,
+  },
+  {
+    id: "4",
+    type: "goal",
+    title: "Goal milestone achieved",
+    description: "30-day consistency streak reached",
+    time: "2d ago",
+    icon: Award,
   },
 ];
 
@@ -119,9 +122,9 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <h1 className="text-3xl font-bold">Trader Development Dashboard</h1>
           <p className="text-muted-foreground">
-            Welcome back! Here's what's happening with your trading.
+            Focus on your psychology and discipline. Your mental game drives results.
           </p>
         </div>
         <div className="flex items-center space-x-2">
@@ -131,7 +134,7 @@ export default function DashboardPage() {
           </Button>
           <Button>
             <Plus className="w-4 h-4 mr-2" />
-            New Trade
+            New Journal Entry
           </Button>
         </div>
       </div>
@@ -165,49 +168,49 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Recent Trades */}
+        {/* Recent Journal Entries */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Activity className="w-5 h-5 mr-2" />
-              Recent Trades
+              <BookOpen className="w-5 h-5 mr-2" />
+              Recent Journal Entries
             </CardTitle>
             <CardDescription>
-              Your latest trading activity
+              Your latest trading psychology reflections
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentTrades.map((trade) => (
-                <div key={trade.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
+              {recentJournalEntries.map((entry) => (
+                <div key={entry.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className={`w-2 h-2 rounded-full ${
-                      trade.status === 'Filled' ? 'bg-green-500' :
-                      trade.status === 'Pending' ? 'bg-yellow-500' : 'bg-gray-500'
+                      entry.status === 'reviewed' ? 'bg-green-500' :
+                      entry.status === 'needs-review' ? 'bg-yellow-500' : 'bg-gray-500'
                     }`} />
                     <div>
-                      <div className="font-medium">{trade.symbol}</div>
+                      <div className="font-medium">{entry.title}</div>
                       <div className="text-sm text-muted-foreground">
-                        {trade.type} {trade.quantity} @ {trade.price}
+                        Emotional State: {entry.emotionalState}
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <Badge variant={trade.status === 'Filled' ? 'default' : 'secondary'}>
-                      {trade.status}
+                    <Badge variant={entry.status === 'reviewed' ? 'default' : 'secondary'}>
+                      {entry.status}
                     </Badge>
-                    {trade.pnl && (
-                      <div className="text-xs text-green-600 mt-1">{trade.pnl}</div>
-                    )}
-                    <div className="text-xs text-muted-foreground">{trade.time}</div>
+                    <div className="text-xs text-green-600 mt-1">
+                      Discipline: {entry.disciplineScore}/10
+                    </div>
+                    <div className="text-xs text-muted-foreground">{entry.time}</div>
                   </div>
                 </div>
               ))}
             </div>
             <div className="mt-4">
               <Button variant="outline" className="w-full">
-                <BarChart3 className="w-4 h-4 mr-2" />
-                View All Trades
+                <BookOpen className="w-4 h-4 mr-2" />
+                View Journal
               </Button>
             </div>
           </CardContent>
@@ -245,40 +248,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>
-            Frequently used features and shortcuts
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Button className="h-auto p-4 flex flex-col items-start space-y-2">
-              <Target className="w-5 h-5" />
-              <span className="font-medium">New Trade</span>
-              <span className="text-xs text-muted-foreground">Enter a position</span>
-            </Button>
-            <Button variant="outline" className="h-auto p-4 flex flex-col items-start space-y-2">
-              <BarChart3 className="w-5 h-5" />
-              <span className="font-medium">Analytics</span>
-              <span className="text-xs text-muted-foreground">View performance</span>
-            </Button>
-            <Button variant="outline" className="h-auto p-4 flex flex-col items-start space-y-2">
-              <Users className="w-5 h-5" />
-              <span className="font-medium">Workspace</span>
-              <span className="text-xs text-muted-foreground">Team collaboration</span>
-            </Button>
-            <Button variant="outline" className="h-auto p-4 flex flex-col items-start space-y-2">
-              <Clock className="w-5 h-5" />
-              <span className="font-medium">Schedule</span>
-              <span className="text-xs text-muted-foreground">Plan your trades</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

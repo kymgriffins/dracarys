@@ -2,7 +2,7 @@
   "name": "dracarys",
   "version": "0.1.0",
   "private": true,
-  "description": "Dracarys - Task Management Platform",
+  "description": "Dracarys - Trader Development Platform",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -17,7 +17,16 @@
     "analyze": "npm run build && npx @next/bundle-analyzer",
     "test": "jest --watchAll",
     "test:ci": "jest --ci --coverage --watchAll=false",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "preflight": "npm run type-check && npm run lint && npm run schema-validate",
+    "preflight:strict": "npm run type-check && npm run lint && npm run schema-validate && npm run test:types",
+    "contracts:verify": "npm run schema-validate && npm run test:contracts",
+    "deps:audit": "npm audit --audit-level=high",
+    "deps:audit:zero": "npm audit --audit-level=critical",
+    "schema-validate": "node scripts/validate-schemas.js",
+    "test:types": "jest --testPathPattern=types --coverage --passWithNoTests",
+    "test:contracts": "jest --testPathPattern=contracts --coverage --passWithNoTests",
+    "validate:pre-commit": "npm run preflight && npm run contracts:verify && npm run deps:audit:zero"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
