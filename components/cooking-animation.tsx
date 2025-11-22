@@ -42,7 +42,7 @@ export function CookingAnimation({
                 ease: "easeInOut"
               }}
             >
-              🌶️
+              🔥
             </motion.div>
             <motion.div
               className="absolute top-8 left-4 text-yellow-300 opacity-50"
@@ -57,8 +57,7 @@ export function CookingAnimation({
                 delay: 0.5
               }}
             >
-              🧅
-            </motion.div>
+              🔥           </motion.div>
             <motion.div
               className="absolute bottom-4 left-6 text-green-300 opacity-60"
               animate={{
@@ -88,7 +87,7 @@ export function CookingAnimation({
                 ease: "easeInOut"
               }}
             >
-              ✨
+              🔥
             </motion.div>
             <motion.div
               className="absolute bottom-2 right-2 text-yellow-400"
@@ -103,7 +102,7 @@ export function CookingAnimation({
                 delay: 1
               }}
             >
-              ✨
+              🔥
             </motion.div>
 
             {/* Animated dragon throwing fire */}
@@ -203,9 +202,9 @@ export function CookingAnimation({
                 <Clock className="w-4 h-4" />
                 <span>Estimated completion</span>
               </div>
-              <div className="w-full bg-orange-100 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-orange-400 to-yellow-500 rounded-full"
+                  className="h-full bg-foreground rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: "70%" }}
                   transition={{ duration: 2, ease: "easeOut" }}
@@ -213,20 +212,15 @@ export function CookingAnimation({
               </div>
             </div>
 
-            <motion.div
-              className="text-sm text-gray-500 font-medium opacity-75"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 1 }}
-            >
-              We're forging something legendary just for you! 🔥
-            </motion.div>
+            <div className="flex items-center justify-center text-sm font-medium opacity-75 mb-8">
+              <span>We're forging something legendary just for you! 🔥</span>
+            </div>
 
-            {/* Action buttons - keep full color for usability */}
+            {/* Action buttons */}
             <div className="flex flex-col gap-3 mt-8">
               {showHomeButton && (
                 <Link href={backLink}>
-                  <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                  <Button className="w-full">
                     <Home className="w-4 h-4 mr-2" />
                     Back to Dashboard
                   </Button>
@@ -235,7 +229,7 @@ export function CookingAnimation({
 
               {backLink !== "/app/dashboard" && (
                 <Link href="/app/dashboard">
-                  <Button variant="outline" className="w-full border-orange-300 text-orange-700 hover:bg-orange-50">
+                  <Button variant="outline" className="w-full">
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Return Home
                   </Button>

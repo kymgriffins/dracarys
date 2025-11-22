@@ -9,26 +9,58 @@ import { Check, Star, ArrowRight, BookOpen, Users, Target, TrendingUp, Shield, Z
 
 export default function PremiumPricingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 py-24">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      {/* Navigation */}
+      <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <span className="text-xl font-bold">Dracarys</span>
+          </Link>
+          <div className="hidden md:flex items-center space-x-6">
+            <Link href="/features" className="text-muted-foreground hover:text-foreground transition-colors">
+              Features
+            </Link>
+            <Link href="/pricing" className="text-foreground hover:text-foreground/80 transition-colors font-medium">
+              Pricing
+            </Link>
+            <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
+              About
+            </Link>
+            <Link href="/auth/login">
+              <Button variant="ghost">Sign In</Button>
+            </Link>
+            <Link href="/auth/signup">
+              <Button>Get Started</Button>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-24 text-center">
+        <div className="max-w-4xl mx-auto mb-16">
           <Badge variant="secondary" className="mb-6">
             <Star className="w-4 h-4 mr-2" />
             Trader Development Memberships
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             Master Your Trading Mindset
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Professional mentorship and psychology-driven tools to transform you from a gambler into a disciplined trader.
           </p>
         </div>
+      </section>
+
+      <div className="container mx-auto px-4">
 
         {/* Premium Focus Banner */}
-        <div className="bg-primary/5 border border-primary/20 rounded-lg p-8 mb-16 text-center">
+        <div className="bg-muted/30 border border-border rounded-lg p-8 mb-16 text-center">
           <div className="flex items-center justify-center mb-4">
-            <Heart className="w-8 h-8 text-primary mr-3" />
+            <Heart className="w-8 h-8 mr-3" />
             <h2 className="text-2xl font-bold">Psychology-First Trading Education</h2>
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -42,8 +74,8 @@ export default function PremiumPricingPage() {
           {/* Core Membership */}
           <Card className="border-2">
             <CardHeader className="text-center pb-8">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-6 h-6" />
               </div>
               <CardTitle className="text-2xl">Core Membership</CardTitle>
               <CardDescription className="text-base">Self-directed trader development</CardDescription>
@@ -93,12 +125,12 @@ export default function PremiumPricingPage() {
           {/* Accelerated Program - Most Popular */}
           <Card className="border-2 border-primary shadow-2xl scale-105 relative">
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-primary text-primary-foreground px-4 py-1">Most Popular</Badge>
+              <Badge className="bg-foreground text-background px-4 py-1">Most Popular</Badge>
             </div>
 
             <CardHeader className="text-center pb-8 pt-8">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Users className="w-6 h-6" />
               </div>
               <CardTitle className="text-2xl">Accelerated Program</CardTitle>
               <CardDescription className="text-base">Mentor-guided development</CardDescription>
@@ -154,10 +186,10 @@ export default function PremiumPricingPage() {
           </Card>
 
           {/* Elite Mastery Program */}
-          <Card className="border-2 border-amber-200 bg-gradient-to-br from-amber-50/50 to-orange-50/50">
+          <Card className="border-2">
             <CardHeader className="text-center pb-8">
-              <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Trophy className="w-6 h-6 text-amber-600" />
+              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Trophy className="w-6 h-6" />
               </div>
               <CardTitle className="text-2xl">Elite Mastery</CardTitle>
               <CardDescription className="text-base">Intensive elite trader development</CardDescription>
@@ -170,41 +202,41 @@ export default function PremiumPricingPage() {
 
             <CardContent className="space-y-6">
               <div className="space-y-3">
-                <div className="flex items-center space-x-2 text-amber-700 font-semibold">
-                  <Check className="w-5 h-5 text-amber-600" />
+                <div className="flex items-center space-x-2 font-semibold">
+                  <Check className="w-5 h-5" />
                   <span>Everything in Accelerated +</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-amber-600" />
+                  <Check className="w-5 h-5" />
                   <span>1-on-1 elite mentor (40+ years experience)</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-amber-600" />
+                  <Check className="w-5 h-5" />
                   <span>Bi-weekly coaching sessions</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-amber-600" />
+                  <Check className="w-5 h-5" />
                   <span>Real-time psychology consultations</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-amber-600" />
+                  <Check className="w-5 h-5" />
                   <span>Custom 90-day playbook creation</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-amber-600" />
+                  <Check className="w-5 h-5" />
                   <span>Dedicated discord channel</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-amber-600" />
+                  <Check className="w-5 h-5" />
                   <span>Priority educational alerts</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-amber-600" />
+                  <Check className="w-5 h-5" />
                   <span>Unlimited mentor messaging</span>
                 </div>
               </div>
 
-              <Button variant="outline" className="w-full" size="lg" style={{borderColor: '#d97706', color: '#d97706'}}>
+              <Button variant="outline" className="w-full" size="lg">
                 Apply for Elite Program
               </Button>
             </CardContent>
@@ -212,26 +244,26 @@ export default function PremiumPricingPage() {
         </div>
 
         {/* Psychology Guarantee */}
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-8 mb-16">
+        <div className="bg-muted/30 border border-border rounded-lg p-8 mb-16">
           <div className="flex items-center justify-center mb-4">
-            <Shield className="w-8 h-8 text-green-600 mr-3" />
-            <h2 className="text-2xl font-bold text-green-800">Psychology-First Guarantee</h2>
+            <Shield className="w-8 h-8 mr-3" />
+            <h2 className="text-2xl font-bold">Psychology-First Guarantee</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-green-600 mb-2">30-Day</div>
-              <div className="text-green-800">Money Back Guarantee</div>
-              <div className="text-sm text-green-600 mt-2">No market risk required</div>
+              <div className="text-3xl font-bold mb-2">30-Day</div>
+              <div>Money Back Guarantee</div>
+              <div className="text-sm text-muted-foreground mt-2">No market risk required</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">90-Day</div>
-              <div className="text-blue-800">Transformation Commitment</div>
-              <div className="text-sm text-blue-600 mt-2">Focus on your mental game</div>
+              <div className="text-3xl font-bold mb-2">90-Day</div>
+              <div>Transformation Commitment</div>
+              <div className="text-sm text-muted-foreground mt-2">Focus on your mental game</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-purple-600 mb-2">Lifetime</div>
-              <div className="text-purple-800">Access to Psychology Tools</div>
-              <div className="text-sm text-purple-600 mt-2">Built for long-term growth</div>
+              <div className="text-3xl font-bold mb-2">Lifetime</div>
+              <div>Access to Psychology Tools</div>
+              <div className="text-sm text-muted-foreground mt-2">Built for long-term growth</div>
             </div>
           </div>
         </div>
@@ -311,7 +343,7 @@ export default function PremiumPricingPage() {
                   <th className="p-4 text-left font-semibold">Features</th>
                   <th className="p-4 text-center font-semibold">Core</th>
                   <th className="p-4 text-center font-semibold">Accelerated</th>
-                  <th className="p-4 text-center font-semibold text-amber-700">Elite</th>
+                  <th className="p-4 text-center font-semibold">Elite</th>
                 </tr>
               </thead>
               <tbody>
