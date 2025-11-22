@@ -69,13 +69,8 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile sidebar backdrop */}
-      <div className="fixed inset-0 z-40 lg:hidden">
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" />
-      </div>
-
-      {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border lg:translate-x-0 transform -translate-x-full lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
+      {/* Sidebar for large screens - fixed positioning */}
+      <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:w-64 lg:bg-card lg:border-r lg:border-border lg:flex lg:flex-col">
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center h-16 px-6 border-b border-border">
