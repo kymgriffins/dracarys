@@ -230,10 +230,11 @@ export default function LivePage() {
                     <CardContent className="p-0">
                       {/* Thumbnail */}
                       <div className="relative">
-                        <div className="aspect-video bg-gradient-to-br from-blue-500 to-purple-600 rounded-t-lg flex items-center justify-center">
+                        <div className="aspect-video bg-gradient-to-br from-blue-500 to-purple-600 rounded-t-lg flex items-center justify-center min-h-[240px]">
                           <div className="text-center text-white">
-                            <Video className="w-8 h-8 mx-auto mb-2" />
-                            <p className="text-sm">Stream Preview</p>
+                            <Video className="w-12 h-12 mx-auto mb-4" />
+                            <p className="text-lg font-medium">Live Stream</p>
+                            <p className="text-sm opacity-90 mt-1">Click to join the session</p>
                           </div>
                         </div>
 

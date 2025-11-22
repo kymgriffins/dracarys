@@ -19,12 +19,12 @@ import {
   ChevronRight,
   Youtube,
   Lock,
-  CheckCircle
+  CheckCircle,
+  X
 } from "lucide-react";
 
-// YouTube API configuration
-const YOUTUBE_API_KEY = 'AIzaSyDhrPlkUdvNWVH-tF4SJ9HI-sCClAOkYRM';
-const CHANNEL_HANDLE = '@lordeofmerchants001';
+
+
 
 interface YouTubeVideo {
   id: {
@@ -110,6 +110,8 @@ export default function CoursesPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [youtubeVideos, setYoutubeVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   const categories = ["All", "Technical Analysis", "Psychology", "Risk Management", "Free Content"];
 
@@ -117,34 +119,71 @@ export default function CoursesPage() {
   useEffect(() => {
     const fetchYouTubeVideos = async () => {
       try {
-        // First get the channel ID from handle
-        const channelResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&q=${encodeURIComponent(CHANNEL_HANDLE)}&type=channel&part=snippet&maxResults=1`
-        );
+        const YOUTUBE_API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
+        const CHANNEL_HANDLE = process.env.NEXT_PUBLIC_DEFAULT_YOUTUBE_CHANNEL;
 
-        if (!channelResponse.ok) {
-          throw new Error('Failed to get channel info');
+        if (!YOUTUBE_API_KEY || !CHANNEL_HANDLE) {
+          console.warn('YouTube API key or channel handle not configured');
+          setYoutubeVideos([]);
+          setLoading(false);
+          return;
         }
 
-        const channelData = await channelResponse.json();
-        const channelId = channelData.items?.[0]?.snippet?.channelId;
+        // Clean the channel handle (remove @ if present)
+        const cleanChannelHandle = CHANNEL_HANDLE.replace('@', '');
 
-        if (!channelId) {
-          throw new Error('Channel not found');
-        }
+        // Try to find the channel by username/handle directly
+        try {
+          const channelResponse = await fetch(
+            `https://www.googleapis.com/youtube/v3/channels?key=${YOUTUBE_API_KEY}&forUsername=${cleanChannelHandle}&part=id,snippet&maxResults=1`
+          );
 
-        // Now fetch videos from the channel
-        const videosResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${channelId}&part=snippet,id&order=date&maxResults=12`
-        );
+          let channelData;
+          let channelId;
 
-        if (videosResponse.ok) {
-          const videosData = await videosResponse.json();
-          setYoutubeVideos(videosData.items || []);
+          if (channelResponse.ok) {
+            channelData = await channelResponse.json();
+            channelId = channelData.items?.[0]?.id;
+          }
+
+          // If username lookup didn't work, try searching for the handle
+          if (!channelId) {
+            const searchResponse = await fetch(
+              `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&q=${encodeURIComponent(cleanChannelHandle)}&type=channel&part=snippet&maxResults=1`
+            );
+
+            if (searchResponse.ok) {
+              const searchData = await searchResponse.json();
+              channelId = searchData.items?.[0]?.snippet?.channelId;
+            }
+          }
+
+          if (!channelId) {
+            throw new Error('Channel not found');
+          }
+
+          // Now fetch videos from the channel
+          const videosResponse = await fetch(
+            `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${channelId}&part=snippet,id&order=date&maxResults=12&type=video`
+          );
+
+          if (videosResponse.ok) {
+            const videosData = await videosResponse.json();
+            // Filter out non-video items and ensure we have valid video data
+            const validVideos = (videosData.items || []).filter((item: YouTubeVideo) =>
+              item.id?.videoId && item.snippet?.thumbnails
+            );
+            setYoutubeVideos(validVideos);
+          } else {
+            throw new Error('Failed to fetch videos');
+          }
+        } catch (apiError) {
+          console.error('YouTube API Error:', apiError);
+          // Continue with empty array
+          setYoutubeVideos([]);
         }
       } catch (error) {
-        console.error('Error fetching YouTube videos:', error);
-        // Fallback to mock data if API fails
+        console.error('Error in fetchYouTubeVideos:', error);
         setYoutubeVideos([]);
       } finally {
         setLoading(false);
@@ -172,6 +211,16 @@ export default function CoursesPage() {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const openVideoPlayer = (video: YouTubeVideo) => {
+    setSelectedVideo(video);
+    setVideoModalOpen(true);
+  };
+
+  const closeVideoPlayer = () => {
+    setSelectedVideo(null);
+    setVideoModalOpen(false);
   };
 
   return (
@@ -262,7 +311,11 @@ export default function CoursesPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {youtubeVideos.map((video) => (
-                  <Card key={video.id.videoId} className="group hover:shadow-lg transition-shadow">
+                  <Card
+                    key={video.id.videoId}
+                    className="group hover:shadow-lg transition-shadow cursor-pointer"
+                    onClick={() => openVideoPlayer(video)}
+                  >
                     <CardContent className="p-0">
                       <div className="relative">
                         <img
@@ -271,7 +324,7 @@ export default function CoursesPage() {
                           className="w-full aspect-video object-cover rounded-t-lg"
                         />
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-t-lg">
-                          <Button size="lg" className="bg-red-600 hover:bg-red-700">
+                          <Button size="lg" className="bg-red-600 hover:bg-red-700 pointer-events-none">
                             <Play className="w-5 h-5 mr-2" />
                             Watch Now
                           </Button>
@@ -391,6 +444,51 @@ export default function CoursesPage() {
             </div>
           </div>
         )}
+
+        {/* Video Player Modal */}
+        {videoModalOpen && selectedVideo && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+            <div className="bg-background rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+              <div className="p-6 border-b border-border">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-100 dark:bg-red-900 rounded-xl">
+                      <Youtube className="w-6 h-6 text-red-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-foreground">
+                        {selectedVideo.snippet.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedVideo.snippet.channelTitle} • {new Date(selectedVideo.snippet.publishedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={closeVideoPlayer}
+                    className="rounded-xl"
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="relative w-full bg-black rounded-b-3xl overflow-hidden">
+                <iframe
+                  src={`https://www.youtube.com/embed/${selectedVideo.id.videoId}?autoplay=1&rel=0`}
+                  title={selectedVideo.snippet.title}
+                  className="w-full aspect-video"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
