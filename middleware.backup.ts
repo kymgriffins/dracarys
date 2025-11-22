@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { CookieOptions } from "@supabase/ssr";
 
-export default async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -12,21 +12,18 @@ export default async function proxy(request: NextRequest) {
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!, // Using PUBLISHABLE_KEY (your actual env var)
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
         get(name: string) {
           return request.cookies.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
-          // Update request cookies
           request.cookies.set({
             name,
             value,
             ...options,
           });
-
-          // Update response cookies
           response = NextResponse.next({
             request: {
               headers: request.headers,
@@ -39,14 +36,11 @@ export default async function proxy(request: NextRequest) {
           });
         },
         remove(name: string, options: CookieOptions) {
-          // Update request cookies
           request.cookies.set({
             name,
             value: "",
             ...options,
           });
-
-          // Update response cookies
           response = NextResponse.next({
             request: {
               headers: request.headers,
@@ -68,14 +62,16 @@ export default async function proxy(request: NextRequest) {
   // Check if the user is authenticated for protected routes
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Protect /app/* routes - redirect to login if not authenticated
+  // Protect /app/* routes
   if (pathname.startsWith("/app/") && !user) {
+    // Redirect to login page
     const redirectUrl = new URL("/auth/login", request.url);
     return NextResponse.redirect(redirectUrl);
   }
 
   // Redirect authenticated users away from auth pages
   if ((pathname.startsWith("/auth/") || pathname === "/auth") && user) {
+    // Redirect to dashboard
     const redirectUrl = new URL("/app/dashboard", request.url);
     return NextResponse.redirect(redirectUrl);
   }
