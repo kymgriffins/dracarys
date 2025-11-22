@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Dracarys - Confirm Your Account</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #374151;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+    }
+    .container {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 40px;
+      margin: 20px auto;
+      border: 1px solid #f3f4f6;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+    }
+    .logo-text {
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .title {
+      color: #1f2937;
+      font-size: 28px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+    .subtitle {
+      color: #6b7280;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    .content {
+      margin: 30px 0;
+    }
+    .highlight-box {
+      background: linear-gradient(135deg, #fed7aa 0%, #fed7aa 100%);
+      border-left: 4px solid #f97316;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 25px 0;
+    }
+    .highlight-title {
+      color: #9a3412;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .highlight-text {
+      color: #9a3412;
+      margin: 0;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      color: white;
+      padding: 16px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+      text-align: center;
+    }
+    .button:hover {
+      background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+    }
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .footer-links {
+      margin: 15px 0;
+    }
+    .footer-link {
+      color: #f97316;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .footer-link:hover {
+      text-decoration: underline;
+    }
+    .help-text {
+      color: #6b7280;
+      font-size: 14px;
+      margin: 20px 0;
+    }
+    .brain-icon {
+      color: #f97316;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    @media only screen and (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      .container {
+        padding: 20px;
+      }
+      .title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <div class="logo-text">D</div>
+      </div>
+      <h1 class="title">Welcome to Dracarys! 🎉</h1>
+      <p class="subtitle">Your journey to becoming a disciplined trader begins here</p>
+    </div>
+
+    <div class="content">
+      <p>Hi there,</p>
+
+      <p>Thank you for joining <strong>Dracarys</strong> - the premier platform for developing your trading psychology and mastering disciplined trading habits.</p>
+
+      <div class="highlight-box">
+        <div class="brain-icon">🧠</div>
+        <div class="highlight-title">Psychology-First Trading Development</div>
+        <p class="highlight-text">We're not just another trading platform. We're your mental game coach, helping you transform from gambler to disciplined trader through proven psychological frameworks and personalized learning.</p>
+      </div>
+
+      <p>All that's left is to confirm your email address and you'll be ready to start your transformation journey.</p>
+
+      <p style="text-align: center;">
+        <a href="{{ .ConfirmationURL }}" class="button">
+          🚀 Start My Trading Development Journey
+        </a>
+      </p>
+
+      <p class="help-text">
+        <strong>What to expect after confirmation:</strong><br>
+        • Access to your personalized trading development dashboard<br>
+        • Psychology Engine 2.0 for bias tracking<br>
+        • Community access and mentorship opportunities<br>
+        • Premium tools for trading discipline
+      </p>
+
+      <p>If you didn't create an account with Dracarys, please ignore this email.</p>
+
+      <p>We're excited to help you master your trading psychology and achieve the consistent results you've been working towards!</p>
+
+      <p>Best regards,<br><strong>The Dracarys Team</strong></p>
+
+      <p style="font-style: italic; color: #f97316; font-size: 18px;">
+        "*Master your mind, master your markets*"
+      </p>
+    </div>
+  </div>
+</body>
+</html>
