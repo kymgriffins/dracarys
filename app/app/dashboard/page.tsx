@@ -188,29 +188,29 @@ export default function DashboardPage() {
                 </Badge>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <Mail className="w-4 h-4" />
-                  <span>{user?.email}</span>
+                  <Mail className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">{user?.email}</span>
                 </div>
 
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <UserIcon className="w-4 h-4" />
-                  <span>ID: {user?.id?.substring(0, 8)}...</span>
+                  <UserIcon className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">ID: {user?.id?.substring(0, 8)}...</span>
                 </div>
 
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <CalendarIcon className="w-4 h-4" />
-                  <span>Joined {formatCreationDate(user?.created_at)}</span>
+                  <CalendarIcon className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">Joined {formatCreationDate(user?.created_at)}</span>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2 mt-4 sm:mt-0">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
                 Edit Profile
               </Button>
-              <Button size="sm">
+              <Button size="sm" className="w-full sm:w-auto">
                 Upgrade Plan
               </Button>
             </div>
@@ -219,19 +219,19 @@ export default function DashboardPage() {
       </Card>
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold">Trader Development Dashboard</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-2xl sm:text-3xl font-bold">Trader Development Dashboard</h2>
+          <p className="text-muted-foreground text-sm sm:text-base">
             Focus on your psychology and discipline. Your mental game drives results.
           </p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2">
+          <Button variant="outline" size="sm" className="w-full sm:w-auto">
             <Calendar className="w-4 h-4 mr-2" />
             Last 30 days
           </Button>
-          <Button>
+          <Button className="w-full sm:w-auto">
             <Plus className="w-4 h-4 mr-2" />
             New Journal Entry
           </Button>
