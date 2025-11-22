@@ -15,297 +15,310 @@ import {
   MessageSquare,
   Award,
   ArrowUpRight,
-  ArrowDownRight,
-  User as UserIcon,
-  Mail,
-  Calendar as CalendarIcon
+  TrendingUp,
+  Clock,
+  Users,
+  Play,
+  ChevronRight,
+  BookOpen as LessonIcon,
+  Zap
 } from "lucide-react";
+import Link from "next/link";
 
-// Sample psychology-focused trader development data
-const stats = [
+// Top Summary Cards - aligned with blueprint
+const summaryCards = [
   {
-    title: "Discipline Score",
-    value: "8.2/10",
-    change: "+0.3",
-    changeType: "positive" as const,
-    icon: Target,
-    description: "Daily routine adherence"
+    title: "Today's Progress",
+    value: "72%",
+    detail: "+12% from yesterday",
+    icon: TrendingUp,
+    color: "text-green-600"
   },
   {
-    title: "Psychological Win Rate",
-    value: "72.4%",
-    change: "+5.1%",
-    changeType: "positive" as const,
-    icon: Brain,
-    description: "Trades where emotions were controlled"
-  },
-  {
-    title: "Journal Streak",
-    value: "12 days",
-    change: "Current",
-    changeType: "neutral" as const,
+    title: "Active Course",
+    value: "Advanced Market Psychology",
+    detail: "5 lessons left",
     icon: BookOpen,
-    description: "Consecutive daily entries"
+    color: "text-blue-600"
   },
   {
-    title: "Routine Completion",
-    value: "85%",
-    change: "+12%",
-    changeType: "positive" as const,
-    icon: CheckCircle,
-    description: "Weekly ritual adherence"
-  },
-];
-
-// Psychology-focused recent journal entries
-const recentJournalEntries = [
-  {
-    id: "1",
-    title: "Morning Preparation Missed - Need to Fix",
-    emotionalState: "Rushed",
-    disciplineScore: 6,
-    time: "2 hours ago",
-    status: "needs-review",
+    title: "Next Session",
+    value: "3:00 PM",
+    detail: "Mentor: Daniel",
+    icon: Clock,
+    color: "text-purple-600"
   },
   {
-    id: "2",
-    title: "Perfect Entry on Setup #3",
-    emotionalState: "Calm",
-    disciplineScore: 9,
-    time: "1 day ago",
-    status: "reviewed",
-  },
-  {
-    id: "3",
-    title: "Dealt with FOMO, exited early",
-    emotionalState: "Anxious",
-    disciplineScore: 8,
-    time: "2 days ago",
-    status: "reviewed",
-  },
-];
-
-// Psychology-focused activity feed
-const activityFeed = [
-  {
-    id: "1",
-    type: "journal",
-    title: "New journal entry",
-    description: "Completed today's pre-session routine",
-    time: "2h ago",
-    icon: BookOpen,
-  },
-  {
-    id: "2",
-    type: "routine",
-    title: "Routine completed",
-    description: "Morning preparation checklist finished",
-    time: "3h ago",
-    icon: CheckCircle,
-  },
-  {
-    id: "3",
-    type: "mentor",
-    title: "Mentor feedback received",
-    description: "Coach reviewed your latest bias pattern analysis",
-    time: "1d ago",
+    title: "Notifications",
+    value: "4",
+    detail: "2 assignments due",
     icon: MessageSquare,
+    color: "text-red-600"
+  },
+];
+
+// Learning Timeline - Upcoming and Recent Activity
+const timelineData = {
+  upcoming: [
+    { title: "Live Psychology Workshop", time: "Today, 3 PM", type: "session" },
+    { title: "Journal Review Meeting", time: "Tomorrow, 11 AM", type: "review" },
+    { title: "Module 4 Release", time: "Friday", type: "course" }
+  ],
+  recent: [
+    { title: "Completed Lesson: Market Cycles 101", time: "2h ago", type: "completed" },
+    { title: "Uploaded Journal Entry", time: "1d ago", type: "journal" },
+    { title: "Commented on forum discussion", time: "2d ago", type: "activity" }
+  ]
+};
+
+// Quick Actions - per blueprint
+const quickActions = [
+  { label: "Add Journal Entry", icon: BookOpen, href: "/app/journal/new" },
+  { label: "Continue Course", icon: BookOpen, href: "/app/courses" },
+  { label: "Join Live Room", icon: Play, href: "/app/live" },
+  { label: "Upload Content", icon: Plus, href: "/app/content/upload" }
+];
+
+// Analytics Preview
+const analyticsData = {
+  weeklyHours: [2.5, 3.2, 1.8, 4.1, 3.8, 2.9, 3.6], // hours per day
+  engagement: [20, 45, 10, 60, 85, 75, 90] // percentage
+};
+
+// Recommended Content
+const recommendedContent = [
+  {
+    title: "Order Blocks Deep Dive",
+    type: "Next Lesson",
+    difficulty: "Advanced",
+    duration: "45 min"
   },
   {
-    id: "4",
-    type: "goal",
-    title: "Goal milestone achieved",
-    description: "30-day consistency streak reached",
-    time: "2d ago",
-    icon: Award,
+    title: "Discipline Training",
+    type: "Suggested Course",
+    difficulty: "Intermediate",
+    duration: "2 weeks"
   },
+  {
+    title: "Risk Management Q&A",
+    type: "Live Event",
+    difficulty: "All Levels",
+    duration: "1 hour"
+  }
 ];
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
 
-  console.log('Dashboard rendering - user:', user, 'isLoading:', isLoading);
-
-  // Show loading state while auth is resolving
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[200px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading your dashboard...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+          <p className="text-sm text-muted-foreground">Loading your dashboard...</p>
         </div>
       </div>
     );
   }
 
-  // Redirect to login if no user (this shouldn't happen due to middleware, but belt and braces)
   if (!user) {
-    console.log('No user found, should redirect to login');
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-muted-foreground">Session not found. Redirecting...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-[200px]">
+        <p className="text-muted-foreground">Please log in to view your dashboard.</p>
       </div>
     );
   }
-
-  // Get user initials for avatar fallback
-  const getUserInitials = (email?: string) => {
-    if (!email) return "U";
-    return email.substring(0, 2).toUpperCase();
-  };
-
-  // Format creation date
-  const formatCreationDate = (createdAt?: string) => {
-    if (!createdAt) return "Unknown";
-    return new Date(createdAt).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   return (
-    <div className="space-y-8">
-      {/* User Profile Header */}
-      <Card className="border-0 shadow-sm bg-gradient-to-r from-primary/5 to-primary/10">
-        <CardContent className="p-6">
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-16 w-16 border-2 border-primary/20">
-              <AvatarImage src="" alt={user?.email || "User"} />
-              <AvatarFallback className="text-lg bg-primary/10 text-primary font-semibold">
-                {getUserInitials(user?.email)}
-              </AvatarFallback>
-            </Avatar>
+    <div className="w-full max-w-full overflow-hidden"> {/* ← CONTAIN OVERFLOW */}
+      <div className="min-h-[calc(100vh-8rem)] space-y-6 lg:space-y-8 w-full max-w-full px-4 sm:px-6"> {/* ← ADD HORIZONTAL PADDING */}
 
-            <div className="flex-1">
-              <div className="flex items-center space-x-2 mb-1">
-                <h1 className="text-2xl font-bold">Welcome back, {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Trader'}!</h1>
-                <Badge variant="secondary" className="bg-green-100 text-green-700">
-                  <CheckCircle className="w-3 h-3 mr-1" />
-                  Active
-                </Badge>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <Mail className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">{user?.email}</span>
-                </div>
-
-                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <UserIcon className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">ID: {user?.id?.substring(0, 8)}...</span>
-                </div>
-
-                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <CalendarIcon className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">Joined {formatCreationDate(user?.created_at)}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2 mt-4 sm:mt-0">
-              <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                Edit Profile
-              </Button>
-              <Button size="sm" className="w-full sm:w-auto">
-                Upgrade Plan
-              </Button>
-            </div>
+        {/* Welcome Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 w-full max-w-full">
+          <div className="min-w-0 flex-1"> {/* ← ALLOW SHRINKING */}
+            <h1 className="text-3xl lg:text-4xl font-bold truncate">Welcome back, {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Trader'}!</h1>
+            <p className="text-muted-foreground text-lg truncate">
+              Ready to master your trading psychology? Let's build that winning mindset.
+            </p>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-bold">Trader Development Dashboard</h2>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            Focus on your psychology and discipline. Your mental game drives results.
-          </p>
+          <Badge variant="secondary" className="bg-green-100 text-green-700 w-fit flex-shrink-0">
+            <CheckCircle className="w-3 h-3 mr-1" />
+            All Systems Active
+          </Badge>
         </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2">
-          <Button variant="outline" size="sm" className="w-full sm:w-auto">
-            <Calendar className="w-4 h-4 mr-2" />
-            Last 30 days
-          </Button>
-          <Button className="w-full sm:w-auto">
-            <Plus className="w-4 h-4 mr-2" />
-            New Journal Entry
-          </Button>
-        </div>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.title} className="border-0 shadow-sm hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.title}
-              </CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{stat.value}</div>
-          <div className="flex items-center text-xs text-muted-foreground mt-1">
-            {stat.changeType === "positive" ? (
-              <ArrowUpRight className="w-3 h-3 text-green-600 mr-1" />
-            ) : (
-              <ArrowDownRight className="w-3 h-3 text-red-600 mr-1" />
-            )}
-            <span className={stat.changeType === "positive" ? "text-green-600" : "text-red-600"}>
-              {stat.change}
-            </span>
-            <span className="ml-1">{stat.description}</span>
-          </div>
-        </CardContent>
+      {/* 2.1 Top Summary Cards - Responsive Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        {summaryCards.map((card, index) => (
+          <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="p-4 lg:p-6">
+            <div className="flex items-center justify-between min-w-0">
+              <div className="min-w-0 flex-1 mr-3">
+                <p className="text-xs lg:text-sm font-medium text-muted-foreground truncate">{card.title}</p>
+                <p className="text-xl lg:text-2xl font-bold mt-1">{card.value}</p>
+                <p className="text-xs text-muted-foreground mt-1 truncate">{card.detail}</p>
+              </div>
+              <card.icon className={`h-6 w-6 lg:h-8 lg:w-8 ${card.color} flex-shrink-0`} />
+            </div>
+          </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Performance Chart */}
-      <Card className="border-0 shadow-sm">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Target className="w-5 h-5 mr-2" />
-            Performance Trend
-          </CardTitle>
-          <CardDescription>
-            Your psychological performance over the last 7 days
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-32 flex items-end justify-between space-x-1">
-            {/* Simple bar chart representation */}
-            {[65, 72, 68, 78, 82, 79, 85].map((value, index) => (
-              <div key={index} className="flex flex-col items-center flex-1">
-                <div
-                  className="w-full bg-primary/20 rounded-t-sm transition-all duration-300 hover:bg-primary/30"
-                  style={{ height: `${value}%` }}
-                >
-                  <div
-                    className="w-full bg-primary rounded-t-sm transition-all duration-300"
-                    style={{ height: `${Math.min(value, 85)}%` }}
-                  />
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 w-full max-w-full min-w-0"> {/* ← ADD min-w-0 */}
+
+          {/* Left Column - Timeline */}
+          <div className="lg:col-span-2 space-y-6 min-w-0"> {/* ← ALLOW SHRINKING */}
+            {/* 2.2 Learning/Teaching Timeline */}
+            <Card className="border-0 shadow-sm w-full max-w-full">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl">Learning Timeline</CardTitle>
+                <CardDescription>Your upcoming and recent activity</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6 w-full max-w-full">
+                {/* Upcoming Section */}
+                <div className="w-full max-w-full">
+                  <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3">Upcoming</h4>
+                  <div className="space-y-3 w-full max-w-full">
+                    {timelineData.upcoming.map((item, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-accent/50 transition-colors w-full max-w-full min-w-0">
+                        <div className="flex items-center space-x-3 min-w-0 flex-1">
+                          <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-sm lg:text-base truncate">{item.title}</p>
+                            <p className="text-xs lg:text-sm text-muted-foreground truncate">{item.time}</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0 ml-2" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <span className="text-xs text-muted-foreground mt-1">
-                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][index]}
-                </span>
-              </div>
-            ))}
+
+                {/* Recent Activity Section */}
+                <div className="w-full max-w-full">
+                  <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3">Recent Activity</h4>
+                  <div className="space-y-3 w-full max-w-full">
+                    {timelineData.recent.map((item, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-accent/50 transition-colors w-full max-w-full min-w-0">
+                        <div className="flex items-center space-x-3 min-w-0 flex-1">
+                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${item.type === 'completed' ? 'bg-green-500' :
+                              item.type === 'journal' ? 'bg-blue-500' : 'bg-orange-500'
+                            }`}></div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-sm lg:text-base truncate">{item.title}</p>
+                            <p className="text-xs lg:text-sm text-muted-foreground truncate">{item.time}</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0 ml-2" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          <div className="flex items-center justify-between mt-4 text-sm">
-            <span className="text-muted-foreground">Average: 75.6%</span>
-            <div className="flex items-center text-green-600">
-              <ArrowUpRight className="w-3 h-3 mr-1" />
-              <span>+8.4% this week</span>
+
+          {/* Right Column - Quick Actions & Analytics */}
+          <div className="space-y-6 min-w-0"> {/* ← ALLOW SHRINKING */}
+            {/* 2.3 Quick Actions Row */}
+            <Card className="border-0 shadow-sm w-full max-w-full">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="w-full max-w-full">
+                <div className="grid grid-cols-1 gap-3 w-full max-w-full">
+                  {quickActions.map((action, index) => (
+                    <Link key={index} href={action.href} className="w-full max-w-full">
+                      <Button variant="outline" className="w-full max-w-full justify-start h-auto p-4 min-w-0">
+                        <action.icon className="w-5 h-5 mr-3 flex-shrink-0" />
+                        <span className="truncate">{action.label}</span>
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 2.4 Analytics Preview */}
+            <Card className="border-0 shadow-sm w-full max-w-full">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl">Performance Overview</CardTitle>
+                <CardDescription>This week at a glance</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6 w-full max-w-full">
+                {/* Progress Chart */}
+                <div className="w-full max-w-full">
+                  <h4 className="font-semibold text-sm text-muted-foreground mb-3">Learning Hours</h4>
+                  <div className="space-y-2 w-full max-w-full">
+                    <div className="flex items-end justify-between h-20 w-full max-w-full min-w-0">
+                      {analyticsData.weeklyHours.map((hours, index) => (
+                        <div key={index} className="flex flex-col items-center flex-1 min-w-0">
+                          <div
+                            className="w-full max-w-full bg-primary/20 rounded-t-sm transition-all duration-300 hover:bg-primary/30"
+                            style={{ height: `${(hours / 5) * 100}%` }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex justify-between text-xs text-muted-foreground w-full max-w-full min-w-0">
+                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
+                        <span key={`${day}-${index}`} className="flex-1 text-center truncate">{day.substring(0, 1)}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Engagement Heat Map */}
+                <div className="w-full max-w-full">
+                  <h4 className="font-semibold text-sm text-muted-foreground mb-3">Daily Engagement</h4>
+                  <div className="grid grid-cols-7 gap-1 w-full max-w-full">
+                    {analyticsData.engagement.map((value, index) => (
+                      <div
+                        key={index}
+                        className={`aspect-square rounded ${value >= 80 ? 'bg-green-500' :
+                            value >= 60 ? 'bg-green-400' :
+                              value >= 40 ? 'bg-green-300' :
+                                value >= 20 ? 'bg-green-200' : 'bg-gray-200'
+                          }`}
+                        title={`${value}% engagement`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* 2.5 Recommended Content */}
+        <Card className="border-0 shadow-sm w-full max-w-full">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl">Recommended for You</CardTitle>
+            <CardDescription>AI-powered suggestions based on your progress</CardDescription>
+          </CardHeader>
+          <CardContent className="w-full max-w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-full">
+              {recommendedContent.map((content, index) => (
+                <div key={index} className="p-4 border rounded-lg hover:border-primary transition-colors cursor-pointer min-h-[120px] lg:min-h-[140px] w-full max-w-full min-w-0">
+                  <div className="flex items-start justify-between mb-3 min-w-0">
+                    <Badge variant="secondary" className="text-xs flex-shrink-0 truncate">
+                      {content.type}
+                    </Badge>
+                    <Zap className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                  </div>
+                  <h4 className="font-semibold mb-2 line-clamp-2 text-sm lg:text-base min-w-0">{content.title}</h4>
+                  <div className="flex items-center justify-between text-xs lg:text-sm text-muted-foreground min-w-0">
+                    <span className="truncate flex-1 mr-2">{content.difficulty}</span>
+                    <span className="flex-shrink-0">{content.duration}</span>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
