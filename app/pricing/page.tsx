@@ -3,9 +3,11 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, ArrowRight, BookOpen, Users, Target, TrendingUp, Shield, Zap, Heart, Brain, Trophy } from "lucide-react";
+import { Star, ArrowRight, Heart, Shield, Brain, Target, Users, TrendingUp } from "lucide-react";
+import { PricingPlans } from "@/components/pricing-plans";
+import { pricingTiers, tableFeatures, tableData, psychologyGuarantees } from "@/lib/pricing-data";
 
 export default function PremiumPricingPage() {
   return (
@@ -69,179 +71,13 @@ export default function PremiumPricingPage() {
           </p>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
-          {/* Core Membership */}
-          <Card className="border-2">
-            <CardHeader className="text-center pb-8">
-              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-6 h-6" />
-              </div>
-              <CardTitle className="text-2xl">Core Membership</CardTitle>
-              <CardDescription className="text-base">Self-directed trader development</CardDescription>
-              <div className="text-4xl font-bold mt-4">
-                $97
-                <span className="text-lg font-normal text-muted-foreground">/month</span>
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">Cancel anytime</div>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Unlimited journaling with AI insights</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Psychology Engine 2.0 (bias tracking)</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Deep performance analytics</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Custom routines builder</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Goal ladder framework</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Educational psychology library</span>
-                </div>
-              </div>
-
-              <Link href="/auth/sign-up">
-                <Button className="w-full" size="lg">
-                  Start Core Journey
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Accelerated Program - Most Popular */}
-          <Card className="border-2 border-primary shadow-2xl scale-105 relative">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-foreground text-background px-4 py-1">Most Popular</Badge>
-            </div>
-
-            <CardHeader className="text-center pb-8 pt-8">
-              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6" />
-              </div>
-              <CardTitle className="text-2xl">Accelerated Program</CardTitle>
-              <CardDescription className="text-base">Mentor-guided development</CardDescription>
-              <div className="text-4xl font-bold mt-4">
-                $297
-                <span className="text-lg font-normal text-muted-foreground">/month</span>
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">3-month commitment</div>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2 text-primary font-semibold">
-                  <Check className="w-5 h-5" />
-                  <span>Everything in Core +</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Dedicated mentor assignment</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Weekly mentor coaching calls</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Mentor-reviewed journal entries</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Live trade walkthroughs (educational)</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Personal playbook development</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Monthly progress deep-dives</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5 text-primary" />
-                  <span>Educational alerts feed</span>
-                </div>
-              </div>
-
-              <Link href="/auth/sign-up">
-                <Button className="w-full" size="lg" variant="default">
-                  Start Accelerated Growth
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Elite Mastery Program */}
-          <Card className="border-2">
-            <CardHeader className="text-center pb-8">
-              <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Trophy className="w-6 h-6" />
-              </div>
-              <CardTitle className="text-2xl">Elite Mastery</CardTitle>
-              <CardDescription className="text-base">Intensive elite trader development</CardDescription>
-              <div className="text-4xl font-bold mt-4">
-                $997
-                <span className="text-lg font-normal text-muted-foreground">/month</span>
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">6-month transformation</div>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2 font-semibold">
-                  <Check className="w-5 h-5" />
-                  <span>Everything in Accelerated +</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5" />
-                  <span>1-on-1 elite mentor (40+ years experience)</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5" />
-                  <span>Bi-weekly coaching sessions</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5" />
-                  <span>Real-time psychology consultations</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5" />
-                  <span>Custom 90-day playbook creation</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5" />
-                  <span>Dedicated discord channel</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5" />
-                  <span>Priority educational alerts</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-5 h-5" />
-                  <span>Unlimited mentor messaging</span>
-                </div>
-              </div>
-
-              <Button variant="outline" className="w-full" size="lg">
-                Apply for Elite Program
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Pricing Component */}
+        <PricingPlans
+          tiers={pricingTiers}
+          tableFeatures={tableFeatures}
+          tableData={tableData}
+          showTable={true}
+        />
 
         {/* Psychology Guarantee */}
         <div className="bg-muted/30 border border-border rounded-lg p-8 mb-16">
@@ -250,21 +86,13 @@ export default function PremiumPricingPage() {
             <h2 className="text-2xl font-bold">Psychology-First Guarantee</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold mb-2">30-Day</div>
-              <div>Money Back Guarantee</div>
-              <div className="text-sm text-muted-foreground mt-2">No market risk required</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold mb-2">90-Day</div>
-              <div>Transformation Commitment</div>
-              <div className="text-sm text-muted-foreground mt-2">Focus on your mental game</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold mb-2">Lifetime</div>
-              <div>Access to Psychology Tools</div>
-              <div className="text-sm text-muted-foreground mt-2">Built for long-term growth</div>
-            </div>
+            {psychologyGuarantees.map((guarantee, index) => (
+              <div key={index}>
+                <div className="text-3xl font-bold mb-2">{guarantee.title}</div>
+                <div>{guarantee.subtitle}</div>
+                <div className="text-sm text-muted-foreground mt-2">{guarantee.description}</div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -333,72 +161,7 @@ export default function PremiumPricingPage() {
           </div>
         </div>
 
-        {/* Membership Comparison Table */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-center mb-8">Membership Comparison</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full border border-border rounded-lg">
-              <thead className="bg-muted">
-                <tr>
-                  <th className="p-4 text-left font-semibold">Features</th>
-                  <th className="p-4 text-center font-semibold">Core</th>
-                  <th className="p-4 text-center font-semibold">Accelerated</th>
-                  <th className="p-4 text-center font-semibold">Elite</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b">
-                  <td className="p-4 font-medium">Journaling & Analytics</td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-amber-600 mx-auto" /></td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-4 font-medium">Psychology Engine</td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-amber-600 mx-auto" /></td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-4 font-medium">Custom Routines</td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-amber-600 mx-auto" /></td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-4 font-medium">Educational Content</td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-amber-600 mx-auto" /></td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-4 font-medium">Mentor Assignment</td>
-                  <td className="p-4 text-center">❌</td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-amber-600 mx-auto" /></td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-4 font-medium">Weekly Coaching Calls</td>
-                  <td className="p-4 text-center">❌</td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-amber-600 mx-auto" /></td>
-                </tr>
-                <tr className="border-b">
-                  <td className="p-4 font-medium">Live Trade Walkthroughs</td>
-                  <td className="p-4 text-center">❌</td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-primary mx-auto" /></td>
-                  <td className="p-4 text-center">Priority</td>
-                </tr>
-                <tr>
-                  <td className="p-4 font-medium">1-on-1 Elite Mentors</td>
-                  <td className="p-4 text-center">❌</td>
-                  <td className="p-4 text-center">❌</td>
-                  <td className="p-4 text-center"><Check className="w-5 h-5 text-amber-600 mx-auto" /></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+
       </div>
     </div>
   );
