@@ -7,73 +7,75 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Smartphone, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
-
-interface PlanDetails {
-  name: string;
-  price: number;
-  interval: string;
-  features: string[];
-}
-
-const planDetails: { [key: string]: PlanDetails } = {
-  normal: {
-    name: "Normal Plan",
-    price: 1000,
-    interval: "year",
-    features: [
-      "All Free features",
-      "Enhanced charting tools",
-      "Extended historical data",
-      "Advanced risk management",
-      "Portfolio analytics",
-      "Email support"
-    ]
-  },
-  premium: {
-    name: "Premium Plan",
-    price: 3000,
-    interval: "year",
-    features: [
-      "All Normal features",
-      "Trading signals",
-      "One-on-one coaching",
-      "Personal strategy sessions",
-      "Priority support",
-      "Dedicated account manager"
-    ]
-  }
-};
+import { PAYMENT_PLANS, formatPhoneNumber } from "@/lib/types/payment";
 
 function MpesaPaymentPage() {
   const searchParams = useSearchParams();
-  const plan = searchParams.get("plan");
+  const planId = searchParams.get("plan");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isStkSent, setIsStkSent] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const [stkResponse, setStkResponse] = useState<any>(null);
 
-  const planDetail = plan ? planDetails[plan] : null;
+  const planDetail = planId ? PAYMENT_PLANS[planId] : null;
 
   const handleMpesaPayment = async () => {
     if (!planDetail || !phoneNumber) return;
 
     setIsProcessing(true);
+    setError(null);
 
-    // Simulate STK Push
-    setTimeout(() => {
+    try {
+      // Get current user ID (replace with actual user ID from auth context)
+      const userId = 'anonymous';
+
+      const response = await fetch('/api/payments/mpesa/stk-push', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: formatPhoneNumber(phoneNumber),
+          planId: planId,
+          userId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('M-Pesa API Error:', data);
+        throw new Error(data.error || 'Failed to initiate M-Pesa payment');
+      }
+
       setIsProcessing(false);
       setIsStkSent(true);
-      setCountdown(120); // 2 minutes countdown
-    }, 2000);
+      setCountdown(300); // 5 minutes countdown for M-Pesa
+      setStkResponse(data);
+
+      // Log the checkout request ID for debugging
+      console.log('STK Push initiated:', {
+        phone: formatPhoneNumber(phoneNumber),
+        checkoutRequestId: data.checkoutRequestId,
+        merchantRequestId: data.merchantRequestId,
+      });
+
+    } catch (err: any) {
+      console.error('M-Pesa payment error:', err);
+      setError(err.message || 'Failed to initiate M-Pesa payment');
+      setIsProcessing(false);
+    }
   };
 
   const handlePaymentConfirmation = () => {
     setIsCompleted(true);
 
-    // Simulate storing payment status
+    // Store payment status locally
     localStorage.setItem("lastPayment", JSON.stringify({
-      plan: plan,
+      plan: planId,
       amount: planDetail!.price,
       method: "mpesa",
       phone: phoneNumber,
@@ -160,16 +162,21 @@ function MpesaPaymentPage() {
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="font-medium">{planDetail.name}</span>
-                <span className="text-2xl font-bold">${planDetail.price}</span>
+                <div className="text-right">
+                  <span className="text-2xl font-bold">${planDetail.price} USD</span>
+                  <div className="text-sm text-muted-foreground">
+                    ≈ KES {(planDetail.price * 150).toLocaleString()} at current rates
+                  </div>
+                </div>
               </div>
               <div className="text-sm text-muted-foreground">
-                Billed {planDetail.interval}ly
+                Billed {planDetail.interval}ly in USD
               </div>
               <hr />
               <div className="space-y-2">
                 <h4 className="font-medium">What's included:</h4>
                 <ul className="space-y-1 text-sm">
-                  {planDetail.features.map((feature, index) => (
+                  {planDetail.features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
                       {feature}
@@ -192,6 +199,16 @@ function MpesaPaymentPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5 text-red-600" />
+                    <span className="font-medium text-red-800">Error</span>
+                  </div>
+                  <p className="text-sm text-red-700 mt-1">{error}</p>
+                </div>
+              )}
+
               {!isStkSent ? (
                 <>
                   <div className="space-y-4">
@@ -241,6 +258,11 @@ function MpesaPaymentPage() {
                     <p className="text-sm text-blue-700 mb-2">
                       A payment request has been sent to your phone: <strong>{phoneNumber}</strong>
                     </p>
+                    {stkResponse?.message && (
+                      <p className="text-sm text-blue-700 mb-2">
+                        {stkResponse.message}
+                      </p>
+                    )}
                     <p className="text-sm text-blue-700">
                       Time remaining: <strong>{Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')}</strong>
                     </p>
