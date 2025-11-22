@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +40,7 @@ const paymentMethods = [
 const tabs = ["profile", "upgrade", "billing"];
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("billing");
 
   return (
@@ -215,7 +217,19 @@ export default function SettingsPage() {
                           )}
                         </div>
 
-                        <Button className="w-full" variant="outline">
+                        <Button
+                          className="w-full"
+                          variant="outline"
+                          onClick={() => {
+                            if (method.name === 'M-Pesa') {
+                              router.push('/payment/mpesa?plan=premium_kes');
+                            } else if (method.name === 'Visa/Mastercard' || method.name === 'Stripe') {
+                              router.push('/payment/stripe?plan=premium');
+                            } else {
+                              console.log(`Payment with ${method.name}`);
+                            }
+                          }}
+                        >
                           {method.available ? `Pay with ${method.name}` : 'Coming Soon'}
                         </Button>
                       </CardContent>
@@ -224,9 +238,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="mt-8 p-4 bg-muted rounded-lg">
-                  <h4 className="font-semibold mb-2 flex items-center gap-2">
-                    🔒 Secure Payment Processing
-                  </h4>
+                  <h4 className="font-semibold mb-2">🔒 Secure Payment Processing</h4>
                   <p className="text-sm text-muted-foreground">
                     All payments are processed securely using industry-standard encryption.
                     We never store sensitive payment information on our servers.

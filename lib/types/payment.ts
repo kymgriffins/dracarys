@@ -66,34 +66,75 @@ export interface PaymentRecord {
 export type PaymentMethod = 'stripe' | 'mpesa' | 'crypto';
 
 export const PAYMENT_PLANS: Record<string, PaymentPlan> = {
-  normal: {
-    id: 'normal',
-    name: 'Normal Plan',
-    price: 1000,
-    currency: 'USD',
-    interval: 'year',
-    features: [
-      'All Free features',
-      'Enhanced charting tools',
-      'Extended historical data',
-      'Advanced risk management',
-      'Portfolio analytics',
-      'Email support'
-    ]
-  },
   premium: {
     id: 'premium',
     name: 'Premium Plan',
-    price: 3000,
+    price: 29,
     currency: 'USD',
-    interval: 'year',
+    interval: 'month',
     features: [
-      'All Normal features',
+      'Unlimited journaling',
       'Trading signals',
-      'One-on-one coaching',
-      'Personal strategy sessions',
-      'Priority support',
-      'Dedicated account manager'
+      'Live streams',
+      'AI-powered insights',
+      'Lorde of Merchants mentorship access',
+      'Community forum premium',
+      'Mobile app access',
+      'Priority email support'
+    ]
+  },
+  mentoring: {
+    id: 'mentoring',
+    name: 'Mentoring Pro Plan',
+    price: 99,
+    currency: 'USD',
+    interval: 'month',
+    features: [
+      'All Premium features',
+      '1-on-1 mentoring sessions with Lorde of Merchants',
+      'Personal strategy development',
+      'Custom trading plans',
+      'Direct Lorde of Merchants availability',
+      'Private mentor chat',
+      'Emergency trading support',
+      'Live webinar priority access'
+    ]
+  }
+};
+
+export const KES_PAYMENT_PLANS: Record<string, PaymentPlan> = {
+  premium_kes: {
+    id: 'premium_kes',
+    name: 'Premium Plan (KES)',
+    price: usdToKes(29),
+    currency: 'KES',
+    interval: 'month',
+    features: [
+      'Unlimited journaling',
+      'Trading signals',
+      'Live streams',
+      'AI-powered insights',
+      'Lorde of Merchants mentorship access',
+      'Community forum premium',
+      'Mobile app access',
+      'Priority email support'
+    ]
+  },
+  mentoring_kes: {
+    id: 'mentoring_kes',
+    name: 'Mentoring Pro Plan (KES)',
+    price: usdToKes(99),
+    currency: 'KES',
+    interval: 'month',
+    features: [
+      'All Premium features',
+      '1-on-1 mentoring sessions with Lorde of Merchants',
+      'Personal strategy development',
+      'Custom trading plans',
+      'Direct Lorde of Merchants availability',
+      'Private mentor chat',
+      'Emergency trading support',
+      'Live webinar priority access'
     ]
   }
 };
