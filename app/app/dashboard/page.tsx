@@ -122,7 +122,33 @@ const activityFeed = [
 ];
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+
+  console.log('Dashboard rendering - user:', user, 'isLoading:', isLoading);
+
+  // Show loading state while auth is resolving
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login if no user (this shouldn't happen due to middleware, but belt and braces)
+  if (!user) {
+    console.log('No user found, should redirect to login');
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-muted-foreground">Session not found. Redirecting...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Get user initials for avatar fallback
   const getUserInitials = (email?: string) => {

@@ -34,7 +34,7 @@ export function LoginForm({
     const supabase = createClient();
 
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -43,8 +43,17 @@ export function LoginForm({
         throw signInError;
       }
 
-      // Authentication successful - redirect to dashboard immediately
-      router.push("/app/dashboard");
+      if (data.session) {
+        console.log('Login successful, session established:', data.session.user.email);
+        // Wait a moment for the session to be properly set and auth state to propagate
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Force refresh and redirect
+        router.refresh();
+        router.push("/app/dashboard");
+      } else {
+        throw new Error('No session returned after login');
+      }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred during login");
     } finally {

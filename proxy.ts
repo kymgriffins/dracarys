@@ -66,7 +66,8 @@ export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Check if the user is authenticated for protected routes
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
 
   // Protect /app/* routes - redirect to login if not authenticated
   if (pathname.startsWith("/app/") && !user) {
