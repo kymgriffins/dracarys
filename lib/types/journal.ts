@@ -58,7 +58,7 @@ export const JournalEntrySchema = z.object({
   session_start_time: z.date().optional(),
   session_end_time: z.date().optional(),
   pre_session_emotional_state: EmotionalStateSchema,
-  pre_session_bias_checklist: z.record(z.boolean()).optional(),
+  pre_session_bias_checklist: z.record(z.string(), z.boolean()).optional(),
   trades_count: z.number().min(0),
   session_rating: z.number().min(1).max(10),
   discipline_score: z.number().min(1).max(10),

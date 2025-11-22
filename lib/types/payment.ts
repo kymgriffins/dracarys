@@ -13,6 +13,18 @@ export interface PaymentIntent {
   amount: number;
   currency: string;
   status: string;
+  payment_method?: string;
+  last_payment_error?: {
+    message?: string;
+    code?: string;
+  };
+}
+
+export interface StripePaymentData {
+  planId: string;
+  userId: string;
+  amount: number;
+  currency: string;
 }
 
 export interface MpesaSTKPushRequest {
