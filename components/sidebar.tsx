@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth-context";
 import {
   LayoutDashboard,
   CheckSquare,
@@ -36,23 +37,34 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navigation = [
-  { name: "Dashboard", href: "/protected/dashboard", icon: LayoutDashboard },
-  { name: "Tasks", href: "/protected/tasks", icon: CheckSquare },
-  { name: "Workspaces", href: "/protected/workspaces", icon: Users },
-  { name: "Analytics", href: "/protected/analytics", icon: BarChart3 },
-  { name: "Portfolio", href: "/protected/portfolio", icon: Wallet, badge: "Beta" },
-  { name: "Trading", href: "/protected/trading", icon: TrendingUp },
-  { name: "Calendar", href: "/protected/calendar", icon: Calendar },
+  { name: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+  { name: "Tasks", href: "/app/tasks", icon: CheckSquare },
+  { name: "Workspaces", href: "/app/workspaces", icon: Users },
+  { name: "Analytics", href: "/app/analytics", icon: BarChart3 },
+  { name: "Portfolio", href: "/app/portfolio", icon: Wallet, badge: "Beta" },
+  { name: "Trading", href: "/app/trading", icon: TrendingUp },
+  { name: "Calendar", href: "/app/calendar", icon: Calendar },
 ];
 
 const quickActions = [
-  { name: "New Task", href: "/protected/tasks/new", icon: Plus, shortcut: "N" },
-  { name: "New Workspace", href: "/protected/workspaces/new", icon: Users },
-  { name: "Quick Trade", href: "/protected/trading/quick", icon: Target },
+  { name: "New Task", href: "/app/tasks/new", icon: Plus, shortcut: "N" },
+  { name: "New Workspace", href: "/app/workspaces/new", icon: Users },
+  { name: "Quick Trade", href: "/app/trading/quick", icon: Target },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { user, signOut } = useAuth();
+
+  // Get user initials for avatar fallback
+  const getUserInitials = (email?: string) => {
+    if (!email) return "U";
+    return email.substring(0, 2).toUpperCase();
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <>
@@ -66,7 +78,7 @@ export function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center h-16 px-6 border-b border-border">
-            <Link href="/protected/dashboard" className="flex items-center space-x-2">
+            <Link href="/app/dashboard" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-primary-foreground" />
               </div>
@@ -152,13 +164,13 @@ export function Sidebar() {
             </Button>
 
             {/* Settings */}
-            <Link href="/protected/settings">
+            <Link href="/app/settings">
               <Button
                 variant="ghost"
                 size="sm"
                 className={cn(
                   "w-full justify-start",
-                  pathname === "/protected/settings" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground"
+                  pathname === "/app/settings" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 <Settings className="w-4 h-4 mr-3" />
@@ -172,12 +184,18 @@ export function Sidebar() {
                 <Button variant="ghost" className="w-full justify-start p-2 h-auto mt-4">
                   <div className="flex items-center space-x-3 w-full">
                     <Avatar className="w-8 h-8">
-                      <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
-                      <AvatarFallback>JD</AvatarFallback>
+                      <AvatarImage src="" alt={user?.email || "User"} />
+                      <AvatarFallback className="text-sm bg-primary/10 text-primary">
+                        {getUserInitials(user?.email)}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 text-left">
-                      <div className="text-sm font-medium">John Doe</div>
-                      <div className="text-xs text-muted-foreground">john@example.com</div>
+                      <div className="text-sm font-medium">
+                        {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
+                      </div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        {user?.email}
+                      </div>
                     </div>
                   </div>
                 </Button>
@@ -198,7 +216,7 @@ export function Sidebar() {
                   Preferences
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="w-4 h-4 mr-2" />
                   Sign out
                 </DropdownMenuItem>

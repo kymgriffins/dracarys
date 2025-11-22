@@ -43,7 +43,7 @@ export function LoginForm({
         throw signInError;
       }
 
-      router.push("/protected/dashboard");
+      router.push("/app/dashboard");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred during login");
     } finally {
