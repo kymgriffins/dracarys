@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Your Email Change - Dracarys</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #374151;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+    }
+    .container {
+      background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+      border-radius: 16px;
+      padding: 40px;
+      margin: 20px auto;
+      border: 1px solid #f3f4f6;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+    .logo-text {
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .title {
+      color: #1f2937;
+      font-size: 28px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+    .subtitle {
+      color: #6b7280;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    .content {
+      margin: 30px 0;
+    }
+    .email-change-box {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-left: 4px solid #f59e0b;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 25px 0;
+    }
+    .email-change-title {
+      color: #92400e;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .email-change-grid {
+      display: table;
+      width: 100%;
+      margin: 15px 0;
+    }
+    .email-change-row {
+      display: table-row;
+    }
+    .email-change-label {
+      display: table-cell;
+      padding: 8px 15px 8px 0;
+      font-weight: bold;
+      color: #92400e;
+      width: 80px;
+    }
+    .email-change-value {
+      display: table-cell;
+      padding: 8px 15px 8px 0;
+      color: #92400e;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: bold;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      padding: 16px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      margin: 20px 0;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+      text-align: center;
+    }
+    .button:hover {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    }
+    .security-note {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid #f59e0b;
+    }
+    .security-note h3 {
+      color: #92400e;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .security-note p {
+      color: #92400e;
+      margin: 0;
+      font-size: 14px;
+    }
+    .warning-icon {
+      color: #f59e0b;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .help-text {
+      color: #6b7280;
+      font-size: 14px;
+      margin: 20px 0;
+    }
+    @media only screen and (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      .container {
+        padding: 20px;
+      }
+      .title {
+        font-size: 24px;
+      }
+      .email-change-grid,
+      .email-change-row,
+      .email-change-label,
+      .email-change-value {
+        display: block;
+      }
+      .email-change-label {
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <div class="logo-text">D</div>
+      </div>
+      <h1 class="title">Confirm Email Change ⚡</h1>
+      <p class="subtitle">Update your Dracarys account email securely</p>
+    </div>
+
+    <div class="content">
+      <p>Hi there,</p>
+
+      <p>You've requested to change the email address associated with your <strong>Dracarys</strong> trading psychology development account.</p>
+
+      <div class="email-change-box">
+        <div class="warning-icon">⚠️</div>
+        <div class="email-change-title">Email Address Update</div>
+
+        <div class="email-change-grid">
+          <div class="email-change-row">
+            <div class="email-change-label">From:</div>
+            <div class="email-change-value">{{ .Email }}</div>
+          </div>
+          <div class="email-change-row">
+            <div class="email-change-label">To:</div>
+            <div class="email-change-value">{{ .NewEmail }}</div>
+          </div>
+        </div>
+      </div>
+
+      <p><strong>Important:</strong> Changing your email will affect:</p>
+      <ul>
+        <li>Your login credentials (you'll use the new email)</li>
+        <li>Where we send trading insights and alerts</li>
+        <li>How you receive mentorship notifications</li>
+        <li>Your account recovery options</li>
+      </ul>
+
+      <p style="text-align: center;">
+        <a href="{{ .ConfirmationURL }}" class="button">
+          ✅ Confirm Email Change
+        </a>
+      </p>
+
+      <div class="security-note">
+        <h3>🔒 Security Verification</h3>
+        <p>If you did not request this email change, please <strong>do not click the link</strong>. Instead, secure your account immediately by changing your password and contacting our support team.</p>
+      </div>
+
+      <p><strong>What happens after confirmation?</strong></p>
+      <ol>
+        <li>Your email address will be updated immediately</li>
+        <li>You'll receive a confirmation at your new email address</li>
+        <li>Future communications will be sent to your new email</li>
+        <li>You can log in using either email for the next 24 hours (transition period)</li>
+      </ol>
+
+      <p class="help-text">
+        Questions about this change? Our psychology coaches are here to help you maintain account security while developing your trading discipline.
+      </p>
+
+      <p>If you have any concerns about this email security, please reply immediately.</p>
+
+      <p>Stay disciplined,<br><strong>The Dracarys Security Team</strong></p>
+
+      <p style="font-style: italic; color: #f59e0b; font-size: 18px;">
+        "*Account security protects your trading future*"
+      </p>
+    </div>
+  </div>
+</body>
+</html>

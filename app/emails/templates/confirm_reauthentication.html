@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reauthentication Required - Dracarys</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #374151;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+    }
+    .container {
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border-radius: 16px;
+      padding: 40px;
+      margin: 20px auto;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+    }
+    .logo-text {
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .title {
+      color: #1f2937;
+      font-size: 28px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+    .subtitle {
+      color: #6b7280;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    .content {
+      margin: 30px 0;
+    }
+    .token-box {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      border: 2px solid #64748b;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin: 25px 0;
+      position: relative;
+    }
+    .token-label {
+      color: #374151;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .token-code {
+      font-family: 'Courier New', monospace;
+      font-size: 32px;
+      font-weight: bold;
+      color: #1e293b;
+      background: white;
+      padding: 15px 30px;
+      border-radius: 8px;
+      border: 2px solid #cbd5e1;
+      letter-spacing: 4px;
+      margin: 0 auto;
+      display: inline-block;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .security-note {
+      background: #fefce8;
+      border-left: 4px solid #eab308;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .security-note h3 {
+      color: #a16207;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .security-note p {
+      color: #a16207;
+      margin: 0;
+      font-size: 14px;
+    }
+    .help-section {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #e2e8f0;
+    }
+    .warning-icon {
+      color: #64748b;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .help-text {
+      color: #6b7280;
+      font-size: 14px;
+      margin: 15px 0;
+    }
+    .copy-text {
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: center;
+      margin-top: 10px;
+    }
+    @media only screen and (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      .container {
+        padding: 20px;
+      }
+      .title {
+        font-size: 24px;
+      }
+      .token-code {
+        font-size: 24px;
+        padding: 12px 20px;
+        letter-spacing: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <div class="logo-text">D</div>
+      </div>
+      <h1 class="title">Security Verification 🔒</h1>
+      <p class="subtitle">Complete your account reauthentication</p>
+    </div>
+
+    <div class="content">
+      <p>Hi there,</p>
+
+      <p>For additional security, we need to verify your identity before proceeding with this sensitive action on your <strong>Dracarys</strong> trading psychology development account.</p>
+
+      <div class="token-box">
+        <div class="warning-icon">🔐</div>
+        <div class="token-label">Your Verification Code:</div>
+        <div class="token-code">{{ .Token }}</div>
+        <div class="copy-text">Enter this code in your browser</div>
+      </div>
+
+      <div class="security-note">
+        <h3>🛡️ Why This Verification?</h3>
+        <p>This additional security step helps protect your trading psychology data, journal entries, and account settings from unauthorized access. Your security is our top priority.</p>
+      </div>
+
+      <div class="help-section">
+        <h3>How to complete verification:</h3>
+        <ol style="margin: 0; padding-left: 20px;">
+          <li>Return to your browser window</li>
+          <li>Enter the code shown above</li>
+          <li>The verification will complete automatically</li>
+          <li>You can then proceed with your requested action</li>
+        </ol>
+      </div>
+
+      <p><strong>This code will expire in 10 minutes</strong> for your security. If it expires, you'll need to restart the process to receive a new code.</p>
+
+      <p class="help-text">
+        Didn't request this verification? Your account may still be secure, but we recommend changing your password and reviewing your recent account activity. Contact our security team if you have concerns.
+      </p>
+
+      <p>Thank you for helping us maintain the highest security standards for your trading psychology development.</p>
+
+      <p>Stay secure and trade with confidence,<br><strong>The Dracarys Security Team</strong></p>
+
+      <p style="font-style: italic; color: #64748b; font-size: 18px;">
+        "*Trust is built through security and transparency*"
+      </p>
+    </div>
+  </div>
+</body>
+</html>
