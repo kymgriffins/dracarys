@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import { createClient } from '@/lib/supabase/server';
 
 const stripe = new Stripe(process.env.STRIPESECRETKEY!, {
-  apiVersion: '2025-02-24.acacia',
+  apiVersion: '2025-11-17.clover',
 });
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET; // Add this to your env later
