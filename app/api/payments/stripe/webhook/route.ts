@@ -9,27 +9,28 @@ const stripe = new Stripe(process.env.STRIPESECRETKEY!, {
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET; // Add this to your env later
 
 export async function POST(request: NextRequest) {
+  let event: Stripe.Event;
+
   try {
     const body = await request.text();
     const signature = request.headers.get('stripe-signature');
 
-    let event: Stripe.Event;
+    event = stripe.webhooks.constructEvent(body, signature!, endpointSecret!);
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error(`Webhook signature verification failed.`, error.message);
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+  }
 
-    try {
-      event = stripe.webhooks.constructEvent(body, signature!, endpointSecret!);
-    } catch (err: any) {
-      console.error(`Webhook signature verification failed.`, err.message);
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
-    }
-
-    // Handle the event
+  // Handle the event
+  try {
     switch (event.type) {
       case 'payment_intent.succeeded':
-        const paymentIntent = event.data.object;
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
         await handlePaymentSuccess(paymentIntent);
         break;
       case 'payment_intent.payment_failed':
-        const failedPaymentIntent = event.data.object;
+        const failedPaymentIntent = event.data.object as Stripe.PaymentIntent;
         await handlePaymentFailure(failedPaymentIntent);
         break;
       default:
@@ -56,10 +57,10 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     const { error: paymentError } = await supabase
       .from('payments')
       .insert({
-        user_id: userId,
-        plan_id: planId,
+        user_id: userId || 'anonymous',
+        plan_id: planId || 'normal',
         amount: paymentIntent.amount / 100, // Convert cents to dollars
-        currency: paymentIntent.currency,
+        currency: paymentIntent.currency.toUpperCase(),
         method: 'stripe',
         status: 'completed',
         transaction_id: paymentIntent.id,
@@ -78,8 +79,8 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     const { error: subscriptionError } = await supabase
       .from('user_subscriptions')
       .upsert({
-        user_id: userId,
-        plan_id: planId,
+        user_id: userId || 'anonymous',
+        plan_id: planId || 'normal',
         status: 'active',
         current_period_start: new Date(),
         current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
@@ -106,10 +107,10 @@ async function handlePaymentFailure(paymentIntent: Stripe.PaymentIntent) {
     const { error } = await supabase
       .from('payments')
       .insert({
-        user_id: userId,
-        plan_id: planId,
+        user_id: userId || 'anonymous',
+        plan_id: planId || 'normal',
         amount: paymentIntent.amount / 100,
-        currency: paymentIntent.currency,
+        currency: paymentIntent.currency.toUpperCase(),
         method: 'stripe',
         status: 'failed',
         transaction_id: paymentIntent.id,

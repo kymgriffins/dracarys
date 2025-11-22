@@ -52,10 +52,6 @@ export async function POST(request: NextRequest) {
     };
 
     // Make request to M-Pesa API
-    const auth = Buffer.from(
-      `${MPESA_CONFIG.CONSUMER_KEY}:${MPESA_CONFIG.CONSUMER_SECRET}`
-    ).toString('base64');
-
     const response = await fetch(
       `${MPESA_CONFIG.BASE_URL}/mpesa/stkpush/v1/processrequest`,
       {

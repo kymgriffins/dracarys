@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { PAYMENT_PLANS, kesToUsd } from '@/lib/types/payment';
 
+interface MpesaMetadataItem {
+  Name: string;
+  Value: string | number;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const callbackData = await request.json();
@@ -33,26 +38,22 @@ export async function POST(request: NextRequest) {
     // Check if payment was successful
     if (ResultCode === 0 && CallbackMetadata) {
       // Extract payment details
-      const metadata = CallbackMetadata.Item;
+      const metadata = CallbackMetadata.Item as MpesaMetadataItem[];
       const transactionInfo = {
-        transactionId: metadata.find((item: any) => item.Name === 'MpesaReceiptNumber')?.Value,
-        transactionDate: metadata.find((item: any) => item.Name === 'TransactionDate')?.Value,
-        phoneNumber: metadata.find((item: any) => item.Name === 'PhoneNumber')?.Value,
-        amountInKes: metadata.find((item: any) => item.Name === 'Amount')?.Value,
+        transactionId: metadata.find((item) => item.Name === 'MpesaReceiptNumber')?.Value,
+        transactionDate: metadata.find((item) => item.Name === 'TransactionDate')?.Value,
+        phoneNumber: metadata.find((item) => item.Name === 'PhoneNumber')?.Value,
+        amountInKes: metadata.find((item) => item.Name === 'Amount')?.Value,
       };
 
       // Extract plan information from the AccountReference if available
       // Format: Dracarys-{planId}-{userId}
-      let planId = 'normal'; // default fallback
-      let userId = 'anonymous'; // default fallback
+      const planId = 'normal'; // default fallback
+      const userId = 'anonymous'; // default fallback
 
-      try {
-        // This would ideally come from stored session data, but for now we'll use defaults
-        // In production, you'd store this mapping when creating the STK push
-        console.log('Payment successful:', transactionInfo);
-      } catch (parseError) {
-        console.warn('Could not parse plan info from callback:', parseError);
-      }
+      // This would ideally come from stored session data, but for now we'll use defaults
+      // In production, you'd store this mapping when creating the STK push
+      console.log('Payment successful:', transactionInfo);
 
       try {
         const supabase = await createClient();
@@ -63,16 +64,14 @@ export async function POST(request: NextRequest) {
         // Find the matching plan based on USD amount
         const matchingPlan = Object.values(PAYMENT_PLANS).find(plan => plan.price === amountInUsd);
 
-        if (matchingPlan) {
-          planId = matchingPlan.id;
-        }
+        const finalPlanId = matchingPlan ? matchingPlan.id : planId;
 
         // Store payment record in USD
         const { error: paymentError } = await supabase
           .from('payments')
           .insert({
             user_id: userId,
-            plan_id: planId,
+            plan_id: finalPlanId,
             amount: amountInUsd,
             currency: 'USD', // Store in USD internally
             method: 'mpesa',
@@ -100,7 +99,7 @@ export async function POST(request: NextRequest) {
           .from('user_subscriptions')
           .upsert({
             user_id: userId,
-            plan_id: planId,
+            plan_id: finalPlanId,
             status: 'active',
             current_period_start: new Date(),
             current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
