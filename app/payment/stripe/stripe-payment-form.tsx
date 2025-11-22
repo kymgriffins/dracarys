@@ -1,90 +1,185 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, CreditCard, ArrowLeft, Loader2 } from "lucide-react";
+import { CheckCircle, CreditCard, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
+import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { PAYMENT_PLANS } from "@/lib/types/payment";
 
-interface PlanDetails {
-  name: string;
-  price: number;
-  interval: string;
-  features: string[];
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+
+interface CheckoutFormProps {
+  clientSecret: string;
+  plan: any;
+  onSuccess: () => void;
 }
 
-const planDetails: { [key: string]: PlanDetails } = {
-  normal: {
-    name: "Normal Plan",
-    price: 1000,
-    interval: "year",
-    features: [
-      "All Free features",
-      "Enhanced charting tools",
-      "Extended historical data",
-      "Advanced risk management",
-      "Portfolio analytics",
-      "Email support"
-    ]
-  },
-  premium: {
-    name: "Premium Plan",
-    price: 3000,
-    interval: "year",
-    features: [
-      "All Normal features",
-      "Trading signals",
-      "One-on-one coaching",
-      "Personal strategy sessions",
-      "Priority support",
-      "Dedicated account manager"
-    ]
-  }
-};
+function CheckoutForm({ clientSecret, plan, onSuccess }: CheckoutFormProps) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    setIsProcessing(true);
+    setError(null);
+
+    const { error: submitError } = await elements.submit();
+
+    if (submitError) {
+      setError(submitError.message || 'An error occurred');
+      setIsProcessing(false);
+      return;
+    }
+
+    const { error: confirmError } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${window.location.origin}/payment/success`,
+      },
+      redirect: 'if_required',
+    });
+
+    if (confirmError) {
+      setError(confirmError.message || 'Payment failed');
+      setIsProcessing(false);
+    } else {
+      onSuccess();
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <PaymentElement
+        options={{
+          layout: 'tabs',
+        }}
+      />
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <span className="font-medium text-red-800">Payment Error</span>
+          </div>
+          <p className="text-sm text-red-700 mt-1">{error}</p>
+        </div>
+      )}
+
+      <Button
+        type="submit"
+        disabled={!stripe || !elements || isProcessing}
+        className="w-full"
+        size="lg"
+      >
+        {isProcessing ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Processing Payment...
+          </>
+        ) : (
+          <>
+            Pay ${plan.price} with Stripe
+          </>
+        )}
+      </Button>
+
+      <p className="text-xs text-muted-foreground text-center">
+        Your payment is secured by Stripe
+      </p>
+    </form>
+  );
+}
 
 export function StripePaymentForm() {
   const searchParams = useSearchParams();
-  const plan = searchParams.get("plan");
-  const [isProcessing, setIsProcessing] = useState(false);
+  const router = useRouter();
+  const planId = searchParams.get("plan");
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const planDetail = plan ? planDetails[plan] : null;
+  const plan = planId ? PAYMENT_PLANS[planId] : null;
 
-  const handleStripePayment = async () => {
-    if (!planDetail) return;
+  useEffect(() => {
+    if (!plan) {
+      setError('Invalid plan selected');
+      setIsLoading(false);
+      return;
+    }
 
-    setIsProcessing(true);
+    // Get current user ID (you might want to get this from auth context)
+    const userId = 'anonymous'; // Replace with actual user ID from auth
 
-    // Simulate Stripe checkout process
+    const createPaymentIntent = async () => {
+      try {
+        const response = await fetch('/api/payments/stripe/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            planId,
+            userId,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create payment intent');
+        }
+
+        setClientSecret(data.clientSecret);
+      } catch (err: any) {
+        setError(err.message || 'Failed to initialize payment');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    createPaymentIntent();
+  }, [plan, planId]);
+
+  const handleSuccess = () => {
+    setIsCompleted(true);
     setTimeout(() => {
-      setIsProcessing(false);
-      setIsCompleted(true);
-
-      // Simulate storing payment status
-      localStorage.setItem("lastPayment", JSON.stringify({
-        plan: plan,
-        amount: planDetail.price,
-        method: "stripe",
-        timestamp: new Date().toISOString(),
-        status: "completed"
-      }));
-
-      // Redirect to success page after animation
-      setTimeout(() => {
-        window.location.href = "/payment/success";
-      }, 2000);
-    }, 3000);
+      router.push('/payment/success');
+    }, 2000);
   };
 
-  if (!planDetail) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle>Invalid Plan</CardTitle>
-            <CardDescription>Please select a valid plan to proceed with payment.</CardDescription>
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <CardTitle>Setting up payment...</CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error || !plan) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle>Payment Error</CardTitle>
+            <CardDescription>{error || 'Please select a valid plan to proceed with payment.'}</CardDescription>
           </CardHeader>
           <CardContent>
             <Link href="/pricing">
@@ -113,6 +208,16 @@ export function StripePaymentForm() {
     );
   }
 
+  const options: StripeElementsOptions = {
+    clientSecret: clientSecret!,
+    appearance: {
+      theme: 'stripe',
+      variables: {
+        colorPrimary: '#000',
+      },
+    },
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4">
       <div className="container mx-auto max-w-2xl">
@@ -134,17 +239,17 @@ export function StripePaymentForm() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="font-medium">{planDetail.name}</span>
-                <span className="text-2xl font-bold">${planDetail.price}</span>
+                <span className="font-medium">{plan.name}</span>
+                <span className="text-2xl font-bold">${plan.price}</span>
               </div>
               <div className="text-sm text-muted-foreground">
-                Billed {planDetail.interval}ly
+                Billed {plan.interval}ly
               </div>
               <hr />
               <div className="space-y-2">
                 <h4 className="font-medium">What's included:</h4>
                 <ul className="space-y-1 text-sm">
-                  {planDetail.features.map((feature, index) => (
+                  {plan.features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
                       {feature}
@@ -166,61 +271,16 @@ export function StripePaymentForm() {
                 Complete your payment securely with Stripe
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Dummy payment form - in real app, use Stripe Elements */}
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Card Number</label>
-                  <input
-                    type="text"
-                    placeholder="4242 4242 4242 4242"
-                    className="w-full p-3 border rounded-lg"
-                    defaultValue="4242 4242 4242 4242"
+            <CardContent>
+              {clientSecret && (
+                <Elements stripe={stripePromise} options={options}>
+                  <CheckoutForm
+                    clientSecret={clientSecret}
+                    plan={plan}
+                    onSuccess={handleSuccess}
                   />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Expiry</label>
-                    <input
-                      type="text"
-                      placeholder="MM/YY"
-                      className="w-full p-3 border rounded-lg"
-                      defaultValue="12/25"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">CVV</label>
-                    <input
-                      type="text"
-                      placeholder="123"
-                      className="w-full p-3 border rounded-lg"
-                      defaultValue="123"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <Button
-                onClick={handleStripePayment}
-                disabled={isProcessing}
-                className="w-full"
-                size="lg"
-              >
-                {isProcessing ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Processing Payment...
-                  </>
-                ) : (
-                  <>
-                    Pay ${planDetail.price} with Stripe
-                  </>
-                )}
-              </Button>
-
-              <p className="text-xs text-muted-foreground text-center">
-                Your payment is secured by Stripe. Test card: 4242 4242 4242 4242
-              </p>
+                </Elements>
+              )}
             </CardContent>
           </Card>
         </div>
