@@ -44,6 +44,7 @@ const navigation = [
   { name: "Portfolio", href: "/app/portfolio", icon: Wallet, badge: "Beta" },
   { name: "Trading", href: "/app/trading", icon: TrendingUp },
   { name: "Calendar", href: "/app/calendar", icon: Calendar },
+  { name: "Payment", href: "/payment/stripe", icon: Wallet },
 ];
 
 const quickActions = [
