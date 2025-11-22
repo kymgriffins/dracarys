@@ -46,6 +46,7 @@ const navigation = [
   { name: "Live Sessions", href: "/app/sessions", icon: Users },
   { name: "Journal", href: "/app/journal", icon: FileText },
   { name: "Community", href: "/app/community", icon: MessageSquare, badge: "3" },
+  { name: "Calendar", href: "/app/calendar", icon: Calendar },
   { name: "Analytics", href: "/app/analytics", icon: BarChart3 },
   { name: "Signals", href: "/app/signals", icon: TrendingUp, badge: "Pro" },
   { name: "Settings", href: "/app/settings", icon: Settings },
