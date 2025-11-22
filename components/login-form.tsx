@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function LoginForm({
@@ -23,13 +22,14 @@ export function LoginForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    setSuccess(false);
 
     const supabase = createClient();
 
@@ -43,7 +43,9 @@ export function LoginForm({
         throw signInError;
       }
 
-      router.push("/app/dashboard");
+      setSuccess(true);
+      // Authentication successful - UI will update immediately via auth context
+      // No redirect needed as user can navigate freely from authenticated state
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred during login");
     } finally {
@@ -93,12 +95,17 @@ export function LoginForm({
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
+              {success && (
+                <p className="text-sm text-green-600">
+                  Login successful! Navigation updated - you can now access the dashboard.
+                </p>
+              )}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
+              Don't have an account?{" "}
               <Link
                 href="/auth/sign-up"
                 className="underline underline-offset-4"
