@@ -23,239 +23,303 @@ export function CookingAnimation({
   backLink = "/app/dashboard"
 }: CookingAnimationProps) {
   return (
-    <div className="min-h-screen bg-white from-primary/5 via-primary/10 to-primary/5 flex items-center justify-center p-4">
-      <div className="relative">
-        {/* Subtle premium overlay for coming soon feel */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 rounded-xl opacity-30" />
-        <Card className="relative w-[100%] max-w-6xl mx-auto bg-white/95 backdrop-blur-sm border-primary/30 shadow-xl ring-1 ring-primary/10">
-          <CardHeader className="text-center relative overflow-hidden pb-8">
-            {/* Floating ingredients */}
-            <motion.div
-              className="absolute top-4 right-4 text-orange-300 opacity-60"
-              animate={{
-                y: [0, -10, 0],
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              🔥
-            </motion.div>
-            <motion.div
-              className="absolute top-8 left-4 text-yellow-300 opacity-50"
-              animate={{
-                y: [0, -8, 0],
-                rotate: [0, -3, 3, 0],
-              }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5
-              }}
-            >
-              🔥           </motion.div>
-            <motion.div
-              className="absolute bottom-4 left-6 text-green-300 opacity-60"
-              animate={{
-                y: [0, -6, 0],
-                rotate: [0, 8, -8, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
-            >
-              🌿
-            </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
+      <div className="relative w-full max-w-2xl">
+        {/* Animated background grid */}
+        <motion.div
+          className="absolute inset-0 opacity-5"
+          animate={{
+            opacity: [0.03, 0.08, 0.03],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <div className="grid grid-cols-8 gap-4 w-full h-full">
+            {Array.from({ length: 64 }).map((_, i) => (
+              <div key={i} className="h-8 bg-foreground/10 rounded-sm" />
+            ))}
+          </div>
+        </motion.div>
 
-            {/* Sparkles */}
-            <motion.div
-              className="absolute top-2 left-2 text-yellow-400"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.5, 0.8, 0.5],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              🔥
-            </motion.div>
-            <motion.div
-              className="absolute bottom-2 right-2 text-yellow-400"
-              animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.5, 1, 0.5],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
-            >
-              🔥
-            </motion.div>
-
-            {/* Animated dragon throwing fire */}
-            <div className="relative mx-auto w-32 h-24 mb-4 flex items-center justify-center">
-              {/* Dragon body */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1 }
+            }
+          }}
+        >
+          <Card className="relative w-full bg-card/95 border border-border rounded-xl shadow-2xl backdrop-blur-sm">
+            <CardHeader className="text-center relative overflow-hidden pb-12 pt-8">
+              {/* Animated neural network lines */}
               <motion.div
-                className="text-6xl"
+                className="absolute inset-0 opacity-5"
                 animate={{
-                  scale: [1, 1.05, 1],
+                  opacity: [0.03, 0.08, 0.03],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <div className="w-full h-full bg-gradient-to-br from-foreground/10 to-foreground/5" />
+              </motion.div>
+
+              {/* Abstract data nodes */}
+              <motion.div
+                className="absolute top-6 right-8 w-3 h-3 bg-foreground rounded-full opacity-20"
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.2, 0.6, 0.2],
                 }}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-              >
-                🐉
-              </motion.div>
-
-              {/* Fire being thrown - animated flames */}
+              />
               <motion.div
-                className="absolute -right-8 top-2 flex space-x-1"
+                className="absolute bottom-8 left-6 w-2 h-2 bg-foreground rounded-full opacity-15"
                 animate={{
-                  opacity: [0, 1, 0],
-                  x: [0, 20, 40],
-                  scale: [0.8, 1.2, 0.8],
+                  scale: [1, 2, 1],
+                  opacity: [0.15, 0.4, 0.15],
                 }}
                 transition={{
-                  duration: 1.5,
+                  duration: 2.5,
                   repeat: Infinity,
                   ease: "easeInOut",
                   delay: 0.5
                 }}
-              >
-                🔥
-              </motion.div>
+              />
 
-              <motion.div
-                className="absolute -right-4 top-1 flex space-x-1"
-                animate={{
-                  opacity: [0, 1, 0],
-                  x: [0, 15, 30],
-                  scale: [0.6, 1, 0.6],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.8
-                }}
-              >
-                🔥
-              </motion.div>
-
-              <motion.div
-                className="absolute -right-12 top-3 flex space-x-1"
-                animate={{
-                  opacity: [0, 1, 0],
-                  x: [0, 25, 50],
-                  scale: [1, 1.4, 1],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1.2
-                }}
-              >
-                🔥
-              </motion.div>
-            </div>
-
-            <Badge variant="secondary" className="bg-gray-200 text-gray-500 mb-4 px-4 py-1 opacity-75">
-              <Heart className="w-3 h-3 mr-1" />
-              {estimatedTime}
-            </Badge>
-
-            <CardTitle className="text-2xl font-bold text-gray-500 mb-2 opacity-75">
-              {title}
-            </CardTitle>
-
-            <div className="flex items-center justify-center space-x-1 mb-4 opacity-75">
-              <Sparkles className="w-4 h-4 text-gray-300" />
-              <span className="text-lg font-medium text-gray-500">Fire's Still Blazing!</span>
-              <Sparkles className="w-4 h-4 text-gray-300" />
-            </div>
-
-            <CardDescription className="text-gray-500 text-center max-w-sm mx-auto opacity-75">
-              {description}
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="text-center space-y-4">
-            {/* Progress indicator */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 opacity-75">
-                <Clock className="w-4 h-4" />
-                <span>Estimated completion</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+              {/* Central processor animation */}
+              <div className="relative mx-auto w-32 h-32 mb-6 flex items-center justify-center">
+                {/* Hexagon processor */}
                 <motion.div
-                  className="h-full bg-foreground rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: "70%" }}
-                  transition={{ duration: 2, ease: "easeOut" }}
+                  className="absolute w-24 h-24 border border-border rounded-lg"
+                  animate={{
+                    rotate: 360,
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    rotate: {
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "linear"
+                    },
+                    scale: {
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }}
+                />
+
+                {/* Pulsing core */}
+                <motion.div
+                  className="w-16 h-16 bg-primary/10 border border-primary/30 rounded-lg"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+
+                {/* Data particles */}
+                <motion.div
+                  className="absolute -top-2 left-1/2 w-1 h-1 bg-primary rounded-full"
+                  animate={{
+                    y: [0, -20, 0],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                <motion.div
+                  className="absolute -bottom-2 right-4 w-1 h-1 bg-primary rounded-full"
+                  animate={{
+                    y: [0, 20, 0],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 1.8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.3
+                  }}
                 />
               </div>
-            </div>
 
-            <div className="flex items-center justify-center text-sm font-medium opacity-75 mb-8">
-              <span>We're forging something legendary just for you! 🔥</span>
-            </div>
+              <motion.div variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+              }}>
+                <Badge
+                  variant="secondary"
+                  className="bg-muted text-muted-foreground border-0 mb-6 px-4 py-2 rounded-full"
+                >
+                  <Heart className="w-3 h-3 mr-2" />
+                  {estimatedTime}
+                </Badge>
+              </motion.div>
 
-            {/* Action buttons */}
-            <div className="flex flex-col gap-3 mt-8">
-              {showHomeButton && (
-                <Link href={backLink}>
-                  <Button className="w-full">
-                    <Home className="w-4 h-4 mr-2" />
-                    Back to Dashboard
-                  </Button>
-                </Link>
-              )}
+              <motion.div variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, delay: 0.1 } }
+              }}>
+                <CardTitle className="text-3xl font-bold text-foreground mb-4">
+                  {title}
+                </CardTitle>
+              </motion.div>
 
-              {backLink !== "/app/dashboard" && (
-                <Link href="/app/dashboard">
-                  <Button variant="outline" className="w-full">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Return Home
-                  </Button>
-                </Link>
-              )}
-            </div>
+              <motion.div
+                className="flex items-center justify-center space-x-3 mb-6"
+                variants={{
+                  hidden: { opacity: 0, scale: 0 },
+                  visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 200, delay: 0.2 } }
+                }}
+              >
+                <Sparkles className="w-5 h-5 text-primary" />
+                <span className="text-lg font-medium text-foreground">Processing Intelligence</span>
+                <Sparkles className="w-5 h-5 text-primary" />
+              </motion.div>
 
-            {/* Fun facts or updates - gray but readable */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200 opacity-75">
-              <div className="flex items-start space-x-3">
-                <Zap className="w-5 h-5 text-grag04 mt-0.5 flex-shrink-0" />
-                <div className="text-left">
-                  <p className="text-sm font-medium text-grag06 mb-1">
-                    What we're cooking up:
-                  </p>
-                  <ul className="text-xs text-grag05 space-y-0.5">
-                    <li>• Advanced AI-powered insights</li>
-                    <li>• Real-time mentor connections</li>
-                    <li>• Interactive psychology exercises</li>
-                    <li>• Performance tracking tools</li>
-                  </ul>
+              <motion.div variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, delay: 0.3 } }
+              }}>
+                <CardDescription className="text-muted-foreground text-center max-w-md mx-auto text-lg leading-relaxed">
+                  {description}
+                </CardDescription>
+              </motion.div>
+            </CardHeader>
+
+            <CardContent className="text-center space-y-6 pb-8">
+              {/* Progress indicator */}
+              <motion.div
+                className="space-y-4"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, delay: 0.4 } }
+                }}
+              >
+                <div className="flex items-center justify-center space-x-3 text-sm text-muted-foreground">
+                  <Clock className="w-4 h-4" />
+                  <span>System Initialization</span>
                 </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    className="h-full bg-primary rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: "65%" }}
+                    transition={{
+                      duration: 2,
+                      ease: "easeOut",
+                      delay: 0.5
+                    }}
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="text-sm font-medium text-muted-foreground mb-2"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1, transition: { delay: 0.6 } }
+                }}
+              >
+                <span>Building cognitive architecture...</span>
+              </motion.div>
+
+              {/* Action buttons */}
+              <motion.div
+                className="flex flex-col gap-4 mt-8"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, delay: 0.7 } }
+                }}
+              >
+                {showHomeButton && (
+                  <Link href={backLink}>
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Button className="w-full rounded-full py-6 text-lg">
+                        <Home className="w-5 h-5 mr-3" />
+                        Return to Dashboard
+                      </Button>
+                    </motion.div>
+                  </Link>
+                )}
+
+                {backLink !== "/app/dashboard" && (
+                  <Link href="/app/dashboard">
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Button variant="outline" className="w-full rounded-full py-6 text-lg">
+                        <ArrowLeft className="w-5 h-5 mr-3" />
+                        Main Interface
+                      </Button>
+                    </motion.div>
+                  </Link>
+                )}
+              </motion.div>
+
+              {/* Feature preview */}
+              <motion.div
+                className="mt-8 p-6 bg-muted/50 rounded-xl border border-border/50"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, delay: 0.8 } }
+                }}
+              >
+                <div className="flex items-start space-x-4">
+                  <Zap className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-foreground mb-3">
+                      Neural Components in Development:
+                    </p>
+                    <ul className="text-sm text-muted-foreground space-y-2">
+                      <li className="flex items-center">
+                        <div className="w-1 h-1 bg-primary rounded-full mr-3" />
+                        Advanced cognitive pattern recognition
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1 h-1 bg-primary rounded-full mr-3" />
+                        Real-time mental state analysis
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1 h-1 bg-primary rounded-full mr-3" />
+                        Predictive psychology modeling
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1 h-1 bg-primary rounded-full mr-3" />
+                        Neural performance optimization
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </motion.div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
@@ -265,8 +329,8 @@ export function CookingAnimation({
 export function TradingAPIComingSoon() {
   return (
     <CookingAnimation
-      title="Live Trading API"
-      description="We're building a secure API to integrate your favorite trading platforms and brokers"
+      title="Trading Neural Interface"
+      description="Secure API architecture for real-time cognitive trading integration"
       estimatedTime="Q1 2026"
     />
   );
@@ -275,8 +339,8 @@ export function TradingAPIComingSoon() {
 export function SocialFeaturesComingSoon() {
   return (
     <CookingAnimation
-      title="Trader Community"
-      description="Connect with fellow traders, share strategies, and learn from the community"
+      title="Cognitive Network"
+      description="Neural connectivity platform for trader intelligence sharing"
       estimatedTime="Q2 2026"
     />
   );
@@ -285,8 +349,8 @@ export function SocialFeaturesComingSoon() {
 export function AdvancedAnalyticsComingSoon() {
   return (
     <CookingAnimation
-      title="Advanced Analytics"
-      description="Deep performance analytics with predictive insights and risk modeling"
+      title="Predictive Analytics Engine"
+      description="Deep learning models for psychological pattern recognition"
       estimatedTime="Q4 2025"
     />
   );
@@ -295,8 +359,8 @@ export function AdvancedAnalyticsComingSoon() {
 export function MobileAppComingSoon() {
   return (
     <CookingAnimation
-      title="Mobile App"
-      description="Full-featured mobile app for on-the-go trading psychology development"
+      title="Mobile Neural Processor"
+      description="Portable cognitive development platform for on-the-go mental training"
       estimatedTime="Q2 2026"
     />
   );

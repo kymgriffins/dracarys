@@ -222,105 +222,64 @@ export default function DashboardPage() {
               </CardTitle>
               <stat.icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <div className="flex items-center text-xs text-muted-foreground mt-1">
-                {stat.changeType === "positive" ? (
-                  <ArrowUpRight className="w-3 h-3 text-green-600 mr-1" />
-                ) : (
-                  <ArrowDownRight className="w-3 h-3 text-red-600 mr-1" />
-                )}
-                <span className={stat.changeType === "positive" ? "text-green-600" : "text-red-600"}>
-                  {stat.change}
-                </span>
-                <span className="ml-1">from last month</span>
-              </div>
-            </CardContent>
+        <CardContent>
+          <div className="text-2xl font-bold">{stat.value}</div>
+          <div className="flex items-center text-xs text-muted-foreground mt-1">
+            {stat.changeType === "positive" ? (
+              <ArrowUpRight className="w-3 h-3 text-green-600 mr-1" />
+            ) : (
+              <ArrowDownRight className="w-3 h-3 text-red-600 mr-1" />
+            )}
+            <span className={stat.changeType === "positive" ? "text-green-600" : "text-red-600"}>
+              {stat.change}
+            </span>
+            <span className="ml-1">{stat.description}</span>
+          </div>
+        </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Recent Journal Entries */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <BookOpen className="w-5 h-5 mr-2" />
-              Recent Journal Entries
-            </CardTitle>
-            <CardDescription>
-              Your latest trading psychology reflections
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentJournalEntries.map((entry) => (
-                <div key={entry.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-2 h-2 rounded-full ${
-                      entry.status === 'reviewed' ? 'bg-green-500' :
-                      entry.status === 'needs-review' ? 'bg-yellow-500' : 'bg-gray-500'
-                    }`} />
-                    <div>
-                      <div className="font-medium">{entry.title}</div>
-                      <div className="text-sm text-muted-foreground">
-                        Emotional State: {entry.emotionalState}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant={entry.status === 'reviewed' ? 'default' : 'secondary'}>
-                      {entry.status}
-                    </Badge>
-                    <div className="text-xs text-green-600 mt-1">
-                      Discipline: {entry.disciplineScore}/10
-                    </div>
-                    <div className="text-xs text-muted-foreground">{entry.time}</div>
-                  </div>
+      {/* Performance Chart */}
+      <Card className="border-0 shadow-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Target className="w-5 h-5 mr-2" />
+            Performance Trend
+          </CardTitle>
+          <CardDescription>
+            Your psychological performance over the last 7 days
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-32 flex items-end justify-between space-x-1">
+            {/* Simple bar chart representation */}
+            {[65, 72, 68, 78, 82, 79, 85].map((value, index) => (
+              <div key={index} className="flex flex-col items-center flex-1">
+                <div
+                  className="w-full bg-primary/20 rounded-t-sm transition-all duration-300 hover:bg-primary/30"
+                  style={{ height: `${value}%` }}
+                >
+                  <div
+                    className="w-full bg-primary rounded-t-sm transition-all duration-300"
+                    style={{ height: `${Math.min(value, 85)}%` }}
+                  />
                 </div>
-              ))}
+                <span className="text-xs text-muted-foreground mt-1">
+                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][index]}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center justify-between mt-4 text-sm">
+            <span className="text-muted-foreground">Average: 75.6%</span>
+            <div className="flex items-center text-green-600">
+              <ArrowUpRight className="w-3 h-3 mr-1" />
+              <span>+8.4% this week</span>
             </div>
-            <div className="mt-4">
-              <Button variant="outline" className="w-full">
-                <BookOpen className="w-4 h-4 mr-2" />
-                View Journal
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Activity Feed */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <MessageSquare className="w-5 h-5 mr-2" />
-              Activity Feed
-            </CardTitle>
-            <CardDescription>
-              Recent notifications and updates
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {activityFeed.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3 p-3 border border-border rounded-lg">
-                  <activity.icon className="w-4 h-4 text-primary mt-0.5" />
-                  <div className="flex-1">
-                    <div className="font-medium">{activity.title}</div>
-                    <div className="text-sm text-muted-foreground">{activity.description}</div>
-                  </div>
-                  <div className="text-xs text-muted-foreground">{activity.time}</div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4">
-              <Button variant="outline" className="w-full">
-                View All Activity
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
