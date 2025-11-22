@@ -14,6 +14,8 @@ export interface UserProfile {
   timezone: string;
   trading_experience_level: TradingExperienceLevel;
   trading_style?: TradingStyle;
+  role: UserRole;
+  premium_tier: PremiumTier;
   created_at: Date;
   updated_at: Date;
 }
@@ -38,6 +40,14 @@ export type PremiumTier =
   | 'premium'
   | 'mentoring'
   | 'enterprise';
+
+// User Role Types
+export type UserRole =
+  | 'student'
+  | 'mentor'
+  | 'admin'
+  | 'premium_student'
+  | 'pro_mentor';
 
 // User Status
 export type UserStatus =
@@ -75,6 +85,14 @@ export const UserStatusSchema = z.enum([
   'pending_verification'
 ]);
 
+export const UserRoleSchema = z.enum([
+  'student',
+  'mentor',
+  'admin',
+  'premium_student',
+  'pro_mentor'
+]);
+
 export const UserProfileSchema = z.object({
   id: z.string().uuid(),
   email: z.string().email(),
@@ -83,6 +101,8 @@ export const UserProfileSchema = z.object({
   timezone: z.string().default('UTC'),
   trading_experience_level: TradingExperienceLevelSchema,
   trading_style: TradingStyleSchema,
+  role: UserRoleSchema,
+  premium_tier: PremiumTierSchema,
   created_at: z.date(),
   updated_at: z.date(),
 });
@@ -109,6 +129,8 @@ export type DatabaseUserProfile = {
   timezone: string;
   trading_experience_level: string;
   trading_style: string | null;
+  role: string;
+  premium_tier: string;
   created_at: string;
   updated_at: string;
 };
@@ -123,6 +145,8 @@ export function transformDatabaseUser(dbUser: DatabaseUserProfile): UserProfile 
     timezone: dbUser.timezone,
     trading_experience_level: dbUser.trading_experience_level as TradingExperienceLevel,
     trading_style: dbUser.trading_style as TradingStyle || undefined,
+    role: dbUser.role as UserRole,
+    premium_tier: dbUser.premium_tier as PremiumTier,
     created_at: new Date(dbUser.created_at),
     updated_at: new Date(dbUser.updated_at),
   };
@@ -137,6 +161,8 @@ export function transformToDatabase(user: UserProfile): DatabaseUserProfile {
     timezone: user.timezone,
     trading_experience_level: user.trading_experience_level,
     trading_style: user.trading_style || null,
+    role: user.role,
+    premium_tier: user.premium_tier,
     created_at: user.created_at.toISOString(),
     updated_at: user.updated_at.toISOString(),
   };
