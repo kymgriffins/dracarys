@@ -1,0 +1,1 @@
+gooood, now ui for the live stream video section, it shall belike zoom like where people can also join when allowed
