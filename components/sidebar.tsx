@@ -45,6 +45,7 @@ const navigation = [
   { name: "Courses", href: "/app/courses", icon: BookOpen, badge: "2" },
   { name: "Live Sessions", href: "/app/sessions", icon: Users },
   { name: "Journal", href: "/app/journal", icon: FileText },
+  { name: "JawGnarl v2", href: "/app/jawgnarl", icon: Target, badge: "New" },
   { name: "Community", href: "/app/community", icon: MessageSquare, badge: "3" },
   { name: "Calendar", href: "/app/calendar", icon: Calendar },
   { name: "Analytics", href: "/app/analytics", icon: BarChart3 },
