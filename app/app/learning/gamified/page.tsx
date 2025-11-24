@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,113 +27,125 @@ export default function GamifiedLearningPage() {
   const [experiencePoints] = useState(2450);
   const [completedModules] = useState(12);
 
-  const innerCircleModules = [
+  const gauntletLevels = [
     {
       id: 1,
-      title: "Mindset Mastery",
-      description: "Develop the psychological foundation for consistent trading success",
-      lessons: 3,
-      completedLessons: 3,
-      xpReward: 150,
+      title: "Level 1: The Foundation",
+      subtitle: "Market Mechanics Primer",
+      description: "Master the core market structures that professional traders use",
+      gates: 3,
+      completedGates: 3,
+      xpReward: 200,
       status: "completed",
       icon: <BookOpen className="w-6 h-6" />,
-      color: "bg-purple-500",
-      concepts: ["Trading Psychology", "Emotional Discipline", "Growth Mindset"]
+      color: "bg-slate-600",
+      concepts: ["Market Maker Series Primer", "Order Blocks (OB)", "Fair Value Gaps (FVG)"],
+      gateChallenge: "Identify Bullish/Bearish Order Blocks and Fair Value Gaps on chart snippets"
     },
     {
       id: 2,
-      title: "Market Structure Fundamentals",
-      description: "Understand how professional traders view price action",
-      lessons: 4,
-      completedLessons: 4,
-      xpReward: 200,
+      title: "Level 2: The Scout",
+      subtitle: "Market Timing & Liquidity",
+      description: "Learn to hunt liquidity and understand market manipulation patterns",
+      gates: 4,
+      completedGates: 4,
+      xpReward: 250,
       status: "completed",
-      icon: <TrendingUp className="w-6 h-6" />,
-      color: "bg-blue-500",
-      concepts: ["Support & Resistance", "Trend Channels", "Market Phases"]
+      icon: <Users className="w-6 h-6" />,
+      color: "bg-red-600",
+      concepts: ["Buy/Sell-Side Liquidity", "Mitigation Blocks", "NY/London Killzones"],
+      gateChallenge: "Describe liquidity sweeps and mitigation patterns during killzones"
     },
     {
       id: 3,
-      title: "The Inner Circle Edge",
-      description: "Learn institutional trading patterns and smart money concepts",
-      lessons: 5,
-      completedLessons: 2,
-      xpReward: 250,
+      title: "Level 3: The Sniper",
+      subtitle: "Entry & Execution Models",
+      description: "Precision trade entry using ICT's proprietary models",
+      gates: 5,
+      completedGates: 2,
+      xpReward: 300,
       status: "inProgress",
       icon: <Target className="w-6 h-6" />,
-      color: "bg-green-500",
-      concepts: ["Order Flow", "Liquidity Pools", "Institutional Footprints"]
+      color: "bg-blue-600",
+      concepts: ["ICT Power of 3 (P3)", "Judas Swing", "Displacement & Retracement"],
+      gateChallenge: "Outline complete P3 buy setup from entry trigger to displacement"
     },
     {
       id: 4,
-      title: "Risk-First Trading",
-      description: "Master position sizing, stop losses, and risk management protocols",
-      lessons: 4,
-      completedLessons: 1,
-      xpReward: 200,
-      status: "inProgress",
-      icon: <CheckCircle className="w-6 h-6" />,
-      color: "bg-orange-500",
-      concepts: ["Risk/Reward Ratios", "Position Sizing", "Portfolio Heat"]
+      title: "Level 4: The Strategist",
+      subtitle: "Higher Timeframe Confluence",
+      description: "Synthesize multi-timeframe analysis for high-probability setups",
+      gates: 6,
+      completedGates: 0,
+      xpReward: 350,
+      status: "locked",
+      icon: <TrendingUp className="w-6 h-6" />,
+      color: "bg-green-600",
+      concepts: ["HTF Order Blocks", "HTF FVGs", "Market Structure Shifts (MSS)", "Breaker Blocks"],
+      gateChallenge: "Synthesize HTF confluence with MSS for optimal trade alignment"
     },
     {
       id: 5,
-      title: "Execution Mastery",
-      description: "Perfect your trade entry and exit timing",
-      lessons: 6,
-      completedLessons: 0,
-      xpReward: 300,
+      title: "Level 5: The Risk Commander",
+      subtitle: "Trade & Risk Management",
+      description: "Master position management and psychological discipline",
+      gates: 4,
+      completedGates: 0,
+      xpReward: 400,
       status: "locked",
-      icon: <Award className="w-6 h-6" />,
-      color: "bg-red-500",
-      concepts: ["Entry Triggers", "Exit Strategies", "Trade Management"]
+      icon: <Shield className="w-6 h-6" />,
+      color: "bg-purple-600",
+      concepts: ["Optimal Trade Entry (OTE)", "RR-based Position Sizing", "Psychological Discipline"],
+      gateChallenge: "Calculate OTE zones, define liquidation levels, and identify liquidity targets"
     },
     {
       id: 6,
-      title: "Performance Analytics",
-      description: "Track, analyze, and optimize your trading performance",
-      lessons: 4,
-      completedLessons: 0,
-      xpReward: 250,
+      title: "Finale: The Proving Grounds",
+      subtitle: "Live Trading Simulation",
+      description: "Demonstrate mastery in unstructured real-market scenarios",
+      gates: 1,
+      completedGates: 0,
+      xpReward: 500,
       status: "locked",
-      icon: <BarChart3 className="w-6 h-6" />,
-      color: "bg-indigo-500",
-      concepts: ["Win Rate Analysis", "Drawdown Management", "Performance Metrics"]
+      icon: <Trophy className="w-6 h-6" />,
+      color: "bg-yellow-600",
+      concepts: ["Real-time Synthesis", "Adaptability", "Execution Fluency"],
+      gateChallenge: "Navigate live scenarios articulating complete trade thesis from setup to management"
     }
   ];
 
   const achievements = [
     {
       id: 1,
-      title: "Mindset Warrior",
-      description: "Completed the psychological foundation module",
-      icon: <Trophy className="w-8 h-8 text-purple-500" />,
-      earned: true,
-      xpReward: 150
-    },
-    {
-      id: 2,
-      title: "Structure Master",
-      description: "Mastered market structure fundamentals",
-      icon: <Award className="w-8 h-8 text-blue-500" />,
+      title: "Foundation Conqueror",
+      description: "Passed all gates in Level 1: The Foundation",
+      icon: <Trophy className="w-8 h-8 text-slate-500" />,
       earned: true,
       xpReward: 200
     },
     {
+      id: 2,
+      title: "Liquidity Scout",
+      description: "Mastered market timing and liquidity hunting",
+      icon: <Award className="w-8 h-8 text-red-500" />,
+      earned: true,
+      xpReward: 250
+    },
+    {
       id: 3,
-      title: "Inner Circle Initiate",
-      description: "First step into institutional trading concepts",
-      icon: <Zap className="w-8 h-8 text-green-500" />,
+      title: "P3 Precision",
+      description: "Successfully articulated complete Power of 3 setups",
+      icon: <Target className="w-8 h-8 text-blue-500" />,
       earned: false,
-      xpReward: 100
+      xpReward: 300
     },
     {
       id: 4,
-      title: "Risk Guardian",
-      description: "Master consistent risk management",
-      icon: <Shield className="w-8 h-8 text-orange-500" />,
-      earned: false,
-      xpReward: 300
+      title: "S.M.A.R.T. Initiate",
+      description: "Commenced Socratic training under the AI mentor",
+      icon: <Star className="w-8 h-8 text-purple-500" />,
+      earned: true,
+      xpReward: 100
     }
   ];
 
@@ -140,8 +153,22 @@ export default function GamifiedLearningPage() {
     <div className="container mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold tracking-tight mb-2">🎮 Gamified Learning Hub</h1>
-        <p className="text-muted-foreground text-lg">Learn trading through interactive experiences and visual storytelling</p>
+        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500/10 to-blue-500/10 px-6 py-3 rounded-full mb-4">
+          <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            S
+          </div>
+          <div className="text-left">
+            <h3 className="font-bold text-lg">S.M.A.R.T. Dealer</h3>
+            <p className="text-sm text-muted-foreground">Your ICT Mentor</p>
+          </div>
+        </div>
+        <h1 className="text-4xl font-bold tracking-tight mb-2">⚔️ The Gauntlet</h1>
+        <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
+          5-level ICT mastery through <span className="font-semibold text-primary">S</span>ocratic questioning,
+          <span className="font-semibold text-green-600"> A</span>chievement milestones,
+          <span className="font-semibold text-blue-600"> R</span>isk-conscious learning,
+          <span className="font-semibold text-purple-600"> T</span>imed-learning experiences
+        </p>
       </div>
 
       {/* Player Stats Card */}
@@ -199,45 +226,48 @@ export default function GamifiedLearningPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {innerCircleModules.map((module) => (
-            <Card key={module.id} className={`hover:shadow-lg transition-all duration-200 border-2 ${
-              module.status === 'completed' ? 'bg-green-50/50 border-green-200' :
-              module.status === 'inProgress' ? 'bg-blue-50/50 border-blue-200' :
+          {gauntletLevels.map((level) => (
+            <Card key={level.id} className={`hover:shadow-lg transition-all duration-200 border-2 ${
+              level.status === 'completed' ? 'bg-green-50/50 border-green-200' :
+              level.status === 'inProgress' ? 'bg-blue-50/50 border-blue-200' :
               'bg-muted/20 border-muted'
             }`}>
               <CardHeader>
                 <div className="flex items-start justify-between">
-                  <div className={`p-3 rounded-lg ${module.color} text-white relative`}>
-                    {module.icon}
-                    {module.status === 'completed' && (
+                  <div className={`p-3 rounded-lg ${level.color} text-white relative`}>
+                    {level.icon}
+                    {level.status === 'completed' && (
                       <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-1">
                         <CheckCircle className="w-3 h-3 text-white" />
                       </div>
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <Badge variant={module.status === 'completed' ? 'default' :
-                                   module.status === 'inProgress' ? 'secondary' : 'destructive'}>
-                      {module.status === 'completed' ? 'Completed' :
-                       module.status === 'inProgress' ? 'In Progress' : 'Locked'}
+                    <Badge variant={level.status === 'completed' ? 'default' :
+                                   level.status === 'inProgress' ? 'secondary' : 'destructive'}>
+                      {level.status === 'completed' ? 'Completed' :
+                       level.status === 'inProgress' ? 'In Progress' : 'Locked'}
                     </Badge>
                   </div>
                 </div>
-                <CardTitle className="text-lg">{module.title}</CardTitle>
+                <CardTitle className="text-lg">
+                  <div className="font-bold">{level.title}</div>
+                  <div className="text-sm font-normal text-muted-foreground mt-1">{level.subtitle}</div>
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-sm">{module.description}</p>
+                <p className="text-muted-foreground text-sm">{level.description}</p>
 
                 {/* Progress */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Lesson Progress</span>
-                    <span>{module.completedLessons}/{module.lessons} lessons</span>
+                    <span>Gate Progress</span>
+                    <span>{level.completedGates}/{level.gates} gates</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
                     <div
                       className="bg-primary h-2 rounded-full transition-all"
-                      style={{ width: `${(module.completedLessons / module.lessons) * 100}%` }}
+                      style={{ width: `${(level.completedGates / level.gates) * 100}%` }}
                     ></div>
                   </div>
                 </div>
@@ -246,48 +276,56 @@ export default function GamifiedLearningPage() {
                 <div className="space-y-1">
                   <p className="text-xs font-medium text-muted-foreground">Key Concepts:</p>
                   <div className="flex flex-wrap gap-1">
-                    {module.concepts.slice(0, 3).map((concept, idx) => (
+                    {level.concepts.slice(0, 3).map((concept, idx) => (
                       <span key={idx} className="text-xs bg-muted px-2 py-1 rounded">
                         {concept}
                       </span>
                     ))}
-                    {module.concepts.length > 3 && (
+                    {level.concepts.length > 3 && (
                       <span className="text-xs text-muted-foreground">
-                        +{module.concepts.length - 3} more
+                        +{level.concepts.length - 3} more
                       </span>
                     )}
                   </div>
                 </div>
 
+                {/* Gate Challenge */}
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">Gate Challenge:</p>
+                  <p className="text-xs text-muted-foreground italic">{level.gateChallenge}</p>
+                </div>
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <Zap className="w-4 h-4" />
-                    {module.xpReward} XP
+                    {level.xpReward} XP
                   </div>
-                  <Button
-                    size="sm"
-                    variant={module.status === 'completed' ? "secondary" :
-                             module.status === 'inProgress' ? "default" :
-                             "outline"}
-                    disabled={module.status === 'locked'}
-                  >
-                    {module.status === 'completed' ? (
-                      <>
-                        <Star className="w-4 h-4 mr-1" />
-                        Review
-                      </>
-                    ) : module.status === 'inProgress' ? (
-                      <>
-                        <PlayCircle className="w-4 h-4 mr-1" />
-                        Continue
-                      </>
-                    ) : (
-                      <>
-                        <Clock className="w-4 h-4 mr-1" />
-                        Locked
-                      </>
-                    )}
-                  </Button>
+                  <Link href={level.status !== 'locked' ? `/app/learning/lessons/level-${level.id}` : '#'}>
+                    <Button
+                      size="sm"
+                      variant={level.status === 'completed' ? "secondary" :
+                               level.status === 'inProgress' ? "default" :
+                               "outline"}
+                      disabled={level.status === 'locked'}
+                    >
+                      {level.status === 'completed' ? (
+                        <>
+                          <Star className="w-4 h-4 mr-1" />
+                          Review
+                        </>
+                      ) : level.status === 'inProgress' ? (
+                        <>
+                          <PlayCircle className="w-4 h-4 mr-1" />
+                          Continue
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="w-4 h-4 mr-1" />
+                          Locked
+                        </>
+                      )}
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -306,7 +344,7 @@ export default function GamifiedLearningPage() {
 
           <div className="grid grid-cols-1 gap-3">
             {achievements.map((achievement) => (
-              <Card key={achievement.id} className={`transition-all ${achievement.earned ? 'border-green-200 bg-green-50' : 'border-muted bg-muted/20'}`}>
+              <Card key={achievement.id} className={`transition-all ${achievement.earned ? 'border-green-200 bg-green-50' : 'border-muted bg-muted/20'}`} style={{transition: 'all 0.2s ease'}}>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className={`p-2 rounded-full ${achievement.earned ? 'bg-white' : 'bg-muted'}`}>
