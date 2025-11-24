@@ -296,6 +296,334 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
+-- ============================================================================
+-- GAMIFIED TRADING EDUCATION PLATFORM TABLES
+-- ============================================================================
+
+-- Gaming chapters for progressive learning
+CREATE TABLE public.chapters (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  title text NOT NULL,
+  description text,
+  difficulty text CHECK (difficulty IN ('beginner', 'intermediate', 'advanced', 'expert', 'master')) NOT NULL,
+  lesson_count integer NOT NULL DEFAULT 1,
+  points_value integer DEFAULT 100,
+  order_position integer NOT NULL,
+  is_active boolean DEFAULT true,
+  prerequisites text[], -- Array of chapter IDs that must be completed first
+  learning_objectives text[],
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- User chapter progress tracking
+CREATE TABLE public.user_chapter_progress (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  chapter_id uuid REFERENCES public.chapters(id) ON DELETE CASCADE NOT NULL,
+  status text CHECK (status IN ('locked', 'unlocked', 'in_progress', 'completed')) DEFAULT 'locked',
+  progress_percentage decimal(5,2) DEFAULT 0 CHECK (progress_percentage >= 0 AND progress_percentage <= 100),
+  completed_lessons_count integer DEFAULT 0,
+  points_earned integer DEFAULT 0,
+  started_at timestamp with time zone,
+  completed_at timestamp with time zone,
+  last_activity_at timestamp with time zone DEFAULT timezone('utc'::text, now()),
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  UNIQUE(user_id, chapter_id)
+);
+
+-- Trading training rooms (interviews, practice, multiplayer)
+CREATE TABLE public.rooms (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  title text NOT NULL,
+  description text,
+  type text CHECK (type IN ('interview', 'practice', 'multiplayer')) NOT NULL,
+  host_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  max_participants integer DEFAULT 12,
+  current_participants integer DEFAULT 0,
+  status text CHECK (status IN ('waiting', 'active', 'starting', 'completed', 'cancelled')) DEFAULT 'waiting',
+  skill_level text CHECK (skill_level IN ('beginner', 'intermediate', 'advanced', 'all')) DEFAULT 'all',
+  duration_minutes integer,
+  tags text[],
+  chapter_focus text, -- Specific chapter/practice focus
+  is_private boolean DEFAULT false,
+  password_hash text,
+  room_settings jsonb, -- WebRTC, screen sharing, whiteboard settings
+  started_at timestamp with time zone,
+  completed_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Room participants (who is in each room)
+CREATE TABLE public.room_participants (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  room_id uuid REFERENCES public.rooms(id) ON DELETE CASCADE NOT NULL,
+  user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  role text CHECK (role IN ('host', 'participant', 'observer')) DEFAULT 'participant',
+  joined_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  left_at timestamp with time zone,
+  performance_score integer CHECK (performance_score >= 0 AND performance_score <= 100),
+  notes text,
+  is_active boolean DEFAULT true,
+  UNIQUE(room_id, user_id)
+);
+
+-- Room chat messages
+CREATE TABLE public.room_messages (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  room_id uuid REFERENCES public.rooms(id) ON DELETE CASCADE NOT NULL,
+  user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  message_type text CHECK (message_type IN ('text', 'trading_command', 'system', 'announcement')) DEFAULT 'text',
+  content text NOT NULL,
+  metadata jsonb, -- For trading commands, links, etc.
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Gamified leaderboard/points system
+CREATE TABLE public.leaderboard (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  period text CHECK (period IN ('daily', 'weekly', 'monthly', 'all_time')) NOT NULL,
+  total_points integer DEFAULT 0,
+  room_participation_count integer DEFAULT 0,
+  successful_rooms_count integer DEFAULT 0,
+  chapter_completions_count integer DEFAULT 0,
+  streak_current integer DEFAULT 0,
+  streak_best integer DEFAULT 0,
+  rank_current integer DEFAULT 0,
+  badge_level text CHECK (badge_level IN ('novice', 'apprentice', 'expert', 'master', 'legend')) DEFAULT 'novice',
+  performance_multiplier decimal(3,2) DEFAULT 1.0,
+  last_calculated_at timestamp with time zone DEFAULT timezone('utc'::text, now()),
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  UNIQUE(user_id, period)
+);
+
+-- Room performance/evaluation results
+CREATE TABLE public.room_evaluations (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  room_id uuid REFERENCES public.rooms(id) ON DELETE CASCADE NOT NULL,
+  user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  evaluator_id uuid REFERENCES public.profiles(id), -- NULL for AI evaluation
+  evaluation_type text CHECK (evaluation_type IN ('ai', 'peer', 'mentor', 'self')) DEFAULT 'ai',
+  technical_score integer CHECK (technical_score >= 0 AND technical_score <= 100),
+  psychology_score integer CHECK (psychology_score >= 0 AND psychology_score <= 100),
+  risk_management_score integer CHECK (risk_management_score >= 0 AND risk_management_score <= 100),
+  communication_score integer CHECK (communication_score >= 0 AND communication_score <= 100),
+  overall_score integer CHECK (overall_score >= 0 AND overall_score <= 100),
+  strengths text[],
+  improvements_needed text[],
+  feedback_summary text,
+  detailed_feedback jsonb,
+  points_awarded integer DEFAULT 0,
+  grade text CHECK (grade IN ('excellent', 'good', 'needs_improvement', 'poor')),
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- User dashboard statistics cache
+CREATE TABLE public.user_dashboard_stats (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  stat_name text NOT NULL,
+  stat_value jsonb,
+  calculated_at timestamp with time zone DEFAULT timezone('utc'::text, now()),
+  expires_at timestamp with time zone DEFAULT timezone('utc'::text, now() + interval '1 hour'),
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
+  UNIQUE(user_id, stat_name)
+);
+
+-- Global statistics for dashboard
+CREATE TABLE public.global_stats (
+  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  stat_name text NOT NULL UNIQUE,
+  stat_value jsonb,
+  last_updated timestamp with time zone DEFAULT timezone('utc'::text, now()),
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable RLS for gamified tables
+ALTER TABLE public.chapters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_chapter_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.rooms ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.room_participants ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.room_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.leaderboard ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.room_evaluations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_dashboard_stats ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.global_stats ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for gamified system
+
+-- Chapters: Everyone can read public chapter data
+CREATE POLICY "Anyone can read chapters" ON public.chapters
+  FOR SELECT USING (true);
+
+-- User Chapter Progress: Users can only see their own progress
+CREATE POLICY "Users can CRUD own chapter progress" ON public.user_chapter_progress
+  FOR ALL USING (auth.uid() = user_id);
+
+-- Rooms: Everyone can read active rooms, only hosts can manage their rooms
+CREATE POLICY "Anyone can view active rooms" ON public.rooms
+  FOR SELECT USING (status IN ('waiting', 'active', 'starting'));
+
+CREATE POLICY "Hosts can manage their rooms" ON public.rooms
+  FOR ALL USING (auth.uid() = host_id);
+
+-- Room Participants: Room owners can see participants, participants can see their own status
+CREATE POLICY "Room hosts can see all participants" ON public.room_participants
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.rooms
+      WHERE rooms.id = room_participants.room_id
+      AND rooms.host_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Users can see their own participation" ON public.room_participants
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can join rooms" ON public.room_participants
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own participation" ON public.room_participants
+  FOR UPDATE USING (auth.uid() = user_id);
+
+-- Room Messages: Room participants can see messages in their rooms
+CREATE POLICY "Room participants can see room messages" ON public.room_messages
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.room_participants
+      WHERE room_participants.room_id = room_messages.room_id
+      AND room_participants.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Room participants can send messages" ON public.room_messages
+  FOR INSERT WITH CHECK (
+    auth.uid() = user_id
+    AND EXISTS (
+      SELECT 1 FROM public.room_participants
+      WHERE room_participants.room_id = room_messages.room_id
+      AND room_participants.user_id = auth.uid()
+    )
+  );
+
+-- Leaderboard: Everyone can read, users can only update their own
+CREATE POLICY "Anyone can read leaderboard" ON public.leaderboard
+  FOR SELECT USING (true);
+
+CREATE POLICY "Users can update their own leaderboard" ON public.leaderboard
+  FOR ALL USING (auth.uid() = user_id);
+
+-- Room Evaluations: Private to the user and evaluators
+CREATE POLICY "Users can read their own evaluations" ON public.room_evaluations
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Evaluators can create evaluations" ON public.room_evaluations
+  FOR INSERT WITH CHECK (auth.uid() = evaluator_id OR evaluator_id IS NULL);
+
+-- User Dashboard Stats: Private to each user
+CREATE POLICY "Users can read their own dashboard stats" ON public.user_dashboard_stats
+  FOR SELECT USING (auth.uid() = user_id);
+
+-- Global Stats: Read-only for everyone
+CREATE POLICY "Anyone can read global stats" ON public.global_stats
+  FOR SELECT USING (true);
+
+-- Indexes for gamified system performance
+
+-- Chapter progress lookups
+CREATE INDEX idx_user_chapter_progress_user ON public.user_chapter_progress(user_id, status);
+CREATE INDEX idx_user_chapter_progress_chapter ON public.user_chapter_progress(chapter_id);
+
+-- Room lookups and active room queries
+CREATE INDEX idx_rooms_status_type ON public.rooms(status, type);
+CREATE INDEX idx_rooms_host ON public.rooms(host_id);
+CREATE INDEX idx_rooms_active ON public.rooms(status) WHERE status IN ('waiting', 'active', 'starting');
+
+-- Room participants lookups
+CREATE INDEX idx_room_participants_room ON public.room_participants(room_id);
+CREATE INDEX idx_room_participants_user ON public.room_participants(user_id, is_active);
+
+-- Room messages by room and time
+CREATE INDEX idx_room_messages_room_time ON public.room_messages(room_id, created_at DESC);
+
+-- Leaderboard by period and points
+CREATE INDEX idx_leaderboard_period_points ON public.leaderboard(period, total_points DESC);
+CREATE INDEX idx_leaderboard_user_period ON public.leaderboard(user_id, period);
+
+-- Room evaluations
+CREATE INDEX idx_room_evaluations_room ON public.room_evaluations(room_id);
+CREATE INDEX idx_room_evaluations_user ON public.room_evaluations(user_id);
+
+-- ============================================================================
+-- FUNCTIONS AND TRIGGERS FOR GAMIFIED SYSTEM
+-- ============================================================================
+
+-- Function to calculate leaderboard rank
+CREATE OR REPLACE FUNCTION update_leaderboard_rank()
+RETURNS trigger AS $$
+BEGIN
+  IF NEW.period = 'all_time' THEN
+    -- Update rank for the current period
+    WITH ranked_users AS (
+      SELECT
+        id,
+        ROW_NUMBER() OVER (ORDER BY total_points DESC, room_participation_count DESC) as new_rank
+      FROM public.leaderboard
+      WHERE period = NEW.period
+    )
+    UPDATE public.leaderboard
+    SET rank_current = ranked_users.new_rank
+    FROM ranked_users
+    WHERE leaderboard.id = ranked_users.id;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to update ranks when leaderboard changes
+CREATE TRIGGER update_leaderboard_ranks AFTER INSERT OR UPDATE ON public.leaderboard
+  FOR EACH ROW EXECUTE FUNCTION update_leaderboard_rank();
+
+-- Function to update room participant counts
+CREATE OR REPLACE FUNCTION update_room_participant_count()
+RETURNS trigger AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    UPDATE public.rooms
+    SET current_participants = current_participants + 1
+    WHERE id = NEW.room_id;
+    RETURN NEW;
+  ELSIF TG_OP = 'UPDATE' AND OLD.is_active != NEW.is_active THEN
+    IF NEW.is_active THEN
+      UPDATE public.rooms
+      SET current_participants = current_participants + 1
+      WHERE id = NEW.room_id;
+    ELSE
+      UPDATE public.rooms
+      SET current_participants = current_participants - 1
+      WHERE id = NEW.room_id;
+    END IF;
+    RETURN NEW;
+  ELSIF TG_OP = 'DELETE' THEN
+    UPDATE public.rooms
+    SET current_participants = current_participants - 1
+    WHERE id = OLD.room_id;
+    RETURN OLD;
+  END IF;
+
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to maintain participant count
+CREATE TRIGGER maintain_room_participant_count
+  AFTER INSERT OR UPDATE OR DELETE ON public.room_participants
+  FOR EACH ROW EXECUTE FUNCTION update_room_participant_count();
+
 -- Function to update updated_at timestamps
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -310,7 +638,17 @@ CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_journals_updated_at BEFORE UPDATE ON public.journals
-  FOR EACH ROW EXAMINE FUNCTION update_updated_at_column();
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_playbooks_updated_at BEFORE UPDATE ON public.playbooks
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Gamified system updated_at triggers
+CREATE TRIGGER update_user_chapter_progress_updated_at BEFORE UPDATE ON public.user_chapter_progress
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_rooms_updated_at BEFORE UPDATE ON public.rooms
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_leaderboard_updated_at BEFORE UPDATE ON public.leaderboard
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

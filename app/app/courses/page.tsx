@@ -159,7 +159,8 @@ export default function CoursesPage() {
           }
 
           if (!channelId) {
-            throw new Error('Channel not found');
+            console.warn('Channel not found for course, skipping YouTube fetch');
+            return; // Skip YouTube fetch silently instead of throwing
           }
 
           // Now fetch videos from the channel
