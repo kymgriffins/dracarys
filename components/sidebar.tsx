@@ -42,9 +42,10 @@ import {
 
 const navigation = [
   { name: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
+  { name: "Dashboard V2", href: "/app/dashboard/v2", icon: LayoutDashboard, badge: "New" },
   { name: "Courses", href: "/app/courses", icon: BookOpen, badge: "2" },
-  { name: "Live Sessions", href: "/app/sessions", icon: Users },
   { name: "Journal", href: "/app/journal", icon: FileText },
+  { name: "Gamified Learning", href: "/app/learning/gamified", icon: Target, badge: "Visual" },
   { name: "JawGnarl v2", href: "/app/jawgnarl", icon: Target, badge: "New" },
   { name: "Community", href: "/app/community", icon: MessageSquare, badge: "3" },
   { name: "Calendar", href: "/app/calendar", icon: Calendar },
@@ -155,10 +156,10 @@ export function Sidebar({ isMobileOpen = false, onMobileClose = () => {} }: Side
                 )}
                 {(!sidebarCollapsed || isHovering) && item.badge && (
                   <Badge
-                    variant={item.badge === "Pro" ? "secondary" : "destructive"}
+                    variant={item.badge === "Pro" ? "secondary" : item.badge === "Visual" ? "secondary" : "destructive"}
                     className="ml-auto text-xs h-5 w-5 rounded-full p-0 flex items-center justify-center"
                   >
-                    {item.badge === "Pro" ? "P" : item.badge}
+                    {item.badge === "Pro" ? "P" : item.badge === "Visual" ? "V" : item.badge}
                   </Badge>
                 )}
               </Button>
