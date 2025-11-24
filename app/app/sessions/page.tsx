@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -130,6 +131,7 @@ const mockSessions: Session[] = [
 const categories = ["All", "Live", "Upcoming", "Recorded", "My Sessions", "Psychology", "Technical Analysis", "Risk Management"];
 
 export default function LiveSessionsPage() {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -376,7 +378,7 @@ export default function LiveSessionsPage() {
         {/* Sessions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredSessions.map((session) => (
-            <Card key={session.id} className="group hover:shadow-xl transition-all duration-300">
+            <Card key={session.id} className="group hover:shadow-xl transition-all duration-300 cursor-pointer" onClick={() => router.push(`/app/sessions/${session.id}`)}>
               <CardContent className="p-0">
                 {/* Live indicator */}
                 <div className="relative">
