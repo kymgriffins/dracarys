@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +29,13 @@ import {
   Monitor,
   Smartphone,
   Headphones,
-  Settings
+  Settings,
+  Bot,
+  HelpCircle,
+  ThumbsUp,
+  Hash,
+  AtSign,
+  Smile
 } from "lucide-react";
 
 const liveStreams = [
@@ -120,11 +126,46 @@ const upcomingSessions = [
 ];
 
 const chatMessages = [
-  { user: "TraderJoe", message: "Great analysis on the EUR/USD setup!", time: "2m ago", role: "student" },
-  { user: "MasterTrader", message: "I saw similar patterns in my morning session", time: "1m ago", role: "premium_student" },
-  { user: "AlexR", message: "@MasterTrader Yes, the market sentiment shifted around 8:30 AM", time: "1m ago", role: "presenter" },
-  { user: "SarahK", message: "What timeframe are you looking at for entries?", time: "30s ago", role: "student" },
-  { user: "AlexR", message: "@SarahK I'm focusing on 15-min and 1-hour charts right now", time: "10s ago", role: "presenter" }
+  { id: "1", user: "TraderJoe", message: "Great analysis on the EUR/USD setup!", time: "2m ago", role: "student", type: "message", reactions: [] },
+  { id: "2", user: "MasterTrader", message: "I saw similar patterns in my morning session", time: "1m ago", role: "premium_student", type: "message", reactions: [] },
+  { id: "3", user: "AlexR", message: "@MasterTrader Yes, the market sentiment shifted around 8:30 AM", time: "1m ago", role: "presenter", type: "message", reactions: [{ emoji: "👍", count: 3 }] },
+  { id: "4", user: "SarahK", message: "What timeframe are you looking at for entries?", time: "30s ago", role: "student", type: "question", reactions: [] },
+  { id: "5", user: "AlexR", message: "@SarahK I'm focusing on 15-min and 1-hour charts right now", time: "10s ago", role: "presenter", type: "message", reactions: [] },
+  { id: "6", user: "TradeBot", message: "Welcome to the trading session! Use #help for FAQ or ask questions directly. Learn more about market psychology and risk management.", time: "5s ago", role: "bot", type: "bot_welcome", reactions: [] },
+  { id: "7", user: "TradeBot", message: "Question about #entry-timing: Use multiple timeframes to confirm your entries. Start with higher timeframes (4H, Daily) for trend direction, then zoom into 15M-1H for precise entry.", time: "2s ago", role: "bot", type: "faq_response", reactions: [{ emoji: "💡", count: 1 }] }
+];
+
+const faqItems = [
+  {
+    id: "1",
+    question: "How do I spot trading opportunities?",
+    answer: "Look for confluence of multiple factors: trend direction, support/resistance levels, momentum indicators, and market psychology.",
+    tags: ["strategy", "analysis"]
+  },
+  {
+    id: "2",
+    question: "What is proper risk management?",
+    answer: "Never risk more than 1-2% of your account per trade. Use stop losses consistently. Calculate position size based on risk, not potential profit.",
+    tags: ["risk", "management"]
+  },
+  {
+    id: "3",
+    question: "How to control trading emotions?",
+    answer: "Maintain a trading journal to track emotional states and mistakes. Practice meditation and take breaks when feeling emotional.",
+    tags: ["psychology", "emotions"]
+  },
+  {
+    id: "4",
+    question: "Best timeframe for beginners?",
+    answer: "Start with 1-hour or 4-hour charts to avoid noise and focus on significant price action.",
+    tags: ["beginners", "timeframes"]
+  },
+  {
+    id: "5",
+    question: "When to take profits?",
+    answer: "Exit trades when you reach your target, the market shows reversal signals, or when risk/reward becomes unfavorable.",
+    tags: ["exits", "strategy"]
+  }
 ];
 
 export default function LivePage() {
@@ -135,6 +176,9 @@ export default function LivePage() {
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isSharing, setIsSharing] = useState(false);
+  const [showFAQ, setShowFAQ] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const chatScrollRef = useRef<HTMLDivElement>(null);
 
   const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -166,8 +210,96 @@ export default function LivePage() {
     if (chatMessage.trim()) {
       console.log('Sending message:', chatMessage);
       setChatMessage('');
+
+      // Check for FAQ keywords
+      const lowerMessage = chatMessage.toLowerCase();
+      if (lowerMessage.includes('#help') || lowerMessage.includes('help')) {
+        setShowFAQ(true);
+      }
     }
   };
+
+  // Filtered FAQ based on search
+  const filteredFAQ = faqItems.filter(item =>
+    item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  // Enhanced message rendering based on type
+  const renderMessage = (message: typeof chatMessages[0]) => {
+    const isBot = message.role === 'bot';
+    const isQuestion = message.type === 'question';
+    const hasReactions = message.reactions && message.reactions.length > 0;
+
+    return (
+      <div key={message.id} className={`flex gap-2 ${isBot ? 'bg-blue-50/50 rounded-lg p-2' : ''}`}>
+        <Avatar className="w-5 h-5 flex-shrink-0">
+          <AvatarFallback className={`text-xs ${isBot ? 'bg-blue-500 text-white' : ''}`}>
+            {isBot ? <Bot className="w-3 h-3" /> : message.user.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-medium flex items-center gap-1">
+              {isBot && <Bot className="w-3 h-3 text-blue-500" />}
+              {message.user}
+            </span>
+
+            {message.role !== 'student' && !isBot && (
+              <Badge className={`text-xs px-1 py-0 ${getRoleColor(message.role)}`}>
+                {message.role.replace('_', ' ')}
+              </Badge>
+            )}
+
+            {isBot && (
+              <Badge className="text-xs px-1 py-0 bg-blue-100 text-blue-800">
+                Bot
+              </Badge>
+            )}
+
+            {isQuestion && (
+              <HelpCircle className="w-3 h-3 text-orange-500" />
+            )}
+
+            <span className="text-xs text-muted-foreground">{message.time}</span>
+          </div>
+
+          <p className={`text-xs break-words ${isBot ? 'text-blue-900' : 'text-muted-foreground'}`}>
+            {message.message}
+          </p>
+
+          {/* Reactions */}
+          {hasReactions && (
+            <div className="flex gap-1 mt-1">
+              {message.reactions.map((reaction, index) => (
+                <span
+                  key={index}
+                  className="text-xs bg-gray-100 rounded px-1 py-0.5 flex items-center gap-1 hover:bg-gray-200 cursor-pointer"
+                >
+                  <span>{reaction.emoji}</span>
+                  <span className="text-gray-600">{reaction.count}</span>
+                </span>
+              ))}
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-4 px-1 text-xs text-gray-400 hover:text-gray-600"
+              >
+                + 👍
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
   return (
     <div className="min-h-screen bg-background">

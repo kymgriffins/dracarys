@@ -5,6 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Video,
   Calendar,
@@ -13,13 +19,27 @@ import {
   Play,
   MessageSquare,
   Star,
-  ChevronRight,
   Filter,
   Search,
   UserPlus,
   Mic,
-  MicOff
+  MicOff,
+  Plus,
+  Settings,
+  Eye,
+  EyeOff,
+  Sparkles,
+  Edit,
+  Trash2,
+  MoreVertical,
 } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Session {
   id: string;
@@ -37,6 +57,18 @@ interface Session {
   price?: number;
   category: string;
   description: string;
+  isPremium: boolean;
+  isUserHosted?: boolean;
+}
+
+interface SessionFormData {
+  title: string;
+  description: string;
+  duration: number;
+  category: string;
+  isPrivate: boolean;
+  maxParticipants: number;
+  price: number;
   isPremium: boolean;
 }
 
@@ -95,17 +127,140 @@ const mockSessions: Session[] = [
   }
 ];
 
-const categories = ["All", "Live", "Upcoming", "Recorded", "Psychology", "Technical Analysis", "Risk Management"];
+const categories = ["All", "Live", "Upcoming", "Recorded", "My Sessions", "Psychology", "Technical Analysis", "Risk Management"];
 
 export default function LiveSessionsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingSession, setEditingSession] = useState<Session | null>(null);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [mySessions, setMySessions] = useState<Session[]>([]);
+  const [formData, setFormData] = useState<SessionFormData>({
+    title: "",
+    description: "",
+    duration: 60,
+    category: "Technical Analysis",
+    isPrivate: false,
+    maxParticipants: 100,
+    price: 0,
+    isPremium: false
+  });
 
-  const filteredSessions = mockSessions.filter(session => {
+  // Check if user has an active live session
+  const activeLiveSession = mySessions.find(session => session.type === "live");
+
+  const combinedSessions = [...mockSessions, ...mySessions];
+
+  const handleCreateSession = () => {
+    if (!formData.title.trim()) {
+      alert("Please enter a session title");
+      return;
+    }
+
+    const newSession: Session = {
+      id: Date.now().toString(),
+      title: formData.title,
+      instructor: {
+        name: "You", // Current user
+        avatar: "/avatars/current-user.jpg",
+        rating: 4.5
+      },
+      type: "live",
+      startTime: new Date(),
+      duration: formData.duration,
+      participants: 1,
+      maxParticipants: formData.maxParticipants,
+      price: formData.price || undefined,
+      category: formData.category,
+      description: formData.description,
+      isPremium: formData.isPremium,
+      isUserHosted: true
+    };
+
+    setMySessions(prev => [newSession, ...prev]);
+    setIsStreaming(true);
+    setIsCreateDialogOpen(false);
+
+    // Reset form
+    setFormData({
+      title: "",
+      description: "",
+      duration: 60,
+      category: "Technical Analysis",
+      isPrivate: false,
+      maxParticipants: 100,
+      price: 0,
+      isPremium: false
+    });
+  };
+
+  const handleEditSession = (session: Session) => {
+    setEditingSession(session);
+    setFormData({
+      title: session.title,
+      description: session.description,
+      duration: session.duration,
+      category: session.category,
+      isPrivate: false, // You could extend this
+      maxParticipants: session.maxParticipants || 100,
+      price: session.price || 0,
+      isPremium: session.isPremium
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateSession = () => {
+    if (!editingSession || !formData.title.trim()) return;
+
+    setMySessions(prev => prev.map(session =>
+      session.id === editingSession.id ? {
+        ...session,
+        title: formData.title,
+        description: formData.description,
+        duration: formData.duration,
+        category: formData.category,
+        maxParticipants: formData.maxParticipants,
+        price: formData.price || undefined,
+        isPremium: formData.isPremium
+      } : session
+    ));
+
+    setIsEditDialogOpen(false);
+    setEditingSession(null);
+  };
+
+  const handleDeleteSession = (sessionId: string) => {
+    if (window.confirm("Are you sure you want to delete this session? This action cannot be undone.")) {
+      setMySessions(prev => prev.filter(session => session.id !== sessionId));
+      setIsStreaming(false); // End streaming if deleting active session
+    }
+  };
+
+  const handleEndSession = (sessionId: string) => {
+    setMySessions(prev => prev.map(session =>
+      session.id === sessionId ? { ...session, type: "recorded" as const } : session
+    ));
+    setIsStreaming(false);
+  };
+
+  const handleQuickStart = () => {
+    // Quick start with default settings
+    setFormData(prev => ({
+      ...prev,
+      title: `Live Trading Session ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+      description: "Join me for a live trading analysis and Q&A session"
+    }));
+    setIsCreateDialogOpen(true);
+  };
+
+  const filteredSessions = combinedSessions.filter(session => {
     const matchesCategory =
       selectedCategory === "All" ||
       session.category === selectedCategory ||
-      session.type === selectedCategory.toLowerCase();
+      session.type === selectedCategory.toLowerCase() ||
+      (selectedCategory === "My Sessions" && session.isUserHosted);
 
     const matchesSearch = session.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          session.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -139,23 +294,68 @@ export default function LiveSessionsPage() {
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Live Sessions</h1>
-          <p className="text-muted-foreground">
-            Join interactive trading sessions, workshops, and educational content
-          </p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Live Sessions</h1>
+            <p className="text-muted-foreground">
+              Join interactive trading sessions, workshops, and educational content
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {isStreaming && (
+              <Badge className="bg-red-100 text-red-800 animate-pulse">
+                <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                LIVE NOW
+              </Badge>
+            )}
+
+            <Button
+              variant="outline"
+              onClick={handleQuickStart}
+              className="flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              Quick Start
+            </Button>
+
+            {/* Create Session Dialog */}
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Create Live Session
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Create Live Session</DialogTitle>
+                  <DialogDescription>
+                    Set up your live trading session. You'll be able to share your screen, voice, and interact with participants.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <SessionForm
+                  formData={formData}
+                  setFormData={setFormData}
+                  onSubmit={handleCreateSession}
+                  onCancel={() => setIsCreateDialogOpen(false)}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         {/* Search and Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <input
+            <Input
               type="text"
               placeholder="Search sessions..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="pl-10"
             />
           </div>
 
@@ -183,6 +383,31 @@ export default function LiveSessionsPage() {
                   <div className={`absolute top-3 left-3 px-2 py-1 rounded-full text-white text-xs font-bold ${getTypeColor(session.type)}`}>
                     {getTypeLabel(session.type)}
                   </div>
+
+                  {session.isUserHosted && (
+                    <div className="absolute top-3 right-3">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0 bg-white/20 hover:bg-white/30">
+                            <MoreVertical className="h-4 w-4 text-white" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem onClick={() => handleEditSession(session)}>
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteSession(session.id)}
+                            className="text-red-600"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  )}
 
                   {/* Session thumbnail/type indicator */}
                   <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 rounded-t-lg flex items-center justify-center relative overflow-hidden">
@@ -215,7 +440,14 @@ export default function LiveSessionsPage() {
                       <AvatarFallback>{session.instructor.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium text-sm">{session.instructor.name}</p>
+                      <p className="font-medium text-sm flex items-center gap-2">
+                        {session.instructor.name}
+                        {session.isUserHosted && (
+                          <Badge variant="outline" className="text-xs px-1 py-0 bg-blue-50 text-blue-700 border-blue-200">
+                            Your Session
+                          </Badge>
+                        )}
+                      </p>
                       <div className="flex items-center text-xs text-muted-foreground">
                         <Star className="w-3 h-3 text-yellow-500 mr-1" />
                         {session.instructor.rating}
@@ -262,18 +494,54 @@ export default function LiveSessionsPage() {
                           Pro
                         </Badge>
                       )}
+                      {session.isUserHosted && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-700">
+                          <Settings className="w-3 h-3 mr-1" />
+                          Managed
+                        </Badge>
+                      )}
                     </div>
 
-                    <Button
-                      size="sm"
-                      className={session.type === "live" ? "bg-red-600 hover:bg-red-700 animate-pulse" : ""}
-                    >
-                      {session.type === "live" && <Video className="w-4 h-4 mr-2" />}
-                      {session.type === "upcoming" && <Calendar className="w-4 h-4 mr-2" />}
-                      {session.type === "recorded" && <Play className="w-4 h-4 mr-2" />}
-                      {session.type === "live" ? "Join Live" :
-                       session.type === "upcoming" ? "Set Reminder" : "Watch Now"}
-                    </Button>
+                    <div className="flex gap-2 items-center">
+                      <Button
+                        size="sm"
+                        className={session.type === "live" ? "bg-red-600 hover:bg-red-700 animate-pulse" : ""}
+                      >
+                        {session.type === "live" && <Video className="w-4 h-4 mr-2" />}
+                        {session.type === "upcoming" && <Calendar className="w-4 h-4 mr-2" />}
+                        {session.type === "recorded" && <Play className="w-4 h-4 mr-2" />}
+                        {session.type === "live" ? "Join Live" :
+                         session.type === "upcoming" ? "Set Reminder" : "Watch Now"}
+                      </Button>
+
+                      {session.isUserHosted && session.type === "live" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEndSession(session.id)}
+                          className="text-red-600 border-red-200 hover:bg-red-50"
+                        >
+                          End Session
+                        </Button>
+                      )}
+
+                      {session.isUserHosted && session.type === "recorded" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            // Reopen session functionality
+                            setMySessions(prev => prev.map(s =>
+                              s.id === session.id ? { ...s, type: "live" as const, startTime: new Date() } : s
+                            ));
+                            setIsStreaming(true);
+                          }}
+                          className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                        >
+                          Restart Session
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -288,7 +556,174 @@ export default function LiveSessionsPage() {
             <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
           </div>
         )}
+
+        {/* Edit Session Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Edit Session</DialogTitle>
+              <DialogDescription>
+                Update your session details. Changes will be reflected immediately.
+              </DialogDescription>
+            </DialogHeader>
+
+            <SessionForm
+              formData={formData}
+              setFormData={setFormData}
+              onSubmit={handleUpdateSession}
+              onCancel={() => setIsEditDialogOpen(false)}
+              submitText="Update Session"
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
+  );
+}
+
+function SessionForm({
+  formData,
+  setFormData,
+  onSubmit,
+  onCancel,
+  submitText = "Start Live Session"
+}: {
+  formData: SessionFormData;
+  setFormData: (data: SessionFormData) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+  submitText?: string;
+}) {
+  return (
+    <>
+      <div className="grid gap-4 py-4">
+        <div className="grid gap-2">
+          <Label htmlFor="title">Session Title</Label>
+          <Input
+            id="title"
+            placeholder="e.g., EUR/USD Market Analysis Live"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            placeholder="Describe what you'll be covering in the session..."
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            rows={3}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="duration">Duration (minutes)</Label>
+            <Input
+              id="duration"
+              type="number"
+              min="15"
+              max="300"
+              value={formData.duration}
+              onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) || 60 })}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="category">Category</Label>
+            <Select
+              value={formData.category}
+              onValueChange={(value: string) => setFormData({ ...formData, category: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Technical Analysis">Technical Analysis</SelectItem>
+                <SelectItem value="Psychology">Psychology</SelectItem>
+                <SelectItem value="Risk Management">Risk Management</SelectItem>
+                <SelectItem value="Forex">Forex</SelectItem>
+                <SelectItem value="Cryptocurrency">Cryptocurrency</SelectItem>
+                <SelectItem value="Q&A">Q&A</SelectItem>
+                <SelectItem value="Live Trading">Live Trading</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="max-participants">Max Participants</Label>
+            <Input
+              id="max-participants"
+              type="number"
+              min="1"
+              max="500"
+              value={formData.maxParticipants}
+              onChange={(e) => setFormData({ ...formData, maxParticipants: parseInt(e.target.value) || 100 })}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="price">Price ($)</Label>
+            <Input
+              id="price"
+              type="number"
+              min="0"
+              step="0.01"
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="is-premium"
+            checked={formData.isPremium}
+            onCheckedChange={(checked) => setFormData({ ...formData, isPremium: checked as boolean })}
+          />
+          <Label htmlFor="is-premium" className="text-sm font-medium">
+            Premium Session
+          </Label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="is-private"
+            checked={formData.isPrivate}
+            onCheckedChange={(checked) => setFormData({ ...formData, isPrivate: checked as boolean })}
+          />
+          <Label htmlFor="is-private" className="text-sm font-medium">
+            Private Session (invite only)
+            <span className="block text-xs text-muted-foreground ml-6">
+              {formData.isPrivate ? (
+                <>
+                  <EyeOff className="w-3 h-3 inline mr-1" />
+                  Only invited participants can view
+                </>
+              ) : (
+                <>
+                  <Eye className="w-3 h-3 inline mr-1" />
+                  Anyone can join
+                </>
+              )}
+            </span>
+          </Label>
+        </div>
+      </div>
+
+      <DialogFooter>
+        <Button variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button onClick={onSubmit} className="flex items-center gap-2">
+          <Video className="w-4 h-4" />
+          {submitText}
+        </Button>
+      </DialogFooter>
+    </>
   );
 }
