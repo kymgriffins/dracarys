@@ -16,7 +16,9 @@ import {
   Award,
   TrendingUp,
   Star,
-  CheckCircle
+  CheckCircle,
+  BarChart3,
+  Shield
 } from "lucide-react";
 
 export default function GamifiedLearningPage() {
@@ -24,64 +26,111 @@ export default function GamifiedLearningPage() {
   const [experiencePoints] = useState(2450);
   const [completedModules] = useState(12);
 
-  const learningPaths = [
+  const innerCircleModules = [
     {
       id: 1,
-      title: "Trading Fundamentals",
-      description: "Master the basics of trading psychology and technical analysis",
-      modules: 8,
-      completedModules: 8,
-      xpReward: 500,
-      difficulty: "Beginner",
+      title: "Mindset Mastery",
+      description: "Develop the psychological foundation for consistent trading success",
+      lessons: 3,
+      completedLessons: 3,
+      xpReward: 150,
+      status: "completed",
       icon: <BookOpen className="w-6 h-6" />,
-      color: "bg-blue-500"
+      color: "bg-purple-500",
+      concepts: ["Trading Psychology", "Emotional Discipline", "Growth Mindset"]
     },
     {
       id: 2,
-      title: "Risk Management Mastery",
-      description: "Learn to protect your capital and manage position sizing",
-      modules: 6,
-      completedModules: 4,
-      xpReward: 750,
-      difficulty: "Intermediate",
-      icon: <Target className="w-6 h-6" />,
-      color: "bg-green-500"
+      title: "Market Structure Fundamentals",
+      description: "Understand how professional traders view price action",
+      lessons: 4,
+      completedLessons: 4,
+      xpReward: 200,
+      status: "completed",
+      icon: <TrendingUp className="w-6 h-6" />,
+      color: "bg-blue-500",
+      concepts: ["Support & Resistance", "Trend Channels", "Market Phases"]
     },
     {
       id: 3,
-      title: "Advanced Market Analysis",
-      description: "Deep dive into market structure and institutional trading patterns",
-      modules: 10,
-      completedModules: 0,
-      xpReward: 1000,
-      difficulty: "Advanced",
-      icon: <TrendingUp className="w-6 h-6" />,
-      color: "bg-purple-500"
+      title: "The Inner Circle Edge",
+      description: "Learn institutional trading patterns and smart money concepts",
+      lessons: 5,
+      completedLessons: 2,
+      xpReward: 250,
+      status: "inProgress",
+      icon: <Target className="w-6 h-6" />,
+      color: "bg-green-500",
+      concepts: ["Order Flow", "Liquidity Pools", "Institutional Footprints"]
+    },
+    {
+      id: 4,
+      title: "Risk-First Trading",
+      description: "Master position sizing, stop losses, and risk management protocols",
+      lessons: 4,
+      completedLessons: 1,
+      xpReward: 200,
+      status: "inProgress",
+      icon: <CheckCircle className="w-6 h-6" />,
+      color: "bg-orange-500",
+      concepts: ["Risk/Reward Ratios", "Position Sizing", "Portfolio Heat"]
+    },
+    {
+      id: 5,
+      title: "Execution Mastery",
+      description: "Perfect your trade entry and exit timing",
+      lessons: 6,
+      completedLessons: 0,
+      xpReward: 300,
+      status: "locked",
+      icon: <Award className="w-6 h-6" />,
+      color: "bg-red-500",
+      concepts: ["Entry Triggers", "Exit Strategies", "Trade Management"]
+    },
+    {
+      id: 6,
+      title: "Performance Analytics",
+      description: "Track, analyze, and optimize your trading performance",
+      lessons: 4,
+      completedLessons: 0,
+      xpReward: 250,
+      status: "locked",
+      icon: <BarChart3 className="w-6 h-6" />,
+      color: "bg-indigo-500",
+      concepts: ["Win Rate Analysis", "Drawdown Management", "Performance Metrics"]
     }
   ];
 
   const achievements = [
     {
       id: 1,
-      title: "First Trade Journal",
-      description: "Complete your first trading journal entry",
-      icon: <CheckCircle className="w-8 h-8 text-green-500" />,
+      title: "Mindset Warrior",
+      description: "Completed the psychological foundation module",
+      icon: <Trophy className="w-8 h-8 text-purple-500" />,
       earned: true,
-      xpReward: 100
+      xpReward: 150
     },
     {
       id: 2,
-      title: "Streak Master",
-      description: "Maintain consistent daily journaling for 7 days",
-      icon: <Zap className="w-8 h-8 text-yellow-500" />,
+      title: "Structure Master",
+      description: "Mastered market structure fundamentals",
+      icon: <Award className="w-8 h-8 text-blue-500" />,
       earned: true,
       xpReward: 200
     },
     {
       id: 3,
-      title: "Knowledge Seeker",
-      description: "Complete 5 learning modules",
-      icon: <Trophy className="w-8 h-8 text-orange-500" />,
+      title: "Inner Circle Initiate",
+      description: "First step into institutional trading concepts",
+      icon: <Zap className="w-8 h-8 text-green-500" />,
+      earned: false,
+      xpReward: 100
+    },
+    {
+      id: 4,
+      title: "Risk Guardian",
+      description: "Master consistent risk management",
+      icon: <Shield className="w-8 h-8 text-orange-500" />,
       earned: false,
       xpReward: 300
     }
@@ -150,50 +199,92 @@ export default function GamifiedLearningPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {learningPaths.map((path) => (
-            <Card key={path.id} className="hover:shadow-lg transition-all duration-200 border-2">
+          {innerCircleModules.map((module) => (
+            <Card key={module.id} className={`hover:shadow-lg transition-all duration-200 border-2 ${
+              module.status === 'completed' ? 'bg-green-50/50 border-green-200' :
+              module.status === 'inProgress' ? 'bg-blue-50/50 border-blue-200' :
+              'bg-muted/20 border-muted'
+            }`}>
               <CardHeader>
                 <div className="flex items-start justify-between">
-                  <div className={`p-3 rounded-lg ${path.color} text-white`}>
-                    {path.icon}
+                  <div className={`p-3 rounded-lg ${module.color} text-white relative`}>
+                    {module.icon}
+                    {module.status === 'completed' && (
+                      <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-1">
+                        <CheckCircle className="w-3 h-3 text-white" />
+                      </div>
+                    )}
                   </div>
-                  <Badge variant={path.difficulty === 'Beginner' ? 'secondary' : path.difficulty === 'Intermediate' ? 'default' : 'destructive'}>
-                    {path.difficulty}
-                  </Badge>
+                  <div className="flex gap-2">
+                    <Badge variant={module.status === 'completed' ? 'default' :
+                                   module.status === 'inProgress' ? 'secondary' : 'destructive'}>
+                      {module.status === 'completed' ? 'Completed' :
+                       module.status === 'inProgress' ? 'In Progress' : 'Locked'}
+                    </Badge>
+                  </div>
                 </div>
-                <CardTitle className="text-lg">{path.title}</CardTitle>
+                <CardTitle className="text-lg">{module.title}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-sm">{path.description}</p>
+                <p className="text-muted-foreground text-sm">{module.description}</p>
 
+                {/* Progress */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Progress</span>
-                    <span>{path.completedModules}/{path.modules} modules</span>
+                    <span>Lesson Progress</span>
+                    <span>{module.completedLessons}/{module.lessons} lessons</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
                     <div
-                      className="bg-primary h-2 rounded-full"
-                      style={{ width: `${(path.completedModules / path.modules) * 100}%` }}
+                      className="bg-primary h-2 rounded-full transition-all"
+                      style={{ width: `${(module.completedLessons / module.lessons) * 100}%` }}
                     ></div>
+                  </div>
+                </div>
+
+                {/* Key Concepts */}
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">Key Concepts:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {module.concepts.slice(0, 3).map((concept, idx) => (
+                      <span key={idx} className="text-xs bg-muted px-2 py-1 rounded">
+                        {concept}
+                      </span>
+                    ))}
+                    {module.concepts.length > 3 && (
+                      <span className="text-xs text-muted-foreground">
+                        +{module.concepts.length - 3} more
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <Zap className="w-4 h-4" />
-                    {path.xpReward} XP
+                    {module.xpReward} XP
                   </div>
-                  <Button size="sm" variant={path.completedModules === path.modules ? "secondary" : "default"}>
-                    {path.completedModules === path.modules ? (
+                  <Button
+                    size="sm"
+                    variant={module.status === 'completed' ? "secondary" :
+                             module.status === 'inProgress' ? "default" :
+                             "outline"}
+                    disabled={module.status === 'locked'}
+                  >
+                    {module.status === 'completed' ? (
                       <>
                         <Star className="w-4 h-4 mr-1" />
                         Review
                       </>
-                    ) : (
+                    ) : module.status === 'inProgress' ? (
                       <>
                         <PlayCircle className="w-4 h-4 mr-1" />
                         Continue
+                      </>
+                    ) : (
+                      <>
+                        <Clock className="w-4 h-4 mr-1" />
+                        Locked
                       </>
                     )}
                   </Button>
