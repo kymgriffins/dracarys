@@ -52,6 +52,8 @@ const navigation = [
   { name: "Calendar", href: "/calendar", icon: Calendar },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Affiliates", href: "/affiliates", icon: DollarSign, badge: "Mentor" },
+  { name: "Prop Firms", href: "/props", icon: Target, badge: "Funded" },
+  { name: "Brokers", href: "/brokers", icon: Users, badge: "Trade" },
   { name: "Signals", href: "/signals", icon: TrendingUp, badge: "Pro" },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
