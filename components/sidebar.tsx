@@ -26,7 +26,10 @@ import {
   LogOut,
   Menu,
   X,
-  DollarSign
+  DollarSign,
+  Eye,
+  MousePointer,
+  Activity
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -43,20 +46,85 @@ import {
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Dashboard V2", href: "/dashboard/v2", icon: LayoutDashboard, badge: "New" },
-  { name: "Courses", href: "/courses", icon: BookOpen, badge: "2" },
+  { name: "Courses", href: "/courses", icon: BookOpen },
+  { name: "Gamified Learning", href: "/learning/gamified", icon: Target },
+  { name: "JawGnarl v2", href: "/jawgnarl", icon: Target },
   { name: "Journal", href: "/journal", icon: FileText },
-  { name: "Gamified Learning", href: "/learning/gamified", icon: Target, badge: "Visual" },
-  { name: "JawGnarl v2", href: "/jawgnarl", icon: Target, badge: "New" },
-  { name: "Community", href: "/community", icon: MessageSquare, badge: "3" },
-  { name: "Calendar", href: "/calendar", icon: Calendar },
+  { name: "Community", href: "/community", icon: MessageSquare },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
-  { name: "Affiliates", href: "/affiliates", icon: DollarSign, badge: "Mentor" },
-  { name: "Prop Firms", href: "/props", icon: Target, badge: "Funded" },
-  { name: "Brokers", href: "/brokers", icon: Users, badge: "Trade" },
-  { name: "Signals", href: "/signals", icon: TrendingUp, badge: "Pro" },
+  { name: "Affiliates", href: "/affiliates", icon: DollarSign },
+  { name: "Prop Firms", href: "/props", icon: Target },
+  { name: "Brokers", href: "/brokers", icon: Users },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
+
+// Live promotional offers component
+function LiveAffiliatesSection({ collapsed, hovering }: { collapsed: boolean; hovering: boolean }) {
+  const [currentOfferIndex, setCurrentOfferIndex] = useState(0);
+
+  const promotionalOffers = [
+    { firm: "FTMO", discount: "30% off", description: "Challenge accounts", code: "DRACARYS30" },
+    { firm: "MyForexFunds", discount: "25% off", description: "Evaluation phase", code: "DRACARYS25" },
+    { firm: "The5ers", discount: "20% off", description: "Instant funding", code: "DRACARYS20" },
+    { firm: "TrueForexFunds", discount: "35% off", description: "All accounts", code: "DRACARYS35" },
+    { firm: "FundingPips", discount: "15% off", description: "Express accounts", code: "DRACARYS15" }
+  ];
+
+  // Rotate offers every 8 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentOfferIndex(prev => (prev + 1) % promotionalOffers.length);
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  if (collapsed && !hovering) return null;
+
+  const currentOffer = promotionalOffers[currentOfferIndex];
+
+  return (
+    <div className="mb-4">
+      <Link href="/props" className="block">
+        <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg p-3 border border-orange-500/20 hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-red-500/20 transition-all duration-200 cursor-pointer group">
+          <div className="flex items-center space-x-2 mb-2">
+            <Target className="w-4 h-4 text-orange-600 group-hover:text-orange-700" />
+            <span className="text-sm font-medium text-orange-600 group-hover:text-orange-700">Hot Offer</span>
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse ml-auto" />
+          </div>
+
+          <div className="space-y-2">
+            <div className="text-sm">
+              <span className="font-bold text-orange-600 group-hover:text-orange-700">{currentOffer.discount}</span>
+              <span className="text-muted-foreground group-hover:text-foreground/80"> on {currentOffer.firm}</span>
+            </div>
+            <div className="text-xs text-muted-foreground group-hover:text-muted-foreground/80">
+              {currentOffer.description}
+            </div>
+            <div className="flex items-center justify-between">
+              <code className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded font-mono group-hover:bg-orange-200">
+                {currentOffer.code}
+              </code>
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-orange-600 group-hover:text-orange-700 font-medium">View Deal →</span>
+                <div className="flex space-x-1">
+                  {promotionalOffers.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        index === currentOfferIndex ? 'bg-orange-500' : 'bg-orange-200'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+}
 
 interface SidebarProps {
   isMobileOpen?: boolean;
@@ -158,14 +226,6 @@ export function Sidebar({ isMobileOpen = false, onMobileClose = () => {} }: Side
                 {(!sidebarCollapsed || isHovering) && (
                   <span className="ml-3 truncate">{item.name}</span>
                 )}
-                {(!sidebarCollapsed || isHovering) && item.badge && (
-                  <Badge
-                    variant={item.badge === "Pro" ? "secondary" : item.badge === "Visual" ? "secondary" : "destructive"}
-                    className="ml-auto text-xs h-5 w-5 rounded-full p-0 flex items-center justify-center"
-                  >
-                    {item.badge === "Pro" ? "P" : item.badge === "Visual" ? "V" : item.badge}
-                  </Badge>
-                )}
               </Button>
             </Link>
           );
@@ -174,6 +234,9 @@ export function Sidebar({ isMobileOpen = false, onMobileClose = () => {} }: Side
 
       {/* Bottom Section */}
       <div className="border-t border-border p-4">
+        {/* Live Affiliates Section */}
+        <LiveAffiliatesSection collapsed={sidebarCollapsed} hovering={isHovering} />
+
         {/* Notifications - only show when expanded */}
         {(!sidebarCollapsed || isHovering) && (
           <Button
