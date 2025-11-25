@@ -69,7 +69,7 @@ export function Navigation({ className }: NavigationProps): React.ReactNode {
               <Link href="/auth/login">
                 <Button variant="ghost" className="focus-visible:ring-2 focus-visible:ring-ring">Sign In</Button>
               </Link>
-              <Link href="/app/dashboard">
+              <Link href="/dashboard">
                 <Button variant="ghost" className="focus-visible:ring-2 focus-visible:ring-ring">Dashboard</Button>
               </Link>
             </>

@@ -91,7 +91,7 @@ export function DashboardHeader({ showQuickActions = true, onMobileMenuClick = (
             >
               <Menu className="w-6 h-6" />
             </Button>
-            <Link href="/app/dashboard" className="flex items-center space-x-2">
+            <Link href="/dashboard" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-primary-foreground" />
               </div>

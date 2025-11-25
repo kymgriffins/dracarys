@@ -50,7 +50,7 @@ export function LoginForm({
 
         // Force refresh and redirect
         router.refresh();
-        router.push("/app/dashboard");
+        router.push("/dashboard");
       } else {
         throw new Error('No session returned after login');
       }
