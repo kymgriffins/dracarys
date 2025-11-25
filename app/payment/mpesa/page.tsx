@@ -117,7 +117,7 @@ function MpesaPaymentPageContent() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
-            <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-500" />
+            <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <h2 className="text-xl font-bold text-destructive mb-2">Invalid Plan</h2>
             <p className="text-muted-foreground">The selected plan is not available.</p>
           </CardContent>
@@ -131,7 +131,7 @@ function MpesaPaymentPageContent() {
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.push('/app/settings')}>
+          <Button variant="ghost" onClick={() => router.push('/settings')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Settings
           </Button>
@@ -157,8 +157,8 @@ function MpesaPaymentPageContent() {
               <CardContent>
                 {paymentStatus === 'success' ? (
                   <div className="text-center py-8">
-                    <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
-                    <h3 className="text-2xl font-bold text-green-700 mb-2">Payment Successful!</h3>
+                    <CheckCircle className="w-16 h-16 mx-auto mb-4 text-secondary-foreground" />
+                    <h3 className="text-2xl font-bold text-secondary-foreground mb-2">Payment Successful!</h3>
                     <p className="text-muted-foreground mb-4">
                       Your M-Pesa payment was received successfully.
                     </p>
@@ -167,9 +167,9 @@ function MpesaPaymentPageContent() {
                     </p>
                   </div>
                 ) : paymentStatus === 'error' ? (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                    <AlertTriangle className="w-5 h-5 text-red-600 mb-2" />
-                    <p className="text-sm text-red-700">
+                  <div className="bg-muted border border-muted rounded-lg p-4 mb-4">
+                    <AlertTriangle className="w-5 h-5 text-muted-foreground mb-2" />
+                    <p className="text-sm text-muted-foreground">
                       {errorMessage || "Payment failed. Please try again."}
                     </p>
                   </div>
@@ -183,7 +183,7 @@ function MpesaPaymentPageContent() {
                       Check your phone for the M-Pesa payment prompt
                     </p>
 
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <div className="bg-primary border border-primary rounded-lg p-4 mb-4">
                       <div className="text-sm space-y-2">
                         <p><strong>Phone:</strong> {formatPhoneDisplay(phoneNumber)}</p>
                         <p><strong>Amount:</strong> KES {plan.price.toLocaleString()}</p>
@@ -224,8 +224,8 @@ function MpesaPaymentPageContent() {
                     </div>
 
                     {errorMessage && (
-                      <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                        <p className="text-sm text-red-700">{errorMessage}</p>
+                      <div className="bg-muted border border-muted rounded-lg p-3">
+                        <p className="text-sm text-muted-foreground">{errorMessage}</p>
                       </div>
                     )}
 
@@ -250,31 +250,31 @@ function MpesaPaymentPageContent() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                  <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-xs font-bold">1</div>
                   <p className="text-sm">Click "Pay with M-Pesa" above</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-bold">2</div>
+                  <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-xs font-bold">2</div>
                   <p className="text-sm">Check your phone for M-Pesa payment prompt</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-bold">3</div>
+                  <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-xs font-bold">3</div>
                   <p className="text-sm">Enter your M-Pesa PIN to complete payment</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-bold">4</div>
+                  <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-xs font-bold">4</div>
                   <p className="text-sm">Payment confirmation will appear automatically</p>
                 </div>
               </CardContent>
             </Card>
 
             {/* Security Badge */}
-            <Card className="bg-green-50 border-green-200">
+            <Card className="bg-secondary border-secondary">
               <CardContent className="p-4 flex items-center gap-3">
-                <Shield className="w-6 h-6 text-green-600" />
+                <Shield className="w-6 h-6 text-secondary-foreground" />
                 <div>
-                  <p className="font-medium text-green-800">Secure M-Pesa Payment</p>
-                  <p className="text-sm text-green-600">Direct integration with M-Pesa API</p>
+                  <p className="font-medium text-secondary-foreground">Secure M-Pesa Payment</p>
+                  <p className="text-sm text-secondary-foreground">Direct integration with M-Pesa API</p>
                 </div>
               </CardContent>
             </Card>
@@ -299,11 +299,11 @@ function MpesaPaymentPageContent() {
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="font-medium text-green-700">✓ You'll Get:</h4>
+                  <h4 className="font-medium text-secondary-foreground">✓ You'll Get:</h4>
                   <ul className="space-y-1 text-sm">
                     {plan.features.slice(0, 4).map((feature, i) => (
                       <li key={i} className="flex items-center gap-2">
-                        <CheckCircle className="w-3 h-3 text-green-600 flex-shrink-0" />
+                        <CheckCircle className="w-3 h-3 text-secondary-foreground flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
@@ -317,14 +317,14 @@ function MpesaPaymentPageContent() {
 
                 {/* Lorde of Merchants Mention */}
                 {planId === 'mentoring_kes' && (
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="bg-secondary border border-secondary rounded-lg p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                        <Star className="w-4 h-4 text-purple-600" />
+                      <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                        <Star className="w-4 h-4 text-secondary-foreground" />
                       </div>
                       <div>
-                        <p className="font-medium text-purple-800">Personal Lorde of Merchants Access</p>
-                        <p className="text-sm text-purple-600">Get direct mentorship from trading's master teacher</p>
+                        <p className="font-medium text-secondary-foreground">Personal Lorde of Merchants Access</p>
+                        <p className="text-sm text-secondary-foreground">Get direct mentorship from trading's master teacher</p>
                       </div>
                     </div>
                   </div>

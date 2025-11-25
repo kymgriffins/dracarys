@@ -20,7 +20,7 @@ export function CookingAnimation({
   description = "We're working hard to bring you this amazing feature",
   estimatedTime = "Coming Soon",
   showHomeButton = true,
-  backLink = "/app/dashboard"
+  backLink = "/dashboard"
 }: CookingAnimationProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
@@ -267,8 +267,8 @@ export function CookingAnimation({
                   </Link>
                 )}
 
-                {backLink !== "/app/dashboard" && (
-                  <Link href="/app/dashboard">
+                {backLink !== "/dashboard" && (
+                  <Link href="/dashboard">
                     <motion.div
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}

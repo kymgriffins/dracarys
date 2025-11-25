@@ -102,7 +102,7 @@ function StripePaymentPageContent() {
   const handlePaymentSuccess = () => {
     setPaymentStatus('success');
     setTimeout(() => {
-      router.push('/app/dashboard?payment=success');
+      router.push('/dashboard?payment=success');
     }, 2000);
   };
 
@@ -127,7 +127,7 @@ function StripePaymentPageContent() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
-            <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-red-500" />
+            <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <h2 className="text-xl font-bold text-destructive mb-2">Invalid Plan</h2>
             <p className="text-muted-foreground">The selected plan is not available.</p>
           </CardContent>
@@ -141,7 +141,7 @@ function StripePaymentPageContent() {
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.push('/app/settings')}>
+          <Button variant="ghost" onClick={() => router.push('/settings')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Settings
           </Button>
@@ -167,19 +167,19 @@ function StripePaymentPageContent() {
               <CardContent>
                 {paymentStatus === 'success' ? (
                   <div className="text-center py-8">
-                    <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
-                    <h3 className="text-2xl font-bold text-green-700 mb-2">Payment Successful!</h3>
+                    <CheckCircle className="w-16 h-16 mx-auto mb-4 text-secondary-foreground" />
+                    <h3 className="text-2xl font-bold text-secondary-foreground mb-2">Payment Successful!</h3>
                     <p className="text-muted-foreground">
                       Welcome to your new plan! Redirecting...
                     </p>
                   </div>
                 ) : paymentStatus === 'error' ? (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                  <div className="bg-muted border border-muted rounded-lg p-4 mb-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <AlertTriangle className="w-4 h-4 text-red-600" />
-                      <span className="font-medium text-red-800">Payment Failed</span>
+                      <AlertTriangle className="w-4 h-4 text-muted-foreground" />
+                      <span className="font-medium text-muted-foreground">Payment Failed</span>
                     </div>
-                    <p className="text-sm text-red-700">
+                    <p className="text-sm text-muted-foreground">
                       {errorMessage || "Payment failed. Please try again."}
                     </p>
                   </div>
@@ -190,12 +190,12 @@ function StripePaymentPageContent() {
             </Card>
 
             {/* Security Badge */}
-            <Card className="bg-green-50 border-green-200">
+            <Card className="bg-secondary border-secondary">
               <CardContent className="p-4 flex items-center gap-3">
-                <Shield className="w-6 h-6 text-green-600" />
+                <Shield className="w-6 h-6 text-secondary-foreground" />
                 <div>
-                  <p className="font-medium text-green-800">SSL Encrypted</p>
-                  <p className="text-sm text-green-600">256-bit SSL encryption protects your data</p>
+                  <p className="font-medium text-secondary-foreground">SSL Encrypted</p>
+                  <p className="text-sm text-secondary-foreground">256-bit SSL encryption protects your data</p>
                 </div>
               </CardContent>
             </Card>
@@ -220,11 +220,11 @@ function StripePaymentPageContent() {
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="font-medium text-green-700">✓ You'll Get:</h4>
+                  <h4 className="font-medium text-secondary-foreground">✓ You'll Get:</h4>
                   <ul className="space-y-1 text-sm">
                     {plan.features.slice(0, 4).map((feature, i) => (
                       <li key={i} className="flex items-center gap-2">
-                        <CheckCircle className="w-3 h-3 text-green-600 flex-shrink-0" />
+                        <CheckCircle className="w-3 h-3 text-secondary-foreground flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
@@ -238,14 +238,14 @@ function StripePaymentPageContent() {
 
                 {/* Lorde of Merchants Mention */}
                 {planId === 'mentoring' && (
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="bg-secondary border border-secondary rounded-lg p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                        <Star className="w-4 h-4 text-purple-600" />
+                      <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                        <Star className="w-4 h-4 text-secondary-foreground" />
                       </div>
                       <div>
-                        <p className="font-medium text-purple-800">Personal Lorde of Merchants Access</p>
-                        <p className="text-sm text-purple-600">Get direct mentorship from trading's master teacher</p>
+                        <p className="font-medium text-secondary-foreground">Personal Lorde of Merchants Access</p>
+                        <p className="text-sm text-secondary-foreground">Get direct mentorship from trading's master teacher</p>
                       </div>
                     </div>
                   </div>

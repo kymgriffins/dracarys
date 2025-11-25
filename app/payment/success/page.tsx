@@ -99,8 +99,8 @@ export default function PaymentSuccessPage() {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4">
       <div className="container mx-auto max-w-2xl">
         <div className="text-center mb-8">
-          <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-4" />
-          <h1 className="text-4xl font-bold text-green-600 mb-2">Payment Successful!</h1>
+          <CheckCircle className="w-20 h-20 text-secondary-foreground mx-auto mb-4" />
+          <h1 className="text-4xl font-bold text-secondary-foreground mb-2">Payment Successful!</h1>
           <p className="text-lg text-muted-foreground">
             Welcome to Dracarys! Your subscription has been activated.
           </p>
@@ -165,14 +165,14 @@ export default function PaymentSuccessPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
+                <Check className="w-5 h-5 text-secondary-foreground" />
                 What's Next
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-secondary-foreground mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="font-medium">Account Activated</div>
                     <div className="text-sm text-muted-foreground">
@@ -182,7 +182,7 @@ export default function PaymentSuccessPage() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-secondary-foreground mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="font-medium">Welcome Email Sent</div>
                     <div className="text-sm text-muted-foreground">
@@ -192,7 +192,7 @@ export default function PaymentSuccessPage() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-secondary-foreground mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="font-medium">Dashboard Access</div>
                     <div className="text-sm text-muted-foreground">
@@ -202,7 +202,7 @@ export default function PaymentSuccessPage() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="font-medium">Next Step</div>
                     <div className="text-sm text-muted-foreground">

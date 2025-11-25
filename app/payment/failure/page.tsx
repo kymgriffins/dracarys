@@ -11,8 +11,8 @@ export default function PaymentFailurePage() {
       <div className="w-full max-w-2xl">
         <Card>
           <CardHeader className="text-center">
-            <XCircle className="w-20 h-20 text-red-500 mx-auto mb-4" />
-            <CardTitle className="text-3xl text-red-600 mb-2">
+            <XCircle className="w-20 h-20 text-muted-foreground mx-auto mb-4" />
+            <CardTitle className="text-3xl text-muted-foreground mb-2">
               Payment Failed
             </CardTitle>
             <CardDescription className="text-lg">
@@ -22,9 +22,9 @@ export default function PaymentFailurePage() {
 
           <CardContent className="space-y-6">
             {/* Possible Reasons */}
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <h3 className="font-semibold text-red-800 mb-2">What might have happened?</h3>
-              <ul className="text-sm text-red-700 space-y-1">
+            <div className="bg-muted border border-muted rounded-lg p-4">
+              <h3 className="font-semibold text-muted-foreground mb-2">What might have happened?</h3>
+              <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Insufficient funds in your account</li>
                 <li>• Incorrect payment details provided</li>
                 <li>• Payment method was declined</li>
@@ -34,9 +34,9 @@ export default function PaymentFailurePage() {
             </div>
 
             {/* What to do next */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-blue-800 mb-2">What should you do?</h3>
-              <ul className="text-sm text-blue-700 space-y-1">
+            <div className="bg-primary border border-primary rounded-lg p-4">
+              <h3 className="font-semibold text-primary mb-2">What should you do?</h3>
+              <ul className="text-sm text-primary space-y-1">
                 <li>• Check your payment method and try again</li>
                 <li>• Ensure you have sufficient funds</li>
                 <li>• Verify your payment details are correct</li>
