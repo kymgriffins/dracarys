@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, DollarSign, Eye, TrendingUp, Users, Plus, Settings, BarChart3, Trash2, Edit } from "lucide-react";
+import { AlertCircle, DollarSign, Eye, TrendingUp, Users, Plus, Settings, BarChart3, Trash2, Edit, Target, Award, Star, ExternalLink, CheckCircle } from "lucide-react";
 import { MentorAffiliate, AdvertisingCampaign, AffiliateDashboardStats } from "@/lib/types/mentor";
 import { CreateAffiliateDialog } from "@/components/affiliates/create-affiliate-dialog";
 import { EditAffiliateDialog } from "@/components/affiliates/edit-affiliate-dialog";
@@ -249,30 +249,51 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
         </Alert>
       )}
 
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Affiliate Advertising</h1>
-          <p className="text-muted-foreground mt-2">
-            Monetize your expertise by promoting prop firms and brokers to your students
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            onClick={() => setCreateAffiliateOpen(true)}
-          >
-            <Plus className="w-4 h-4" />
-            Add Affiliate
-          </Button>
-          <Button
-            className="flex items-center gap-2"
-            onClick={() => setCreateCampaignOpen(true)}
-          >
-            <Plus className="w-4 h-4" />
-            Create Campaign
-          </Button>
+      {/* SaaS Platform Header */}
+      <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-teal-50 rounded-lg p-8 mb-8 border border-gray-100">
+        <div className="flex items-center justify-between">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-3 mb-2">
+              <Target className="w-8 h-8 text-blue-600" />
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
+                Funded Trader Toolkit
+              </h1>
+            </div>
+            <p className="text-lg text-gray-700 mb-3">
+              Curated marketplace of top trading prop firms and brokers to help traders get funded faster.
+            </p>
+            <div className="flex items-center gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4 text-yellow-500" />
+                <span className="font-medium">Earn 10 Points</span> per prop firm click
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-blue-500" />
+                <span>Mentor-prepped for success</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span>Verified funding partnerships</span>
+              </div>
+            </div>
+          </div>
+          <div className="hidden lg:flex flex-col gap-3">
+            <Button
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700"
+              onClick={() => setCreateAffiliateOpen(true)}
+            >
+              <Plus className="w-4 h-4" />
+              Add Prop Firm
+            </Button>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={() => setCreateCampaignOpen(true)}
+            >
+              <Plus className="w-4 h-4" />
+              Create Campaign
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -335,8 +356,8 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="affiliates">Affiliates</TabsTrigger>
-          <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
+          <TabsTrigger value="affiliates">Prop Firms</TabsTrigger>
+          <TabsTrigger value="campaigns">Brokers</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -352,11 +373,12 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
               <CardContent>
                 {affiliates.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    <DollarSign className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No affiliates added yet</p>
-                    <Button className="mt-4" size="sm">
+                    <Target className="w-12 h-12 mx-auto mb-4 opacity-50 text-blue-500" />
+                    <p className="mb-2">No prop firms in your marketplace yet</p>
+                    <p className="text-sm mb-4">Add trading prop firms to create your Funding Marketplace.</p>
+                    <Button mt-4 size="sm" className="bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700">
                       <Plus className="w-4 h-4 mr-2" />
-                      Add Your First Affiliate
+                      Add First Prop Firm
                     </Button>
                   </div>
                 ) : (
@@ -432,422 +454,218 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
 
         <TabsContent value="affiliates" className="space-y-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Manage Affiliates</h2>
+            <h2 className="text-2xl font-bold">Prop Firms</h2>
             <Button
               className="flex items-center gap-2"
               onClick={() => setCreateAffiliateOpen(true)}
             >
               <Plus className="w-4 h-4" />
-              Add New Affiliate
+              Add Prop Firm
             </Button>
           </div>
 
-          {affiliates.length === 0 ? (
-            <Card>
+          <div className="flex items-center gap-3 mb-4">
+            <TrendingUp className="w-5 h-5 text-blue-500" />
+            <h3 className="text-xl font-semibold">Trading Prop Firms</h3>
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+              {affiliates.filter(a => a.provider_type === 'prop_firm').length}
+            </Badge>
+          </div>
+
+          {affiliates.filter(a => a.provider_type === 'prop_firm').length === 0 ? (
+            <Card className="border-dashed border-2 border-blue-200">
               <CardContent className="flex flex-col items-center justify-center py-12">
-                <DollarSign className="w-16 h-16 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No affiliates yet</h3>
+                <TrendingUp className="w-16 h-16 text-blue-200 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No prop firms yet</h3>
                 <p className="text-muted-foreground text-center mb-6 max-w-md">
-                  Start building your affiliate network by adding the prop firms and brokers you work with.
-                  Your students will see these opportunities and you'll earn commissions on successful sign-ups.
+                  Add trading prop firms to create your Funding Marketplace. Students earn 10 points per click and you'll earn commissions from successful sign-ups.
                 </p>
-                <Button size="lg">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700">
                   <Plus className="w-5 h-5 mr-2" />
-                  Add Your First Affiliate
+                  Add Your First Prop Firm
                 </Button>
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-8">
-              {/* Prop Firms Section */}
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <TrendingUp className="w-5 h-5 text-blue-500" />
-                  <h3 className="text-xl font-semibold">Prop Firms</h3>
-                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                    {affiliates.filter(a => a.provider_type === 'prop_firm').length}
-                  </Badge>
-                </div>
-
-                {affiliates.filter(a => a.provider_type === 'prop_firm').length === 0 ? (
-                  <Card className="border-dashed border-2 border-blue-200">
-                    <CardContent className="flex flex-col items-center justify-center py-8">
-                      <TrendingUp className="w-12 h-12 text-blue-200 mb-3" />
-                      <p className="text-muted-foreground">No prop firms added yet</p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {affiliates.filter(a => a.provider_type === 'prop_firm').map((affiliate) => (
-                      <Card key={affiliate.id} className="border-blue-100 hover:border-blue-200 transition-colors">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="flex items-center justify-between text-base">
-                            {affiliate.name}
-                            <Badge variant={affiliate.is_active ? "default" : "secondary"} className="text-xs">
-                              {affiliate.is_active ? "Active" : "Inactive"}
-                            </Badge>
-                          </CardTitle>
-                          <CardDescription>{affiliate.provider_name}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-3 text-sm">
-                              <div>
-                                <div className="text-muted-foreground">Clicks</div>
-                                <div className="font-semibold">{affiliate.click_count}</div>
-                              </div>
-                              <div>
-                                <div className="text-muted-foreground">Conversions</div>
-                                <div className="font-semibold">{affiliate.conversion_count}</div>
-                              </div>
-                            </div>
-                            <div className="pt-2 border-t">
-                              <div className="text-sm text-muted-foreground mb-1">Revenue Generated</div>
-                              <div className="text-lg font-semibold text-blue-600">
-                                ${affiliate.revenue_generated.toLocaleString('en-US', { maximumFractionDigits: 2 })}
-                              </div>
-                            </div>
-                            <div className="pt-2 border-t">
-                              <div className="text-sm text-muted-foreground mb-1">Affiliate Link</div>
-                              <a
-                                href={affiliate.affiliate_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
-                                title={affiliate.affiliate_url}
-                              >
-                                {affiliate.affiliate_url}
-                              </a>
-                            </div>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                  setSelectedAffiliate(affiliate);
-                                  setEditAffiliateOpen(true);
-                                }}
-                              >
-                                <Edit className="w-4 h-4 mr-2" />
-                                Edit
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                  setSelectedAffiliate(affiliate);
-                                  setDeleteAffiliateOpen(true);
-                                }}
-                              >
-                                <Trash2 className="w-4 h-4 mr-2" />
-                                Delete
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Brokers Section */}
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <Users className="w-5 h-5 text-green-500" />
-                  <h3 className="text-xl font-semibold">Brokers</h3>
-                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                    {affiliates.filter(a => a.provider_type === 'broker').length}
-                  </Badge>
-                </div>
-
-                {affiliates.filter(a => a.provider_type === 'broker').length === 0 ? (
-                  <Card className="border-dashed border-2 border-green-200">
-                    <CardContent className="flex flex-col items-center justify-center py-8">
-                      <Users className="w-12 h-12 text-green-200 mb-3" />
-                      <p className="text-muted-foreground">No brokers added yet</p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {affiliates.filter(a => a.provider_type === 'broker').map((affiliate) => (
-                      <Card key={affiliate.id} className="border-green-100 hover:border-green-200 transition-colors">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="flex items-center justify-between text-base">
-                            {affiliate.name}
-                            <Badge variant={affiliate.is_active ? "default" : "secondary"} className="text-xs">
-                              {affiliate.is_active ? "Active" : "Inactive"}
-                            </Badge>
-                          </CardTitle>
-                          <CardDescription>{affiliate.provider_name}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-3 text-sm">
-                              <div>
-                                <div className="text-muted-foreground">Clicks</div>
-                                <div className="font-semibold">{affiliate.click_count}</div>
-                              </div>
-                              <div>
-                                <div className="text-muted-foreground">Conversions</div>
-                                <div className="font-semibold">{affiliate.conversion_count}</div>
-                              </div>
-                            </div>
-                            <div className="pt-2 border-t">
-                              <div className="text-sm text-muted-foreground mb-1">Revenue Generated</div>
-                              <div className="text-lg font-semibold text-green-600">
-                                ${affiliate.revenue_generated.toLocaleString('en-US', { maximumFractionDigits: 2 })}
-                              </div>
-                            </div>
-                            <div className="pt-2 border-t">
-                              <div className="text-sm text-muted-foreground mb-1">Affiliate Link</div>
-                              <a
-                                href={affiliate.affiliate_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
-                                title={affiliate.affiliate_url}
-                              >
-                                {affiliate.affiliate_url}
-                              </a>
-                            </div>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                  setSelectedAffiliate(affiliate);
-                                  setEditAffiliateOpen(true);
-                                }}
-                              >
-                                <Edit className="w-4 h-4 mr-2" />
-                                Edit
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                  setSelectedAffiliate(affiliate);
-                                  setDeleteAffiliateOpen(true);
-                                }}
-                              >
-                                <Trash2 className="w-4 h-4 mr-2" />
-                                Delete
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Other Affiliates Section */}
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <AlertCircle className="w-5 h-5 text-purple-500" />
-                  <h3 className="text-xl font-semibold">Other Affiliates</h3>
-                  <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
-                    {affiliates.filter(a => a.provider_type === 'other').length}
-                  </Badge>
-                </div>
-
-                {affiliates.filter(a => a.provider_type === 'other').length === 0 ? (
-                  <Card className="border-dashed border-2 border-purple-200">
-                    <CardContent className="flex flex-col items-center justify-center py-8">
-                      <AlertCircle className="w-12 h-12 text-purple-200 mb-3" />
-                      <p className="text-muted-foreground">No other affiliate types added</p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {affiliates.filter(a => a.provider_type === 'other').map((affiliate) => (
-                      <Card key={affiliate.id} className="border-purple-100 hover:border-purple-200 transition-colors">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="flex items-center justify-between text-base">
-                            {affiliate.name}
-                            <Badge variant={affiliate.is_active ? "default" : "secondary"} className="text-xs">
-                              {affiliate.is_active ? "Active" : "Inactive"}
-                            </Badge>
-                          </CardTitle>
-                          <CardDescription>{affiliate.provider_name}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="grid grid-cols-2 gap-3 text-sm">
-                              <div>
-                                <div className="text-muted-foreground">Clicks</div>
-                                <div className="font-semibold">{affiliate.click_count}</div>
-                              </div>
-                              <div>
-                                <div className="text-muted-foreground">Conversions</div>
-                                <div className="font-semibold">{affiliate.conversion_count}</div>
-                              </div>
-                            </div>
-                            <div className="pt-2 border-t">
-                              <div className="text-sm text-muted-foreground mb-1">Revenue Generated</div>
-                              <div className="text-lg font-semibold text-purple-600">
-                                ${affiliate.revenue_generated.toLocaleString('en-US', { maximumFractionDigits: 2 })}
-                              </div>
-                            </div>
-                            <div className="pt-2 border-t">
-                              <div className="text-sm text-muted-foreground mb-1">Affiliate Link</div>
-                              <a
-                                href={affiliate.affiliate_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
-                                title={affiliate.affiliate_url}
-                              >
-                                {affiliate.affiliate_url}
-                              </a>
-                            </div>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                  setSelectedAffiliate(affiliate);
-                                  setEditAffiliateOpen(true);
-                                }}
-                              >
-                                <Edit className="w-4 h-4 mr-2" />
-                                Edit
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                  setSelectedAffiliate(affiliate);
-                                  setDeleteAffiliateOpen(true);
-                                }}
-                              >
-                                <Trash2 className="w-4 h-4 mr-2" />
-                                Delete
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {affiliates.filter(a => a.provider_type === 'prop_firm').map((affiliate) => (
+                <Card key={affiliate.id} className="border-blue-100 hover:border-blue-200 transition-colors">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center justify-between text-base">
+                      {affiliate.name}
+                      <Badge variant={affiliate.is_active ? "default" : "secondary"} className="text-xs">
+                        {affiliate.is_active ? "Active" : "Inactive"}
+                      </Badge>
+                    </CardTitle>
+                    <CardDescription>{affiliate.provider_name}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <div className="text-muted-foreground">Clicks</div>
+                          <div className="font-semibold">{affiliate.click_count}</div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground">Conversions</div>
+                          <div className="font-semibold">{affiliate.conversion_count}</div>
+                        </div>
+                      </div>
+                      <div className="pt-2 border-t">
+                        <div className="text-sm text-muted-foreground mb-1">Revenue Generated</div>
+                        <div className="text-lg font-semibold text-blue-600">
+                          ${affiliate.revenue_generated.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                        </div>
+                      </div>
+                      <div className="pt-2 border-t">
+                        <div className="text-sm text-muted-foreground mb-1">Funding Challenge Link</div>
+                        <a
+                          href={affiliate.affiliate_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
+                          title={affiliate.affiliate_url}
+                        >
+                          {affiliate.affiliate_url}
+                        </a>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => {
+                            setSelectedAffiliate(affiliate);
+                            setEditAffiliateOpen(true);
+                          }}
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => {
+                            setSelectedAffiliate(affiliate);
+                            setDeleteAffiliateOpen(true);
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
         </TabsContent>
 
-        <TabsContent value="campaigns" className="space-y-6">
+        <TabsContent value="campaigns" className="space-y-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Manage Campaigns</h2>
+            <h2 className="text-2xl font-bold">Brokers</h2>
             <Button
               className="flex items-center gap-2"
-              onClick={() => setCreateCampaignOpen(true)}
+              onClick={() => setCreateAffiliateOpen(true)}
             >
               <Plus className="w-4 h-4" />
-              Create New Campaign
+              Add Broker
             </Button>
           </div>
 
-          {campaigns.length === 0 ? (
-            <Card>
+          <div className="flex items-center gap-3 mb-4">
+            <Users className="w-5 h-5 text-green-500" />
+            <h3 className="text-xl font-semibold">Trading Brokers</h3>
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              {affiliates.filter(a => a.provider_type === 'broker').length}
+            </Badge>
+          </div>
+
+          {affiliates.filter(a => a.provider_type === 'broker').length === 0 ? (
+            <Card className="border-dashed border-2 border-green-200">
               <CardContent className="flex flex-col items-center justify-center py-12">
-                <TrendingUp className="w-16 h-16 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No campaigns yet</h3>
+                <Users className="w-16 h-16 text-green-200 mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No brokers yet</h3>
                 <p className="text-muted-foreground text-center mb-6 max-w-md">
-                  Create your first advertising campaign to promote your affiliate offers to students.
-                  Target specific audiences and track performance with detailed analytics.
+                  Add trading brokers to expand your Funding Marketplace. Students benefit from professional trading accounts and you earn commissions from sign-ups.
                 </p>
-                <Button size="lg"
-                  onClick={() => setCreateCampaignOpen(true)}
-                >
+                <Button size="lg" className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700">
                   <Plus className="w-5 h-5 mr-2" />
-                  Create Your First Campaign
+                  Add Your First Broker
                 </Button>
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-4">
-              {campaigns.map((campaign) => (
-                <Card key={campaign.id}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle>{campaign.title}</CardTitle>
-                      <Badge variant={
-                        campaign.status === 'active' ? 'default' :
-                        campaign.status === 'paused' ? 'secondary' :
-                        campaign.status === 'draft' ? 'outline' : 'secondary'
-                      }>
-                        {campaign.status}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {affiliates.filter(a => a.provider_type === 'broker').map((affiliate) => (
+                <Card key={affiliate.id} className="border-green-100 hover:border-green-200 transition-colors">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center justify-between text-base">
+                      {affiliate.name}
+                      <Badge variant={affiliate.is_active ? "default" : "secondary"} className="text-xs">
+                        {affiliate.is_active ? "Active" : "Inactive"}
                       </Badge>
-                    </div>
-                    <CardDescription>{campaign.description}</CardDescription>
+                    </CardTitle>
+                    <CardDescription>{affiliate.provider_name}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                      <div>
-                        <div className="text-sm text-muted-foreground">Type</div>
-                        <div className="font-medium capitalize">{campaign.campaign_type}</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">Priority</div>
-                        <div className="font-medium">{campaign.priority}/10</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">Target</div>
-                        <div className="font-medium capitalize">{campaign.target_audience.replace('_', ' ')}</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">Created</div>
-                        <div className="font-medium">
-                          {new Date(campaign.created_at).toLocaleDateString()}
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <div className="text-muted-foreground">Clicks</div>
+                          <div className="font-semibold">{affiliate.click_count}</div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground">Conversions</div>
+                          <div className="font-semibold">{affiliate.conversion_count}</div>
                         </div>
                       </div>
-                    </div>
-                    {campaign.click_url && (
-                      <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <div className="text-sm text-blue-700 font-medium mb-1">Campaign Link</div>
+                      <div className="pt-2 border-t">
+                        <div className="text-sm text-muted-foreground mb-1">Revenue Generated</div>
+                        <div className="text-lg font-semibold text-green-600">
+                          ${affiliate.revenue_generated.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                        </div>
+                      </div>
+                      <div className="pt-2 border-t">
+                        <div className="text-sm text-muted-foreground mb-1">Trading Account Link</div>
                         <a
-                          href={campaign.click_url}
+                          href={affiliate.affiliate_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
-                          title={campaign.click_url}
+                          className="text-green-600 hover:text-green-800 underline text-sm break-all"
+                          title={affiliate.affiliate_url}
                         >
-                          {campaign.click_url}
+                          {affiliate.affiliate_url}
                         </a>
                       </div>
-                    )}
-                    <div className="flex gap-2 mt-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedCampaign(campaign);
-                          setEditCampaignOpen(true);
-                        }}
-                      >
-                        <Settings className="w-4 h-4 mr-2" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedCampaign(campaign);
-                          setDeleteCampaignOpen(true);
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => {
+                            setSelectedAffiliate(affiliate);
+                            setEditAffiliateOpen(true);
+                          }}
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => {
+                            setSelectedAffiliate(affiliate);
+                            setDeleteAffiliateOpen(true);
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
