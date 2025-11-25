@@ -25,7 +25,8 @@ import {
   User,
   LogOut,
   Menu,
-  X
+  X,
+  DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,6 +51,7 @@ const navigation = [
   { name: "Community", href: "/community", icon: MessageSquare, badge: "3" },
   { name: "Calendar", href: "/calendar", icon: Calendar },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Affiliates", href: "/affiliates", icon: DollarSign, badge: "Mentor" },
   { name: "Signals", href: "/signals", icon: TrendingUp, badge: "Pro" },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
