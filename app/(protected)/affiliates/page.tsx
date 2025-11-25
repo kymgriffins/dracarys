@@ -7,14 +7,21 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, DollarSign, Eye, TrendingUp, Users, Plus, Settings, BarChart3, Trash2, Edit, Target, Award, Star, ExternalLink, CheckCircle } from "lucide-react";
+import { AlertCircle, DollarSign, Eye, TrendingUp, Users, Plus, Settings, BarChart3, Trash2, Edit, Target, Award, Star, ExternalLink, CheckCircle, Trophy, Crown, Zap, Gift, Flame, Sparkles } from "lucide-react";
 import { MentorAffiliate, AdvertisingCampaign, AffiliateDashboardStats } from "@/lib/types/mentor";
+import { UserPoints, LeaderboardEntry, Achievement, Reward, SocialEngagement, LiveStreamSession, EngagementAnalytics } from "@/lib/types/affiliate-points";
 import { CreateAffiliateDialog } from "@/components/affiliates/create-affiliate-dialog";
 import { EditAffiliateDialog } from "@/components/affiliates/edit-affiliate-dialog";
 import { DeleteAffiliateDialog } from "@/components/affiliates/delete-affiliate-dialog";
 import { CreateCampaignDialog } from "@/components/affiliates/create-campaign-dialog";
 import { EditCampaignDialog } from "@/components/affiliates/edit-campaign-dialog";
 import { DeleteCampaignDialog } from "@/components/affiliates/delete-campaign-dialog";
+import { PointsDashboard } from "@/components/affiliates/points-dashboard";
+import { SocialEngagementTracker } from "@/components/affiliates/social-engagement-tracker";
+import { LiveStreamTracker } from "@/components/affiliates/live-stream-tracker";
+import { RewardsStore } from "@/components/affiliates/rewards-store";
+import { AnalyticsDashboard } from "@/components/affiliates/analytics-dashboard";
+import { RealTimeNotifications } from "@/components/affiliates/real-time-notifications";
 
 interface AffiliatesPageProps {}
 
@@ -25,6 +32,22 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
   const [stats, setStats] = useState<AffiliateDashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+
+  // Gamification state
+  const [userPoints, setUserPoints] = useState<UserPoints | null>(null);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [socialEngagements, setSocialEngagements] = useState<SocialEngagement[]>([]);
+  const [liveSessions, setLiveSessions] = useState<LiveStreamSession[]>([]);
+  const [availableRewards, setAvailableRewards] = useState<Reward[]>([]);
+  const [claimedRewards, setClaimedRewards] = useState<string[]>([]);
+  const [analytics, setAnalytics] = useState<EngagementAnalytics | null>(null);
+  const [analyticsTimeframe, setAnalyticsTimeframe] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
+  const [liveStats, setLiveStats] = useState({
+    activeUsers: 89,
+    pointsEarnedToday: 1247,
+    liveStreamsActive: 1,
+    recentEngagements: 23
+  });
 
   // Dialog states
   const [createAffiliateOpen, setCreateAffiliateOpen] = useState(false);
@@ -44,6 +67,275 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
   const showMessage = (type: 'success' | 'error', text: string) => {
     setMessage({ type, text });
     setTimeout(() => setMessage(null), 5000);
+  };
+
+  // Mock data for gamification features
+  const initializeGamificationData = () => {
+    // Mock user points
+    const mockUserPoints: UserPoints = {
+      id: "user-1",
+      user_id: user?.id || "user-1",
+      total_points: 2847,
+      level: 12,
+      experience_points: 2847,
+      points_breakdown: {
+        affiliate_clicks: 45,
+        social_follows: 23,
+        live_stream_participation: 156,
+        comments: 18,
+        content_shares: 12,
+        referrals: 7,
+        daily_login: 30,
+        challenge_completion: 5,
+        leaderboard_position: 8
+      },
+      achievements: [
+        {
+          id: "first-click",
+          name: "First Affiliate Click",
+          description: "Made your first affiliate link click",
+          icon: "🎯",
+          points_reward: 10,
+          unlocked_at: new Date("2024-01-15"),
+          category: "affiliate_master"
+        },
+        {
+          id: "social-butterfly",
+          name: "Social Butterfly",
+          description: "Followed on 5 different platforms",
+          icon: "🦋",
+          points_reward: 50,
+          unlocked_at: new Date("2024-02-01"),
+          category: "social_influencer"
+        },
+        {
+          id: "live-stream-champion",
+          name: "Live Stream Champion",
+          description: "Participated in 10 live sessions",
+          icon: "🏆",
+          points_reward: 100,
+          unlocked_at: new Date("2024-02-15"),
+          category: "community_builder"
+        }
+      ],
+      badges: [
+        {
+          id: "early-adopter",
+          name: "Early Adopter",
+          description: "Joined the affiliate program early",
+          icon: "🚀",
+          rarity: "rare",
+          unlocked_at: new Date("2024-01-01")
+        }
+      ],
+      streak: {
+        current: 7,
+        longest: 14,
+        last_activity: new Date()
+      },
+      created_at: new Date("2024-01-01"),
+      updated_at: new Date()
+    };
+
+    // Mock leaderboard
+    const mockLeaderboard: LeaderboardEntry[] = [
+      { user_id: "user-1", username: "You", avatar: undefined, total_points: 2847, level: 12, rank: 3, change: 1, achievements_count: 15 },
+      { user_id: "user-2", username: "TradingPro2024", avatar: undefined, total_points: 3456, level: 15, rank: 1, change: -1, achievements_count: 22 },
+      { user_id: "user-3", username: "CryptoKing", avatar: undefined, total_points: 3124, level: 14, rank: 2, change: 0, achievements_count: 18 },
+      { user_id: "user-4", username: "ForexMaster", avatar: undefined, total_points: 2654, level: 11, rank: 4, change: 2, achievements_count: 14 },
+      { user_id: "user-5", username: "TradeGuru", avatar: undefined, total_points: 2341, level: 10, rank: 5, change: -1, achievements_count: 12 }
+    ];
+
+    // Mock social engagements
+    const mockEngagements: SocialEngagement[] = [
+      {
+        id: "eng-1",
+        user_id: user?.id || "user-1",
+        type: "follow",
+        platform: "twitter",
+        points_earned: 25,
+        metadata: {},
+        created_at: new Date("2024-12-01")
+      },
+      {
+        id: "eng-2",
+        user_id: user?.id || "user-1",
+        type: "comment",
+        platform: "youtube",
+        points_earned: 15,
+        metadata: { comment: "Great trading insights!" },
+        created_at: new Date("2024-12-02")
+      },
+      {
+        id: "eng-3",
+        user_id: user?.id || "user-1",
+        type: "live_participation",
+        platform: "twitch",
+        points_earned: 45,
+        metadata: {},
+        created_at: new Date("2024-12-03")
+      }
+    ];
+
+    // Mock live sessions
+    const mockLiveSessions: LiveStreamSession[] = [
+      {
+        id: "live-1",
+        title: "Weekly Trading Strategy Session",
+        description: "Deep dive into current market trends and trading strategies",
+        scheduled_at: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
+        duration: 90,
+        participants: ["user-1", "user-2", "user-3"],
+        points_per_minute: 2,
+        total_points_distributed: 270,
+        status: "scheduled",
+        recording_url: undefined
+      },
+      {
+        id: "live-2",
+        title: "Market Analysis Live",
+        description: "Real-time market analysis and trade opportunities",
+        scheduled_at: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
+        duration: 60,
+        participants: ["user-1", "user-2", "user-4", "user-5"],
+        points_per_minute: 2,
+        total_points_distributed: 480,
+        status: "ended",
+        recording_url: "https://youtube.com/watch?v=example"
+      }
+    ];
+
+    // Mock rewards
+    const mockRewards: Reward[] = [
+      {
+        id: "reward-1",
+        name: "10% Trading Course Discount",
+        description: "Get 10% off any premium trading course",
+        points_cost: 500,
+        type: "discount",
+        value: 10,
+        icon: "💰",
+        available: true,
+        claims_count: 45,
+        max_claims: 100
+      },
+      {
+        id: "reward-2",
+        name: "VIP Community Access",
+        description: "1 month of premium community access",
+        points_cost: 750,
+        type: "feature",
+        value: 30,
+        icon: "👑",
+        available: true,
+        claims_count: 23,
+        max_claims: 50
+      },
+      {
+        id: "reward-3",
+        name: "Exclusive Webinar Invite",
+        description: "Invitation to private trading webinar",
+        points_cost: 1000,
+        type: "exclusive",
+        value: 1,
+        icon: "🎟️",
+        available: true,
+        claims_count: 8,
+        max_claims: 20
+      }
+    ];
+
+    // Mock analytics data
+    const mockAnalytics: EngagementAnalytics = {
+      total_users: 1247,
+      active_users_today: 89,
+      active_users_week: 423,
+      active_users_month: 892,
+      total_points_distributed: 45632,
+      average_points_per_user: 36.5,
+      top_engagement_categories: [
+        { category: 'affiliate_clicks', points: 15240, percentage: 33.4 },
+        { category: 'live_stream_participation', points: 12450, percentage: 27.3 },
+        { category: 'social_follows', points: 9870, percentage: 21.6 },
+        { category: 'comments', points: 4560, percentage: 10.0 },
+        { category: 'content_shares', points: 3512, percentage: 7.7 }
+      ],
+      growth_trends: {
+        daily: [45, 67, 89, 123, 156, 178, 201],
+        weekly: [320, 380, 425, 480, 520, 580, 650],
+        monthly: [1200, 1350, 1480, 1620, 1750, 1890, 2100]
+      }
+    };
+
+    setUserPoints(mockUserPoints);
+    setLeaderboard(mockLeaderboard);
+    setSocialEngagements(mockEngagements);
+    setLiveSessions(mockLiveSessions);
+    setAvailableRewards(mockRewards);
+    setClaimedRewards(["reward-1"]); // Mock some claimed rewards
+    setAnalytics(mockAnalytics);
+  };
+
+  // Gamification handlers
+  const handleEngage = async (type: 'follow' | 'comment' | 'share' | 'live_participation', platform?: string, metadata?: any) => {
+    const pointsEarned = type === 'follow' ? 25 : type === 'comment' ? 15 : type === 'share' ? 20 : 30;
+
+    const newEngagement: SocialEngagement = {
+      id: `eng-${Date.now()}`,
+      user_id: user?.id || "user-1",
+      type,
+      platform,
+      points_earned: pointsEarned,
+      metadata: metadata || {},
+      created_at: new Date()
+    };
+
+    setSocialEngagements(prev => [newEngagement, ...prev]);
+    setUserPoints(prev => prev ? {
+      ...prev,
+      total_points: prev.total_points + pointsEarned,
+      points_breakdown: {
+        ...prev.points_breakdown,
+        [type === 'follow' ? 'social_follows' :
+         type === 'comment' ? 'comments' :
+         type === 'share' ? 'content_shares' : 'live_stream_participation']:
+          prev.points_breakdown[type === 'follow' ? 'social_follows' :
+                              type === 'comment' ? 'comments' :
+                              type === 'share' ? 'content_shares' : 'live_stream_participation'] + 1
+      }
+    } : null);
+
+    showMessage('success', `+${pointsEarned} points earned for ${type.replace('_', ' ')}!`);
+  };
+
+  const handleClaimReward = async (rewardId: string) => {
+    const reward = availableRewards.find(r => r.id === rewardId);
+    if (!reward || !userPoints || userPoints.total_points < reward.points_cost) return;
+
+    setUserPoints(prev => prev ? {
+      ...prev,
+      total_points: prev.total_points - reward.points_cost
+    } : null);
+
+    setClaimedRewards(prev => [...prev, rewardId]);
+    showMessage('success', `Successfully claimed "${reward.name}"!`);
+  };
+
+  const handleJoinLiveSession = async (sessionId: string) => {
+    setLiveSessions(prev => prev.map(session =>
+      session.id === sessionId
+        ? { ...session, participants: [...session.participants, user?.id || "user-1"] }
+        : session
+    ));
+    showMessage('success', 'Joined live session! Start earning points by participating.');
+  };
+
+  const handleLeaveLiveSession = async (sessionId: string) => {
+    setLiveSessions(prev => prev.map(session =>
+      session.id === sessionId
+        ? { ...session, participants: session.participants.filter(id => id !== (user?.id || "user-1")) }
+        : session
+    ));
   };
 
   const refreshData = async () => {
@@ -221,6 +513,19 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
     };
 
     fetchData();
+    initializeGamificationData();
+
+    // Simulate live updates
+    const liveUpdateInterval = setInterval(() => {
+      setLiveStats(prev => ({
+        activeUsers: prev.activeUsers + Math.floor(Math.random() * 3) - 1,
+        pointsEarnedToday: prev.pointsEarnedToday + Math.floor(Math.random() * 10),
+        liveStreamsActive: Math.max(0, prev.liveStreamsActive + (Math.random() > 0.8 ? 1 : 0) - (Math.random() > 0.9 ? 1 : 0)),
+        recentEngagements: prev.recentEngagements + Math.floor(Math.random() * 2)
+      }));
+    }, 5000); // Update every 5 seconds
+
+    return () => clearInterval(liveUpdateInterval);
   }, []);
 
   if (loading) {
@@ -262,29 +567,62 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
             <p className="text-lg text-gray-700 mb-3">
               Curated marketplace of top trading prop firms and brokers to help traders get funded faster.
             </p>
+            {userPoints && (
+              <div className="flex items-center gap-4 mb-3 p-3 bg-white/60 rounded-lg border border-blue-200">
+                <div className="flex items-center gap-2">
+                  <Crown className="w-5 h-5 text-yellow-600" />
+                  <span className="font-semibold">Level {userPoints.level}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-blue-600" />
+                  <span className="font-semibold">{userPoints.total_points.toLocaleString()} Points</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-orange-600" />
+                  <span className="font-semibold">{userPoints.streak.current} Day Streak</span>
+                </div>
+              </div>
+            )}
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <Award className="w-4 h-4 text-yellow-500" />
                 <span className="font-medium">Earn 10 Points</span> per prop firm click
               </div>
               <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-blue-500" />
-                <span>Mentor-prepped for success</span>
+                <Users className="w-4 h-4 text-purple-500" />
+                <span>25 Points for following me</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>Verified funding partnerships</span>
+                <Zap className="w-4 h-4 text-orange-500" />
+                <span>Live stream participation rewards</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Gift className="w-4 h-4 text-pink-500" />
+                <span>Redeem points for exclusive rewards</span>
               </div>
             </div>
           </div>
           <div className="hidden lg:flex flex-col gap-3">
-            <Button
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700"
-              onClick={() => setCreateAffiliateOpen(true)}
-            >
-              <Plus className="w-4 h-4" />
-              Add Prop Firm
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700"
+                onClick={() => setCreateAffiliateOpen(true)}
+              >
+                <Plus className="w-4 h-4" />
+                Add Prop Firm
+              </Button>
+              <RealTimeNotifications
+                onNotificationClick={(notification) => {
+                  showMessage('success', `Clicked: ${notification.title}`);
+                }}
+                onMarkAsRead={(id) => {
+                  showMessage('success', 'Notification marked as read');
+                }}
+                onMarkAllAsRead={() => {
+                  showMessage('success', 'All notifications marked as read');
+                }}
+              />
+            </div>
             <Button
               variant="outline"
               className="flex items-center gap-2"
@@ -296,6 +634,42 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Live Activity Banner */}
+      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 mb-6">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-green-700">LIVE ACTIVITY</span>
+              </div>
+              <div className="hidden md:flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-green-600" />
+                  <span>{liveStats.activeUsers} users online</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Award className="w-4 h-4 text-blue-600" />
+                  <span>{liveStats.pointsEarnedToday} points earned today</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-purple-600" />
+                  <span>{liveStats.liveStreamsActive} live stream{liveStats.liveStreamsActive !== 1 ? 's' : ''}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-orange-600" />
+                  <span>{liveStats.recentEngagements} recent engagements</span>
+                </div>
+              </div>
+            </div>
+            <Badge variant="secondary" className="bg-green-100 text-green-800">
+              <Sparkles className="w-3 h-3 mr-1" />
+              Real-time
+            </Badge>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -354,10 +728,22 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="affiliates">Prop Firms</TabsTrigger>
           <TabsTrigger value="campaigns">Brokers</TabsTrigger>
+          <TabsTrigger value="points" className="flex items-center gap-1">
+            <Trophy className="w-4 h-4" />
+            Points
+          </TabsTrigger>
+          <TabsTrigger value="social" className="flex items-center gap-1">
+            <Star className="w-4 h-4" />
+            Social
+          </TabsTrigger>
+          <TabsTrigger value="live" className="flex items-center gap-1">
+            <Zap className="w-4 h-4" />
+            Live
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -672,6 +1058,120 @@ export default function AffiliatesPage({}: AffiliatesPageProps) {
               ))}
             </div>
           )}
+        </TabsContent>
+
+        {/* Points & Rewards Tab */}
+        <TabsContent value="points" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold">Points & Rewards</h2>
+              <p className="text-muted-foreground">Track your engagement and redeem rewards</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                <Sparkles className="w-4 h-4 mr-1" />
+                Level {userPoints?.level || 1}
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                <Crown className="w-4 h-4 mr-1" />
+                {userPoints?.total_points.toLocaleString() || 0} Points
+              </Badge>
+            </div>
+          </div>
+
+          <Tabs defaultValue="dashboard" className="w-full">
+            <TabsList>
+              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              <TabsTrigger value="rewards">Rewards Store</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            </TabsList>
+            <TabsContent value="dashboard">
+              <PointsDashboard
+                userPoints={userPoints}
+                leaderboard={leaderboard}
+                recentAchievements={userPoints?.achievements.slice(-3) || []}
+                availableRewards={availableRewards}
+                onClaimReward={handleClaimReward}
+              />
+            </TabsContent>
+            <TabsContent value="rewards">
+              <RewardsStore
+                availableRewards={availableRewards}
+                userPoints={userPoints?.total_points || 0}
+                claimedRewards={claimedRewards}
+                onClaimReward={handleClaimReward}
+                onRedeemDiscount={(rewardId, code) => {
+                  handleClaimReward(rewardId);
+                  if (code) {
+                    showMessage('success', `Discount code "${code}" applied!`);
+                  }
+                }}
+              />
+            </TabsContent>
+            <TabsContent value="analytics">
+              {analytics && (
+                <AnalyticsDashboard
+                  analytics={analytics}
+                  engagements={socialEngagements}
+                  userPoints={userPoints}
+                  timeframe={analyticsTimeframe}
+                  onTimeframeChange={setAnalyticsTimeframe}
+                />
+              )}
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        {/* Social Engagement Tab */}
+        <TabsContent value="social" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold">Social Engagement</h2>
+              <p className="text-muted-foreground">Connect with me across platforms and earn points</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <Flame className="w-4 h-4 mr-1" />
+                {userPoints?.streak.current || 0} Day Streak
+              </Badge>
+            </div>
+          </div>
+
+          <SocialEngagementTracker
+            engagements={socialEngagements}
+            onEngage={handleEngage}
+            userPoints={userPoints?.total_points || 0}
+          />
+        </TabsContent>
+
+        {/* Live Streams Tab */}
+        <TabsContent value="live" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold">Live Streams</h2>
+              <p className="text-muted-foreground">Join live sessions and earn points for participation</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                <Zap className="w-4 h-4 mr-1" />
+                {userPoints?.points_breakdown.live_stream_participation || 0} Min Watched
+              </Badge>
+            </div>
+          </div>
+
+          <LiveStreamTracker
+            currentSession={liveSessions.find(s => s.status === 'live') || null}
+            upcomingSessions={liveSessions.filter(s => s.status === 'scheduled')}
+            pastSessions={liveSessions.filter(s => s.status === 'ended')}
+            onJoinSession={handleJoinLiveSession}
+            onLeaveSession={handleLeaveLiveSession}
+            userParticipation={{
+              currentSessionId: liveSessions.find(s => s.status === 'live')?.id || null,
+              totalMinutes: userPoints?.points_breakdown.live_stream_participation || 0,
+              pointsEarned: (userPoints?.points_breakdown.live_stream_participation || 0),
+              streak: 5
+            }}
+          />
         </TabsContent>
       </Tabs>
 
