@@ -41,17 +41,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navigation = [
-  { name: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
-  { name: "Dashboard V2", href: "/app/dashboard/v2", icon: LayoutDashboard, badge: "New" },
-  { name: "Courses", href: "/app/courses", icon: BookOpen, badge: "2" },
-  { name: "Journal", href: "/app/journal", icon: FileText },
-  { name: "Gamified Learning", href: "/app/learning/gamified", icon: Target, badge: "Visual" },
-  { name: "JawGnarl v2", href: "/app/jawgnarl", icon: Target, badge: "New" },
-  { name: "Community", href: "/app/community", icon: MessageSquare, badge: "3" },
-  { name: "Calendar", href: "/app/calendar", icon: Calendar },
-  { name: "Analytics", href: "/app/analytics", icon: BarChart3 },
-  { name: "Signals", href: "/app/signals", icon: TrendingUp, badge: "Pro" },
-  { name: "Settings", href: "/app/settings", icon: Settings },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Dashboard V2", href: "/dashboard/v2", icon: LayoutDashboard, badge: "New" },
+  { name: "Courses", href: "/courses", icon: BookOpen, badge: "2" },
+  { name: "Journal", href: "/journal", icon: FileText },
+  { name: "Gamified Learning", href: "/learning/gamified", icon: Target, badge: "Visual" },
+  { name: "JawGnarl v2", href: "/jawgnarl", icon: Target, badge: "New" },
+  { name: "Community", href: "/community", icon: MessageSquare, badge: "3" },
+  { name: "Calendar", href: "/calendar", icon: Calendar },
+  { name: "Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Signals", href: "/signals", icon: TrendingUp, badge: "Pro" },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 interface SidebarProps {
@@ -93,7 +93,7 @@ export function Sidebar({ isMobileOpen = false, onMobileClose = () => {} }: Side
       {/* Logo */}
       <div className="flex items-center h-16 px-6 border-b border-border">
         <Link
-          href="/app/dashboard"
+          href="/dashboard"
           className="flex items-center space-x-2"
           onClick={onMobileClose}
         >
