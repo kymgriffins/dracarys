@@ -126,11 +126,11 @@ function CheckoutForm({ clientSecret, plan, onSuccess, onError }: CheckoutFormPr
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
-        <div className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <Shield className="w-5 h-5 text-blue-600 flex-shrink-0" />
+        <div className="flex items-center gap-3 p-3 bg-primary border border-primary rounded-lg">
+          <Shield className="w-5 h-5 text-primary flex-shrink-0" />
           <div className="text-sm">
-            <p className="font-medium text-blue-800">Secure Payment</p>
-            <p className="text-blue-600">Powered by Stripe - SSL encrypted</p>
+            <p className="font-medium text-primary">Secure Payment</p>
+            <p className="text-primary">Powered by Stripe - SSL encrypted</p>
           </div>
         </div>
 
@@ -150,25 +150,25 @@ function CheckoutForm({ clientSecret, plan, onSuccess, onError }: CheckoutFormPr
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-muted border border-muted rounded-lg p-4">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <span className="font-medium text-red-800">Payment Error</span>
+            <AlertCircle className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+            <span className="font-medium text-muted-foreground">Payment Error</span>
           </div>
-          <p className="text-sm text-red-700 mt-1">{error}</p>
-          <p className="text-xs text-red-600 mt-2">
+          <p className="text-sm text-muted-foreground mt-1">{error}</p>
+          <p className="text-xs text-muted-foreground mt-2">
             If this error persists, try refreshing the page or contact support.
           </p>
         </div>
       )}
 
       {!isFormComplete && !error && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div className="bg-accent border border-accent rounded-lg p-4">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
-            <span className="font-medium text-yellow-800">Complete Payment Information</span>
+            <AlertCircle className="w-5 h-5 text-accent-foreground flex-shrink-0" />
+            <span className="font-medium text-accent-foreground">Complete Payment Information</span>
           </div>
-          <p className="text-sm text-yellow-700 mt-1">
+          <p className="text-sm text-accent-foreground mt-1">
             Please fill in all required payment information to proceed.
           </p>
         </div>
@@ -323,7 +323,7 @@ export function StripePaymentForm({ className }: StripePaymentFormProps) {
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-4">
         <Card className="w-full max-w-md mx-auto">
           <CardHeader className="text-center">
-            <CardTitle className="text-red-600">Payment Setup Failed</CardTitle>
+            <CardTitle className="text-muted-foreground">Payment Setup Failed</CardTitle>
             <CardDescription className="text-muted-foreground mb-4">
               {error || 'Please select a valid plan to proceed with payment.'}
             </CardDescription>
@@ -353,8 +353,8 @@ export function StripePaymentForm({ className }: StripePaymentFormProps) {
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-4">
         <Card className="w-full max-w-md mx-auto">
           <CardHeader className="text-center">
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <CardTitle className="text-green-600">Payment Successful!</CardTitle>
+            <CheckCircle className="w-16 h-16 text-secondary-foreground mx-auto mb-4" />
+            <CardTitle className="text-secondary-foreground">Payment Successful!</CardTitle>
             <CardDescription>Redirecting you to confirmation page...</CardDescription>
           </CardHeader>
         </Card>
@@ -440,18 +440,18 @@ export function StripePaymentForm({ className }: StripePaymentFormProps) {
                 <ul className="space-y-1 text-sm">
                   {plan.features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
                       {feature}
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="bg-secondary border border-secondary rounded-lg p-4">
                 <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-green-600" />
+                  <Shield className="w-5 h-5 text-secondary-foreground" />
                   <div>
-                    <p className="font-medium text-green-800">Secure Payment</p>
-                    <p className="text-sm text-green-700">Processed by Stripe with bank-level security</p>
+                    <p className="font-medium text-secondary-foreground">Secure Payment</p>
+                    <p className="text-sm text-secondary-foreground">Processed by Stripe with bank-level security</p>
                   </div>
                 </div>
               </div>
@@ -462,7 +462,7 @@ export function StripePaymentForm({ className }: StripePaymentFormProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <Badge variant="outline" className="bg-primary text-primary border-primary">
                   <Shield className="w-4 h-4 mr-1" />
                   Stripe
                 </Badge>

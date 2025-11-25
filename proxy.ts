@@ -62,22 +62,30 @@ export default async function proxy(request: NextRequest) {
     }
   );
 
-  // Get the pathname of the request (e.g. /app/dashboard)
+  // Get the pathname of the request (e.g. /dashboard)
   const { pathname } = request.nextUrl;
 
   // Check if the user is authenticated for protected routes
   const { data: { session } } = await supabase.auth.getSession();
   const user = session?.user;
 
-  // Protect /app/* routes - redirect to login if not authenticated
-  if (pathname.startsWith("/app/") && !user) {
+  // Protect specific routes - redirect to login if not authenticated
+  const protectedRoutes = [
+    '/dashboard', '/journal', '/courses', '/analytics', '/calendar',
+    '/community', '/learning', '/live', '/portfolio', '/sessions',
+    '/settings', '/signals', '/tasks', '/trading', '/workspaces', '/jawgnarl'
+  ];
+
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+
+  if (isProtectedRoute && !user) {
     const redirectUrl = new URL("/auth/login", request.url);
     return NextResponse.redirect(redirectUrl);
   }
 
   // Redirect authenticated users away from auth pages
   if ((pathname.startsWith("/auth/") || pathname === "/auth") && user) {
-    const redirectUrl = new URL("/app/dashboard", request.url);
+    const redirectUrl = new URL("/dashboard", request.url);
     return NextResponse.redirect(redirectUrl);
   }
 

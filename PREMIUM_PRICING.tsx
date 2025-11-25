@@ -42,8 +42,8 @@ export default function PremiumPricingPage() {
           {/* Core Membership */}
           <Card className="border-2">
             <CardHeader className="text-center pb-8">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-6 h-6 text-secondary-foreground" />
               </div>
               <CardTitle className="text-2xl">Core Membership</CardTitle>
               <CardDescription className="text-base">Self-directed trader development</CardDescription>
@@ -95,8 +95,8 @@ export default function PremiumPricingPage() {
             </div>
 
             <CardHeader className="text-center pb-8 pt-8">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Users className="w-6 h-6 text-accent-foreground" />
               </div>
               <CardTitle className="text-2xl">Accelerated Program</CardTitle>
               <CardDescription className="text-base">Mentor-guided development</CardDescription>
@@ -210,19 +210,19 @@ export default function PremiumPricingPage() {
         {/* Psychology Guarantee */}
         <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-8 mb-16">
           <div className="flex items-center justify-center mb-4">
-            <Shield className="w-8 h-8 text-green-600 mr-3" />
-            <h2 className="text-2xl font-bold text-green-800">Psychology-First Guarantee</h2>
+            <Shield className="w-8 h-8 text-accent mr-3" />
+            <h2 className="text-2xl font-bold text-secondary-foreground">Psychology-First Guarantee</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-green-600 mb-2">30-Day</div>
-              <div className="text-green-800">Money Back Guarantee</div>
-              <div className="text-sm text-green-600 mt-2">No market risk required</div>
+              <div className="text-3xl font-bold text-success mb-2">30-Day</div>
+              <div className="text-secondary-foreground">Money Back Guarantee</div>
+              <div className="text-sm text-success mt-2">No market risk required</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">90-Day</div>
-              <div className="text-blue-800">Transformation Commitment</div>
-              <div className="text-sm text-blue-600 mt-2">Focus on your mental game</div>
+              <div className="text-3xl font-bold text-accent mb-2">90-Day</div>
+              <div className="text-accent-foreground">Transformation Commitment</div>
+              <div className="text-sm text-primary mt-2">Focus on your mental game</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-purple-600 mb-2">Lifetime</div>

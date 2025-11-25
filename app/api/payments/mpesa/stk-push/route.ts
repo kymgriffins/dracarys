@@ -51,6 +51,9 @@ export async function POST(request: NextRequest) {
       TransactionDesc: `${plan.name} Subscription Payment - USD ${plan.price}`,
     };
 
+    // Get access token for M-Pesa API
+    const accessToken = await getAccessToken();
+
     // Make request to M-Pesa API
     const response = await fetch(
       `${MPESA_CONFIG.BASE_URL}/mpesa/stkpush/v1/processrequest`,
@@ -58,7 +61,7 @@ export async function POST(request: NextRequest) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await getAccessToken()}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify(stkPushData),
       }

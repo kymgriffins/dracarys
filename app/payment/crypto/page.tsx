@@ -151,8 +151,8 @@ function CryptoPaymentPage() {
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <CardTitle className="text-green-600">Payment Successful!</CardTitle>
+            <CheckCircle className="w-16 h-16 text-secondary-foreground mx-auto mb-4" />
+            <CardTitle className="text-secondary-foreground">Payment Successful!</CardTitle>
             <CardDescription>Redirecting you to confirmation page...</CardDescription>
           </CardHeader>
         </Card>
@@ -193,7 +193,7 @@ function CryptoPaymentPage() {
                 <ul className="space-y-1 text-sm">
                   {planDetail.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-secondary-foreground flex-shrink-0" />
                       {feature}
                     </li>
                   ))}
@@ -264,7 +264,7 @@ function CryptoPaymentPage() {
                     >
                       {copiedAddress ? (
                         <>
-                          <Check className="w-4 h-4 text-green-500" />
+                          <Check className="w-4 h-4 text-secondary-foreground" />
                           Copied!
                         </>
                       ) : (
@@ -282,15 +282,15 @@ function CryptoPaymentPage() {
               </div>
 
               {/* Instructions */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-medium text-blue-800 mb-2">Payment Instructions:</h4>
-                <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
+              <div className="bg-primary border border-primary rounded-lg p-4">
+                <h4 className="font-medium text-primary mb-2">Payment Instructions:</h4>
+                <ol className="text-sm text-primary space-y-1 list-decimal list-inside">
                   <li>Select your cryptocurrency above</li>
                   <li>Send exactly <strong>{cryptoAmount} {selectedCrypto.symbol}</strong> to the address shown</li>
                   <li>Wait for 1-3 blockchain confirmations (usually 10-30 minutes)</li>
                   <li>Click "I've Made Payment" below to complete the process</li>
                 </ol>
-                <div className="mt-3 flex items-center gap-2 text-xs text-blue-600">
+                <div className="mt-3 flex items-center gap-2 text-xs text-primary">
                   <ExternalLink className="w-3 h-3" />
                   <a href={`https://etherscan.io/address/${selectedCrypto.address}`} target="_blank" rel="noopener noreferrer" className="underline hover:no-underline">
                     View address on blockchain explorer
