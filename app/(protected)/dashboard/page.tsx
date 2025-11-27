@@ -1,26 +1,19 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { GlassCard, GlassCardContent, GlassCardDescription, GlassCardHeader, GlassCardTitle } from "@/components/ui/glass-card";
 import { useAuth } from "@/lib/auth-context";
+import { motion } from "framer-motion";
 import {
-  Brain,
-  Target,
   BookOpen,
   CheckCircle,
-  Plus,
-  Calendar,
-  MessageSquare,
-  Award,
-  ArrowUpRight,
-  TrendingUp,
-  Clock,
-  Users,
-  Play,
   ChevronRight,
-  BookOpen as LessonIcon,
+  Clock,
+  MessageSquare,
+  Play,
+  Plus,
+  TrendingUp,
   Zap
 } from "lucide-react";
 import Link from "next/link";
@@ -134,36 +127,41 @@ export default function DashboardPage() {
       <div className="min-h-[calc(100vh-8rem)] space-y-6 lg:space-y-8 w-full max-w-full px-4 sm:px-6"> {/* ← ADD HORIZONTAL PADDING */}
 
         {/* Welcome Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 w-full max-w-full">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 w-full max-w-full"
+        >
           <div className="min-w-0 flex-1"> {/* ← ALLOW SHRINKING */}
-            <h1 className="text-3xl lg:text-4xl font-bold truncate">Welcome back, {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Trader'}!</h1>
+            <h1 className="text-3xl lg:text-4xl font-bold truncate text-gradient">Welcome back, {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Trader'}!</h1>
             <p className="text-muted-foreground text-lg truncate">
               Ready to master your trading psychology? Let's build that winning mindset.
             </p>
           </div>
-          <Badge variant="secondary" className="bg-secondary text-secondary-foreground w-fit flex-shrink-0">
+          <Badge variant="secondary" className="bg-secondary/50 backdrop-blur-sm text-secondary-foreground w-fit flex-shrink-0 border-secondary-foreground/10">
             <CheckCircle className="w-3 h-3 mr-1" />
             All Systems Active
           </Badge>
-        </div>
+        </motion.div>
 
-      {/* 2.1 Top Summary Cards - Responsive Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        {summaryCards.map((card, index) => (
-          <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-4 lg:p-6">
-            <div className="flex items-center justify-between min-w-0">
-              <div className="min-w-0 flex-1 mr-3">
-                <p className="text-xs lg:text-sm font-medium text-muted-foreground truncate">{card.title}</p>
-                <p className="text-xl lg:text-2xl font-bold mt-1">{card.value}</p>
-                <p className="text-xs text-muted-foreground mt-1 truncate">{card.detail}</p>
-              </div>
-              <card.icon className={`h-6 w-6 lg:h-8 lg:w-8 ${card.color} flex-shrink-0`} />
-            </div>
-          </CardContent>
-          </Card>
-        ))}
-      </div>
+        {/* 2.1 Top Summary Cards - Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          {summaryCards.map((card, index) => (
+            <GlassCard key={index} delay={index * 0.1}>
+              <GlassCardContent className="p-4 lg:p-6">
+                <div className="flex items-center justify-between min-w-0">
+                  <div className="min-w-0 flex-1 mr-3">
+                    <p className="text-xs lg:text-sm font-medium text-muted-foreground truncate">{card.title}</p>
+                    <p className="text-xl lg:text-2xl font-bold mt-1">{card.value}</p>
+                    <p className="text-xs text-muted-foreground mt-1 truncate">{card.detail}</p>
+                  </div>
+                  <card.icon className={`h-6 w-6 lg:h-8 lg:w-8 ${card.color} flex-shrink-0`} />
+                </div>
+              </GlassCardContent>
+            </GlassCard>
+          ))}
+        </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 w-full max-w-full min-w-0"> {/* ← ADD min-w-0 */}
@@ -171,18 +169,18 @@ export default function DashboardPage() {
           {/* Left Column - Timeline */}
           <div className="lg:col-span-2 space-y-6 min-w-0"> {/* ← ALLOW SHRINKING */}
             {/* 2.2 Learning/Teaching Timeline */}
-            <Card className="border-0 shadow-sm w-full max-w-full">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl">Learning Timeline</CardTitle>
-                <CardDescription>Your upcoming and recent activity</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6 w-full max-w-full">
+            <GlassCard delay={0.4} className="w-full max-w-full">
+              <GlassCardHeader className="pb-4">
+                <GlassCardTitle className="text-xl">Learning Timeline</GlassCardTitle>
+                <GlassCardDescription>Your upcoming and recent activity</GlassCardDescription>
+              </GlassCardHeader>
+              <GlassCardContent className="space-y-6 w-full max-w-full">
                 {/* Upcoming Section */}
                 <div className="w-full max-w-full">
                   <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3">Upcoming</h4>
                   <div className="space-y-3 w-full max-w-full">
                     {timelineData.upcoming.map((item, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-accent/50 transition-colors w-full max-w-full min-w-0">
+                      <div key={index} className="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-accent/50 transition-colors w-full max-w-full min-w-0 border border-transparent hover:border-border/50">
                         <div className="flex items-center space-x-3 min-w-0 flex-1">
                           <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
                           <div className="min-w-0 flex-1">
@@ -201,10 +199,10 @@ export default function DashboardPage() {
                   <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide mb-3">Recent Activity</h4>
                   <div className="space-y-3 w-full max-w-full">
                     {timelineData.recent.map((item, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-accent/50 transition-colors w-full max-w-full min-w-0">
+                      <div key={index} className="flex items-center justify-between p-3 lg:p-4 rounded-lg hover:bg-accent/50 transition-colors w-full max-w-full min-w-0 border border-transparent hover:border-border/50">
                         <div className="flex items-center space-x-3 min-w-0 flex-1">
                           <div className={`w-2 h-2 rounded-full flex-shrink-0 ${item.type === 'completed' ? 'bg-secondary' :
-                              item.type === 'journal' ? 'bg-primary' : 'bg-muted'
+                            item.type === 'journal' ? 'bg-primary' : 'bg-muted'
                             }`}></div>
                           <div className="min-w-0 flex-1">
                             <p className="font-medium text-sm lg:text-base truncate">{item.title}</p>
@@ -216,38 +214,38 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </GlassCardContent>
+            </GlassCard>
           </div>
 
           {/* Right Column - Quick Actions & Analytics */}
           <div className="space-y-6 min-w-0"> {/* ← ALLOW SHRINKING */}
             {/* 2.3 Quick Actions Row */}
-            <Card className="border-0 shadow-sm w-full max-w-full">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="w-full max-w-full">
+            <GlassCard delay={0.5} className="w-full max-w-full">
+              <GlassCardHeader className="pb-4">
+                <GlassCardTitle className="text-xl">Quick Actions</GlassCardTitle>
+              </GlassCardHeader>
+              <GlassCardContent className="w-full max-w-full">
                 <div className="grid grid-cols-1 gap-3 w-full max-w-full">
                   {quickActions.map((action, index) => (
                     <Link key={index} href={action.href} className="w-full max-w-full">
-                      <Button variant="outline" className="w-full max-w-full justify-start h-auto p-4 min-w-0">
+                      <Button variant="outline" className="w-full max-w-full justify-start h-auto p-4 min-w-0 bg-transparent hover:bg-accent/50 border-border/50">
                         <action.icon className="w-5 h-5 mr-3 flex-shrink-0" />
                         <span className="truncate">{action.label}</span>
                       </Button>
                     </Link>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </GlassCardContent>
+            </GlassCard>
 
             {/* 2.4 Analytics Preview */}
-            <Card className="border-0 shadow-sm w-full max-w-full">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl">Performance Overview</CardTitle>
-                <CardDescription>This week at a glance</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6 w-full max-w-full">
+            <GlassCard delay={0.6} className="w-full max-w-full">
+              <GlassCardHeader className="pb-4">
+                <GlassCardTitle className="text-xl">Performance Overview</GlassCardTitle>
+                <GlassCardDescription>This week at a glance</GlassCardDescription>
+              </GlassCardHeader>
+              <GlassCardContent className="space-y-6 w-full max-w-full">
                 {/* Progress Chart */}
                 <div className="w-full max-w-full">
                   <h4 className="font-semibold text-sm text-muted-foreground mb-3">Learning Hours</h4>
@@ -277,33 +275,33 @@ export default function DashboardPage() {
                     {analyticsData.engagement.map((value, index) => (
                       <div
                         key={index}
-                        className={`aspect-square rounded ${value >= 80 ? 'bg-secondary' :
-                            value >= 60 ? 'bg-secondary' :
-                              value >= 40 ? 'bg-secondary' :
-                                value >= 20 ? 'bg-secondary' : 'bg-gray-200'
+                        className={`aspect-square rounded ${value >= 80 ? 'bg-primary/80' :
+                          value >= 60 ? 'bg-primary/60' :
+                            value >= 40 ? 'bg-primary/40' :
+                              value >= 20 ? 'bg-primary/20' : 'bg-muted'
                           }`}
                         title={`${value}% engagement`}
                       />
                     ))}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </GlassCardContent>
+            </GlassCard>
           </div>
         </div>
 
         {/* 2.5 Recommended Content */}
-        <Card className="border-0 shadow-sm w-full max-w-full">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl">Recommended for You</CardTitle>
-            <CardDescription>AI-powered suggestions based on your progress</CardDescription>
-          </CardHeader>
-          <CardContent className="w-full max-w-full">
+        <GlassCard delay={0.7} className="w-full max-w-full">
+          <GlassCardHeader className="pb-4">
+            <GlassCardTitle className="text-xl">Recommended for You</GlassCardTitle>
+            <GlassCardDescription>AI-powered suggestions based on your progress</GlassCardDescription>
+          </GlassCardHeader>
+          <GlassCardContent className="w-full max-w-full">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-full">
               {recommendedContent.map((content, index) => (
-                <div key={index} className="p-4 border rounded-lg hover:border-primary transition-colors cursor-pointer min-h-[120px] lg:min-h-[140px] w-full max-w-full min-w-0">
+                <div key={index} className="p-4 border border-border/50 rounded-lg hover:bg-accent/30 transition-colors cursor-pointer min-h-[120px] lg:min-h-[140px] w-full max-w-full min-w-0">
                   <div className="flex items-start justify-between mb-3 min-w-0">
-                    <Badge variant="secondary" className="text-xs flex-shrink-0 truncate">
+                    <Badge variant="secondary" className="text-xs flex-shrink-0 truncate bg-secondary/50">
                       {content.type}
                     </Badge>
                     <Zap className="w-4 h-4 text-accent-foreground flex-shrink-0" />
@@ -316,8 +314,8 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </GlassCardContent>
+        </GlassCard>
       </div>
     </div>
   );

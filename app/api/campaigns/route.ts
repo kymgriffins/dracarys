@@ -1,70 +1,54 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { CreateCampaignForm, AdvertisingCampaign } from '@/lib/types/mentor';
+import { AdvertisingCampaign, CreateCampaignForm } from '@/lib/types/mentor';
+import { NextRequest, NextResponse } from 'next/server';
 
 // GET /api/campaigns - Get all campaigns for the current mentor
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    // Return mock data for campaigns
+    // This ensures we are not pulling data from Supabase tables as requested
+    const mockCampaigns: AdvertisingCampaign[] = [
+      {
+        id: 'mock-campaign-1',
+        mentor_id: 'mock-user-id',
+        title: 'FundedNext Winter Special',
+        description: 'Special promotion for winter season',
+        affiliate_id: 'mock-fundednext',
+        campaign_type: 'banner',
+        target_audience: 'all_students',
+        status: 'active',
+        start_date: '2024-01-01T00:00:00Z',
+        priority: 10,
+        click_url: 'https://fundednext.com/winter',
+        headline: 'Get 10% Off Your Challenge',
+        body_text: 'Use code WINTER10 for a discount on any evaluation account.',
+        call_to_action: 'Claim Offer',
+        total_budget_spent: 0,
+        is_active: true,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-01T00:00:00Z'
+      },
+      {
+        id: 'mock-campaign-2',
+        mentor_id: 'mock-user-id',
+        title: 'Tradeify Flash Sale',
+        description: '24-hour flash sale',
+        affiliate_id: 'mock-tradeify',
+        campaign_type: 'sidebar',
+        target_audience: 'advanced',
+        status: 'active',
+        priority: 8,
+        headline: 'Flash Sale Alert!',
+        body_text: 'Huge discounts on instant funding accounts.',
+        call_to_action: 'Shop Now',
+        total_budget_spent: 0,
+        is_active: true,
+        created_at: '2024-01-15T00:00:00Z',
+        updated_at: '2024-01-15T00:00:00Z'
+      }
+    ];
 
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized', message: 'User not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    // Check if user is a mentor
-    const { data: mentor, error: mentorError } = await supabase
-      .from('mentors')
-      .select('*')
-      .eq('profile_id', user.id)
-      .single();
-
-    if (mentorError || !mentor) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'User is not a mentor' },
-        { status: 403 }
-      );
-    }
-
-    // Get URL parameters for filtering
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const campaign_type = searchParams.get('campaign_type');
-
-    // Build query
-    let query = supabase
-      .from('advertising_campaigns')
-      .select(`
-        *,
-        affiliate:mentor_affiliates(*)
-      `)
-      .eq('mentor_id', user.id)
-      .order('created_at', { ascending: false });
-
-    // Apply filters if provided
-    if (status && status !== 'all') {
-      query = query.eq('status', status);
-    }
-
-    if (campaign_type && campaign_type !== 'all') {
-      query = query.eq('campaign_type', campaign_type);
-    }
-
-    const { data: campaigns, error: campaignsError } = await query;
-
-    if (campaignsError) {
-      console.error('Error fetching campaigns:', campaignsError);
-      return NextResponse.json(
-        { error: 'Database error', message: 'Failed to fetch campaigns' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ campaigns: campaigns || [] });
+    return NextResponse.json({ campaigns: mockCampaigns });
 
   } catch (error) {
     console.error('Unexpected error in GET /api/campaigns:', error);

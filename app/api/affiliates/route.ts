@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { CreateAffiliateForm, MentorAffiliate } from '@/lib/types/mentor';
+import { NextRequest, NextResponse } from 'next/server';
 
 // GET /api/affiliates - Get all affiliates for the current mentor
 export async function GET(request: NextRequest) {
@@ -9,140 +9,97 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const isMock = url.searchParams.get('mock') === 'true';
 
-    if (isMock) {
-      // Return mock data for prop firms and brokers
-      const mockAffiliates: MentorAffiliate[] = [
-        {
-          id: 'mock-fundednext',
-          mentor_id: 'mock-user-id',
-          name: 'FundedNext Professional',
-          provider_type: 'prop_firm',
-          provider_name: 'FundedNext',
-          affiliate_url: 'https://fundednext.com/ref/mentor123',
-          commission_rate: 25,
-          description: 'Leading prop trading firm offering $100K-$2M funded accounts after evaluation phase',
-          is_active: true,
-          click_count: 1247,
-          conversion_count: 89,
-          revenue_generated: 22350.00,
-          last_clicked_at: '2024-01-20T10:30:00Z',
-          created_at: '2024-01-15T09:00:00Z',
-          updated_at: '2024-01-20T10:30:00Z'
-        },
-        {
-          id: 'mock-tradeify',
-          mentor_id: 'mock-user-id',
-          name: 'Tradeify Prime Account',
-          provider_type: 'prop_firm',
-          provider_name: 'Tradeify',
-          affiliate_url: 'https://tradeify.com/referred-by/mentor123',
-          commission_rate: 30,
-          description: 'International prop firm with competitive payouts and flexible trading rules',
-          is_active: true,
-          click_count: 2156,
-          conversion_count: 156,
-          revenue_generated: 46800.00,
-          last_clicked_at: '2024-01-21T14:45:00Z',
-          created_at: '2024-01-14T11:20:00Z',
-          updated_at: '2024-01-21T14:45:00Z'
-        },
-        {
-          id: 'mock-hfm',
-          mentor_id: 'mock-user-id',
-          name: 'HFM Broker Pro',
-          provider_type: 'broker',
-          provider_name: 'HFM',
-          affiliate_url: 'https://hfmtrading.com/partner/mentor123',
-          commission_rate: 15,
-          description: 'Established forex broker with competitive spreads and superior execution speeds',
-          is_active: true,
-          click_count: 3241,
-          conversion_count: 234,
-          revenue_generated: 35100.00,
-          last_clicked_at: '2024-01-22T08:15:00Z',
-          created_at: '2024-01-13T13:45:00Z',
-          updated_at: '2024-01-22T08:15:00Z'
-        },
-        {
-          id: 'mock-ftmo',
-          mentor_id: 'mock-user-id',
-          name: 'FTMO Challenge Account',
-          provider_type: 'prop_firm',
-          provider_name: 'FTMO',
-          affiliate_url: 'https://ftmo.com/register?ref=mentor123',
-          commission_rate: 35,
-          description: 'World-renowned prop firm with $100K-$2M accounts and industry-leading reputation',
-          is_active: true,
-          click_count: 4567,
-          conversion_count: 312,
-          revenue_generated: 109200.00,
-          last_clicked_at: '2024-01-22T16:30:00Z',
-          created_at: '2024-01-12T10:15:00Z',
-          updated_at: '2024-01-22T16:30:00Z'
-        },
-        {
-          id: 'mock-myforexfunds',
-          mentor_id: 'mock-user-id',
-          name: 'MyForexFunds Express',
-          provider_type: 'prop_firm',
-          provider_name: 'MyForexFunds',
-          affiliate_url: 'https://myforexfunds.com/affiliate/mentor123',
-          commission_rate: 28,
-          description: 'Fast-track prop firm offering up to $4M funded accounts with flexible leverage options',
-          is_active: true,
-          click_count: 1893,
-          conversion_count: 98,
-          revenue_generated: 27440.00,
-          last_clicked_at: '2024-01-21T19:20:00Z',
-          created_at: '2024-01-16T12:00:00Z',
-          updated_at: '2024-01-21T19:20:00Z'
-        }
-      ];
+    // Return mock data for prop firms and brokers
+    // This ensures we are not pulling data from Supabase tables as requested
+    const mockAffiliates: MentorAffiliate[] = [
+      {
+        id: 'mock-fundednext',
+        mentor_id: 'mock-user-id',
+        name: 'FundedNext Professional',
+        provider_type: 'prop_firm',
+        provider_name: 'FundedNext',
+        affiliate_url: 'https://fundednext.com/ref/mentor123',
+        commission_rate: 25,
+        description: 'Leading prop trading firm offering $100K-$2M funded accounts after evaluation phase',
+        is_active: true,
+        click_count: 1247,
+        conversion_count: 89,
+        revenue_generated: 22350.00,
+        last_clicked_at: '2024-01-20T10:30:00Z',
+        created_at: '2024-01-15T09:00:00Z',
+        updated_at: '2024-01-20T10:30:00Z'
+      },
+      {
+        id: 'mock-tradeify',
+        mentor_id: 'mock-user-id',
+        name: 'Tradeify Prime Account',
+        provider_type: 'prop_firm',
+        provider_name: 'Tradeify',
+        affiliate_url: 'https://tradeify.com/referred-by/mentor123',
+        commission_rate: 30,
+        description: 'International prop firm with competitive payouts and flexible trading rules',
+        is_active: true,
+        click_count: 2156,
+        conversion_count: 156,
+        revenue_generated: 46800.00,
+        last_clicked_at: '2024-01-21T14:45:00Z',
+        created_at: '2024-01-14T11:20:00Z',
+        updated_at: '2024-01-21T14:45:00Z'
+      },
+      {
+        id: 'mock-hfm',
+        mentor_id: 'mock-user-id',
+        name: 'HFM Broker Pro',
+        provider_type: 'broker',
+        provider_name: 'HFM',
+        affiliate_url: 'https://hfmtrading.com/partner/mentor123',
+        commission_rate: 15,
+        description: 'Established forex broker with competitive spreads and superior execution speeds',
+        is_active: true,
+        click_count: 3241,
+        conversion_count: 234,
+        revenue_generated: 35100.00,
+        last_clicked_at: '2024-01-22T08:15:00Z',
+        created_at: '2024-01-13T13:45:00Z',
+        updated_at: '2024-01-22T08:15:00Z'
+      },
+      {
+        id: 'mock-ftmo',
+        mentor_id: 'mock-user-id',
+        name: 'FTMO Challenge Account',
+        provider_type: 'prop_firm',
+        provider_name: 'FTMO',
+        affiliate_url: 'https://ftmo.com/register?ref=mentor123',
+        commission_rate: 35,
+        description: 'World-renowned prop firm with $100K-$2M accounts and industry-leading reputation',
+        is_active: true,
+        click_count: 4567,
+        conversion_count: 312,
+        revenue_generated: 109200.00,
+        last_clicked_at: '2024-01-22T16:30:00Z',
+        created_at: '2024-01-12T10:15:00Z',
+        updated_at: '2024-01-22T16:30:00Z'
+      },
+      {
+        id: 'mock-myforexfunds',
+        mentor_id: 'mock-user-id',
+        name: 'MyForexFunds Express',
+        provider_type: 'prop_firm',
+        provider_name: 'MyForexFunds',
+        affiliate_url: 'https://myforexfunds.com/affiliate/mentor123',
+        commission_rate: 28,
+        description: 'Fast-track prop firm offering up to $4M funded accounts with flexible leverage options',
+        is_active: true,
+        click_count: 1893,
+        conversion_count: 98,
+        revenue_generated: 27440.00,
+        last_clicked_at: '2024-01-21T19:20:00Z',
+        created_at: '2024-01-16T12:00:00Z',
+        updated_at: '2024-01-21T19:20:00Z'
+      }
+    ];
 
-      return NextResponse.json({ affiliates: mockAffiliates });
-    }
-
-    const supabase = await createClient();
-
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized', message: 'User not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    // Check if user is a mentor
-    const { data: mentor, error: mentorError } = await supabase
-      .from('mentors')
-      .select('*')
-      .eq('profile_id', user.id)
-      .single();
-
-    if (mentorError || !mentor) {
-      return NextResponse.json(
-        { error: 'Forbidden', message: 'User is not a mentor' },
-        { status: 403 }
-      );
-    }
-
-    // Get all affiliates for this mentor
-    const { data: affiliates, error: affiliatesError } = await supabase
-      .from('mentor_affiliates')
-      .select('*')
-      .eq('mentor_id', user.id)
-      .order('created_at', { ascending: false });
-
-    if (affiliatesError) {
-      console.error('Error fetching affiliates:', affiliatesError);
-      return NextResponse.json(
-        { error: 'Database error', message: 'Failed to fetch affiliates' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ affiliates: affiliates || [] });
+    return NextResponse.json({ affiliates: mockAffiliates });
 
   } catch (error) {
     console.error('Unexpected error in GET /api/affiliates:', error);

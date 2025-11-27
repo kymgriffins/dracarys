@@ -128,6 +128,9 @@ CREATE POLICY "Mentors can CRUD their own affiliates" ON public.mentor_affiliate
     )
   );
 
+CREATE POLICY "Everyone can view active affiliates" ON public.mentor_affiliates
+  FOR SELECT USING (is_active = true);
+
 CREATE POLICY "Mentors can CRUD their own campaigns" ON public.advertising_campaigns
   FOR ALL USING (
     EXISTS (

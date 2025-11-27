@@ -1,13 +1,12 @@
 "use client";
 
-import { Sidebar } from "@/components/sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { Sidebar } from "@/components/sidebar";
+import { useAuth } from "@/lib/auth-context";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { Loader2, Menu, X, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default function AppLayout({
   children,
@@ -73,7 +72,9 @@ export default function AppLayout({
       {/* Main Content Area */}
       <main className="flex-1 w-full min-w-0 overflow-x-hidden overflow-y-auto pt-16 lg:pl-64">
         <div className="p-4 md:p-6 lg:p-8 w-full max-w-full">
-          {children}
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
         </div>
       </main>
     </div>
